@@ -1,0 +1,45 @@
+{
+  "tokenCount": 126,
+  "checks": [
+    {
+      "label": "Primary text",
+      "ratio": "15.71:1",
+      "minimum": "4.5:1"
+    },
+    {
+      "label": "Secondary text",
+      "ratio": "7.50:1",
+      "minimum": "4.5:1"
+    },
+    {
+      "label": "Accent text",
+      "ratio": "5.12:1",
+      "minimum": "4.5:1"
+    },
+    {
+      "label": "Button label",
+      "ratio": "5.76:1",
+      "minimum": "4.5:1"
+    },
+    {
+      "label": "Pressed button label",
+      "ratio": "4.91:1",
+      "minimum": "4.5:1"
+    },
+    {
+      "label": "Field boundary",
+      "ratio": "4.13:1",
+      "minimum": "3:1"
+    },
+    {
+      "label": "Focus ring",
+      "ratio": "5.78:1",
+      "minimum": "3:1"
+    },
+    {
+      "label": "Error message",
+      "ratio": "8.72:1",
+      "minimum": "4.5:1"
+    }
+  ]
+}

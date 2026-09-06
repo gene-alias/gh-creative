@@ -1,0 +1,235 @@
+@font-face {
+  font-family: 'Chakra Petch';
+  src: url('/fonts/chakra-600.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Chakra Petch';
+  src: url('/fonts/chakra-700.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Plex;
+  src: url('/fonts/plex.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Plex;
+  src: url('/fonts/plex-medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+:root,
+.dark {
+  --background: var(--gh-surface-canvas);
+  --foreground: var(--gh-text-primary);
+  --popover: var(--gh-surface-panel);
+  --popover-foreground: var(--gh-text-primary);
+  --primary: var(--gh-accent);
+  --primary-foreground: var(--gh-text-on-accent);
+  --secondary: var(--gh-surface-raised);
+  --secondary-foreground: var(--gh-text-primary);
+  --muted: var(--gh-surface-panel);
+  --muted-foreground: var(--gh-text-secondary);
+  --border: var(--gh-border-subtle);
+  --input: var(--gh-border-control);
+  --ring: var(--gh-focus);
+  --destructive: var(--gh-feedback-error);
+  --radius: var(--gh-radius-control);
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--gh-ref-space-6);
+}
+body {
+  margin: 0;
+  background: var(--gh-surface-page);
+  color: var(--gh-text-primary);
+  font-family: var(--gh-font-body);
+  font-size: var(--gh-ref-size-body);
+  line-height: var(--gh-ref-line-height-body);
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+::selection {
+  background: var(--gh-accent);
+  color: var(--gh-text-on-accent);
+}
+:where(a, button, input, textarea, select):focus-visible {
+  outline: var(--gh-ref-stroke-focus) solid var(--gh-focus);
+  outline-offset: var(--gh-ref-space-1);
+}
+:where(button, input, textarea):disabled {
+  opacity: var(--gh-ref-opacity-disabled);
+  cursor: not-allowed;
+}
+.eyebrow,
+.meta {
+  font: 400 var(--gh-ref-size-meta)/var(--gh-ref-line-height-label)
+    var(--gh-font-mono);
+  letter-spacing: var(--gh-ref-tracking-label);
+}
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gh-control-gap);
+  width: 100%;
+  min-height: var(--gh-button-height);
+  height: auto;
+  padding: var(--gh-button-padding);
+  border: var(--gh-ref-stroke-hairline) solid transparent;
+  border-radius: var(--gh-button-radius);
+  font: 500 var(--gh-ref-size-label)/var(--gh-ref-line-height-label)
+    var(--gh-font-mono);
+  letter-spacing: var(--gh-ref-tracking-normal);
+  white-space: normal;
+  text-align: left;
+  transition:
+    background-color var(--gh-motion-fast) var(--gh-motion-ease),
+    transform var(--gh-motion-fast) var(--gh-motion-ease);
+}
+.primary {
+  background: var(--gh-button-background);
+  color: var(--gh-button-text);
+}
+.primary:hover:not(:disabled) {
+  background: var(--gh-button-hover);
+}
+.primary:active:not(:disabled) {
+  background: var(--gh-button-pressed);
+  transform: translateY(1px);
+}
+.button.secondary {
+  background: transparent;
+  color: var(--gh-text-primary);
+  border-color: var(--gh-border-control);
+}
+.button.secondary:hover:not(:disabled) {
+  background: var(--gh-surface-raised);
+  border-color: var(--gh-accent);
+}
+.button svg {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 1.5;
+}
+.text-link {
+  display: flex;
+  align-items: center;
+  gap: var(--gh-ref-space-2);
+  width: fit-content;
+  min-height: var(--gh-ref-layout-touch);
+  font: 400 var(--gh-ref-size-label)/var(--gh-ref-line-height-label)
+    var(--gh-font-mono);
+  color: var(--gh-text-primary);
+}
+.text-link:hover {
+  color: var(--gh-accent-hover);
+}
+.contact-form,
+.ds-fields {
+  display: grid;
+  gap: var(--gh-ref-space-6);
+}
+.contact-form label,
+.ds-fields label {
+  display: grid;
+  gap: var(--gh-ref-space-3);
+  font: 400 var(--gh-ref-size-label)/var(--gh-ref-line-height-label)
+    var(--gh-font-mono);
+  color: var(--gh-text-primary);
+}
+.contact-form input,
+.contact-form textarea,
+.ds-fields input,
+.ds-fields textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--gh-field-height);
+  padding: var(--gh-field-padding);
+  border: var(--gh-ref-stroke-hairline) solid var(--gh-field-border);
+  border-radius: var(--gh-field-radius);
+  background: var(--gh-field-background);
+  color: var(--gh-field-text);
+  font: 400 var(--gh-ref-size-body)/var(--gh-ref-line-height-label)
+    var(--gh-font-body);
+  resize: vertical;
+  transition: border-color var(--gh-motion-fast) var(--gh-motion-ease);
+}
+:is(.contact-form, .ds-fields) :is(input, textarea)::placeholder {
+  color: var(--gh-text-secondary);
+}
+:is(.contact-form, .ds-fields) :is(input, textarea):focus {
+  border-color: var(--gh-field-focus);
+  outline: var(--gh-ref-stroke-focus) solid var(--gh-field-focus);
+  outline-offset: var(--gh-ref-space-1);
+}
+:is(.contact-form, .ds-fields) :is(input, textarea)[aria-invalid='true'] {
+  border-color: var(--gh-field-error);
+}
+.field-error {
+  color: var(--gh-feedback-error);
+  font-size: var(--gh-ref-size-label);
+}
+.signal-wordmark {
+  display: grid;
+  gap: var(--gh-ref-space-2);
+  font: 700 clamp(1.5rem, 6vw, 3rem)/1 var(--gh-font-display);
+  letter-spacing: var(--gh-ref-tracking-tight);
+  text-transform: uppercase;
+  overflow: hidden;
+}
+.signal-wordmark__solid {
+  color: var(--gh-accent);
+}
+.signal-wordmark__echo {
+  color: transparent;
+  -webkit-text-stroke: var(--gh-outline-width) var(--gh-outline-color);
+  user-select: none;
+}
+.registration-mark {
+  display: inline-block;
+  width: var(--gh-marker-size);
+  height: var(--gh-marker-size);
+  background: var(--gh-marker-color);
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
