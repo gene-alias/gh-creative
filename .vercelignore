@@ -1,0 +1,9 @@
+node_modules
+.git
+.cursor
+.next
+.vinext
+.wrangler
+dist
+*.tsbuildinfo
+.env*
