@@ -18,7 +18,7 @@ the static layout.
 
 ```sh
 npm run build:vercel
-vercel deploy --scope genes-projects-31163c3c
+vercel deploy --target preview --scope genes-projects-31163c3c
 ```
 
 The Vercel build exports the current routes to static HTML and RSC files in
