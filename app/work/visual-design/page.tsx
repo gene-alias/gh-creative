@@ -1,6 +1,6 @@
 import { WorkPage } from '@/components/work/work-page';
 
-export const metadata = { title: 'Visual Design — GH Creative' };
+export const metadata = { title: 'Visual Design / GH Creative' };
 
 export default function VisualDesign() {
   return <WorkPage

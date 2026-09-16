@@ -77,7 +77,7 @@ export async function deliverProjectBrief(
     return json(422, { error: 'Please check your details and complete all required questions.' });
   }
   if (!config.apiKey || !config.from) {
-    return json(503, { error: 'Enquiry delivery is temporarily unavailable. Your answers are still here—please try again later.' });
+    return json(503, { error: 'Enquiry delivery is temporarily unavailable. Your answers are still here. Please try again later.' });
   }
   try {
     const response = await send('https://api.resend.com/emails', {
@@ -92,12 +92,12 @@ export async function deliverProjectBrief(
         from: config.from,
         to: [BRIEF_RECIPIENT],
         reply_to: brief.email,
-        subject: `New project brief — ${brief.name.replace(/[\r\n]/g, ' ')}`,
+        subject: `New project brief / ${brief.name.replace(/[\r\n]/g, ' ')}`,
         text: formatBrief(brief),
       }),
       signal: AbortSignal.timeout(10_000),
     });
-    if (!response.ok) return json(502, { error: 'We couldn’t send your brief. Your answers are saved here—please try again.' });
+    if (!response.ok) return json(502, { error: 'We couldn’t send your brief. Your answers are saved here. Please try again.' });
     const result: unknown = await response.json();
     if (!result || typeof result !== 'object' || !('id' in result) || typeof result.id !== 'string' || !result.id) {
       return json(502, { error: 'We couldn’t confirm your brief was sent. Please try again.' });

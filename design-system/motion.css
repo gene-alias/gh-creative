@@ -330,6 +330,7 @@
   display: block;
 }
 /* Menu destinations stay fully revealed for the rest of this visit. */
+[data-menu-revealed] .studio-desktop-portrait,
 [data-menu-revealed] .body-copy,
 [data-menu-revealed] .contact-form,
 [data-menu-revealed] [data-content-reveal],

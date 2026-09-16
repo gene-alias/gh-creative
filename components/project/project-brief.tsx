@@ -114,7 +114,7 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
         setError(message);
       }
     } catch {
-      setError('We couldn’t confirm your brief was sent. Check your connection and try again—your answers are still here.');
+      setError('We couldn’t confirm your brief was sent. Check your connection and try again. Your answers are still here.');
     } finally {
       inFlight.current = false;
       setSending(false);
@@ -168,7 +168,7 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
           </div>
           <div className="brief-scroll" ref={scroller}>
             <div className="brief-step" key={complete ? 'complete' : step}>
-              <p className="brief-eyebrow">{complete ? 'BRIEF SENT' : `${String(step + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')} — ${current.label}`}</p>
+              <p className="brief-eyebrow">{complete ? 'BRIEF SENT' : `${String(step + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')} / ${current.label}`}</p>
               <Title ref={heading} tabIndex={-1} className="brief-title">
                 {complete ? 'Your next chapter starts here.' : current.title}
               </Title>

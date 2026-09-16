@@ -106,13 +106,18 @@
   .immersive-site .work-panel { height: clamp(180px, 40svh, 420px); aspect-ratio: auto; }
   .immersive-site .signal-ribbon {
     min-height: 0;
+    margin-top: 32px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 12px;
     padding-block: 32px;
   }
-  .immersive-site .signal-ribbon__line { font-size: clamp(48px, 8vw, 120px); }
+  .immersive-site .signal-ribbon__line {
+    font-size: clamp(40px, min(5.5vw, 8svh), 80px);
+    animation-duration: 40s;
+  }
+  .immersive-site .signal-ribbon__outline { animation-duration: 48s; }
   .immersive-site #services {
     display: flex;
     flex-direction: column;
@@ -282,7 +287,7 @@
 @media (min-width: 1024px) {
   .immersive-site.mobile-site #work { padding-block: 24px; }
   .immersive-site.mobile-site #work h2 {
-    font-size: clamp(40px, min(5.5vw, 8svh), 80px);
+    font-size: clamp(48px, min(6.3vw, 9.2svh), 92px);
     margin-bottom: 24px;
     display: flex;
     flex-wrap: wrap;
@@ -291,6 +296,15 @@
   }
   .immersive-site #work h2 .section-title-line { flex: 0 0 auto; }
   .immersive-site.mobile-site #work .section-index { margin-bottom: 16px; }
+}
+
+.immersive-site :is(#work, #services, #pricing) h2 em,
+.immersive-site .studio-title-outline,
+.immersive-site .contact-title-outline {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--gh-accent);
+  text-shadow: none;
 }
 
 .cursor-trail {
@@ -570,7 +584,7 @@
 }
 @media (min-width: 1024px) {
   .immersive-site .contact-finale__copy .body-copy {
-    font-size: clamp(18px, calc(1.65vw - 2px), 24px);
+    font-size: clamp(16px, calc(1.65vw - 4px), 22px);
     line-height: 1.55;
     max-width: none;
   }
@@ -605,7 +619,7 @@
   .immersive-site .studio > .body-copy {
     grid-column: 1;
     grid-row: 3;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.65;
   }
   .studio-copy-block { display: block; }

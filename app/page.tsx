@@ -186,7 +186,7 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <HeroGlobe />
         <header className="nav">
-          <a href="#top" className="hero-logo" aria-label="GH Creative — back to top">
+          <a href="#top" className="hero-logo" aria-label="GH Creative / back to top">
             <GHMonogram wordmark />
           </a>
           <Sheet open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={async (open) => {
@@ -387,7 +387,7 @@ export default function Home() {
                 <p className="eyebrow">{s.tag}</p>
                 <ul>
                   {s.items.map((item) => (
-                    <li key={item.label}><strong>{item.label}</strong> — {item.description}</li>
+                    <li key={item.label}><strong>{item.label}</strong>: {item.description}</li>
                   ))}
                 </ul>
                 <a href="#contact">
@@ -456,7 +456,7 @@ export default function Home() {
           <span>GH</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="About me." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="About" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} />{' '}<StaggeredText as="span" className="studio-title-outline" text="me." desktopOnly viewportReveal segmentBy="chars" delay={28} startDelay={168} duration={0.8} direction="bottom" blur={false} /></span></span>
           <span className="studio-portrait" aria-hidden="true" />
         </h2>
         <p className="body-copy">
@@ -491,7 +491,7 @@ export default function Home() {
         <h2 className="dot-heading">
           <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="LET’S MAKE" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
           <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="SOMETHING" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="MATTER." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" className="contact-title-outline" text="MATTER." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
         </h2>
         <p className="body-copy">
           Have a project in mind? Start with the idea. We can work out the rest.
@@ -502,7 +502,7 @@ export default function Home() {
         </p>
         <p className="body-copy">
           Tell me where you’re at and what you’d like to achieve. You don’t need
-          a finished brief—just a starting point.
+          a finished brief, just a starting point.
         </p>
         <div className="contact-form">
           <ProjectBriefTrigger className="button primary">

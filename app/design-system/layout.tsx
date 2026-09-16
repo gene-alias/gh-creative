@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
-  title: 'GH Creative — Design System',
+  title: 'GH Creative / Design System',
   description:
     'Colour, typography, components and tokens for the GH Creative visual identity.',
 };

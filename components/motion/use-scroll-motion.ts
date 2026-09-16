@@ -130,6 +130,17 @@ export function useScrollMotion(
             // Desktop shares the entrance, with continuous native scrolling.
             if (desktopLayout) {
               element.dataset.motion = 'desktop';
+              gsap.fromTo(select('.studio-desktop-portrait'),
+                { x: 80, opacity: 0 },
+                {
+                  x: 0, opacity: 1, duration: 1.2, ease: 'power2.out',
+                  scrollTrigger: {
+                    trigger: select('.studio-desktop-portrait')[0],
+                    start: REVEAL_START,
+                    once: true,
+                    refreshPriority: -20,
+                  },
+                });
               gsap.fromTo(select('.particle-layer--middle .planet-drift'), { y: 0 }, {
                 y: () => -Math.min(window.innerHeight * 1.5,
                   Math.max(0, element.scrollHeight - window.innerHeight) * 0.18),

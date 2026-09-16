@@ -105,7 +105,7 @@ export function PricingSection() {
         ))}
       </section>
       <div className="pricing-controls">
-        <span className="eyebrow" aria-live="polite">0{selected + 1} / 03 — {options[selected].menu}</span>
+        <span className="eyebrow" aria-live="polite">0{selected + 1} / 03 / {options[selected].menu}</span>
         <div>
           <button type="button" aria-label="Previous pricing option" disabled={selected === 0} onClick={() => select(selected - 1)}><ArrowLeft size={18} aria-hidden="true" /></button>
           <button type="button" aria-label="Next pricing option" disabled={selected === options.length - 1} onClick={() => select(selected + 1)}><ArrowRight size={18} aria-hidden="true" /></button>

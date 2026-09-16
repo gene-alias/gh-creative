@@ -240,7 +240,7 @@ export default function DesignSystem() {
           <div className="meta">
             DISPLAY
             <br />
-            CHAKRA PETCH / 600–700
+            CHAKRA PETCH / 600 to 700
           </div>
           <div className="ds-type-display">
             MAKE THE
@@ -263,7 +263,7 @@ export default function DesignSystem() {
           <div className="meta">
             LABELS
             <br />
-            IBM PLEX MONO / 400–500
+            IBM PLEX MONO / 400 to 500
           </div>
           <div className="ds-type-mono">
             BRAND / WEB / VISUAL / AUDIO

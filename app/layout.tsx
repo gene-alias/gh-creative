@@ -10,7 +10,7 @@ import '../design-system/desktop.css';
 export const viewport: Viewport = { themeColor: '#08080b', colorScheme: 'dark' };
 export const metadata: Metadata = {
   icons: { icon: '/assets/gh-cube-logo.png', apple: '/assets/gh-cube-logo.png' },
-  title: 'GH Creative — Make the signal clear.',
+  title: 'GH Creative / Make the signal clear.',
   description:
     'Independent creative services across brand, web, visual design and audio. Melbourne / Worldwide.',
 };
