@@ -216,3 +216,17 @@ body:has(.project-brief[data-open]) [data-slot='dialog-overlay'] {
   white-space: nowrap;
 }
 .brief-next:disabled { opacity: 0.65; cursor: wait; }
+
+.brief-call {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gh-text-secondary);
+}
+.brief-call a {
+  color: var(--gh-accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}

@@ -646,7 +646,7 @@
   border: 0;
   box-sizing: border-box;
   padding: 0;
-  color: var(--gh-accent);
+  color: currentColor;
 }
 .hero .button.primary > .cta-shimmer {
   display: none;
@@ -915,4 +915,52 @@ a.hero-instagram:focus-visible {
   width: 100%;
   min-height: 56px;
   margin: 0;
+}
+
+.footer-contact {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 0 8px 12px;
+  color: var(--gh-accent-hover);
+  font: 500 14px/1.4 var(--gh-font-mono);
+  cursor: pointer;
+}
+.footer-contact:hover { color: var(--gh-text-primary); }
+
+.contact-card-meta { flex-wrap: wrap; }
+.contact-card-meta > span { flex-basis: 100%; }
+.contact-card-meta > a { overflow-wrap: anywhere; }
+
+.contact-card-wordmark .hero-wordmark {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.hero-copy > .hero-services { margin-bottom: 20px; }
+
+.hero-subheading {
+  margin: 0;
+  max-width: 36ch;
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.5;
+  color: var(--gh-accent-hover);
+}
+
+@media (max-width: 1023px) {
+  .hero-subheading {
+    text-align: right;
+    margin-left: auto;
+  }
+}
+
+.immersive-site .hero .hero-support > .primary:active:not(:disabled) {
+  background: var(--gh-button-background);
+  color: var(--gh-button-text);
+  border-color: var(--gh-button-background);
+  text-shadow: none;
 }

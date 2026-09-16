@@ -8,12 +8,19 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react';
 import { getOffersScrollDistances, offersRevealStart } from './offers-scroll-timing';
 import type { PixelRevealRef } from '@/components/reactbits/pixel-reveal';
 
 const PixelReveal = lazy(() => import('@/components/reactbits/pixel-reveal'));
+const desktopQuery = '(min-width: 1024px) and (prefers-reduced-motion: no-preference)';
+const subscribeDesktop = (notify: () => void) => {
+  const media = window.matchMedia(desktopQuery);
+  media.addEventListener('change', notify);
+  return () => media.removeEventListener('change', notify);
+};
 
 class RevealFallback extends Component<
   { children: ReactNode },
@@ -125,6 +132,8 @@ function ScrollCurtain({ section }: { section: HTMLElement }) {
 }
 
 export function PixelSectionTransition({ disabled }: { disabled: boolean }) {
+  const desktop = useSyncExternalStore(subscribeDesktop,
+    () => window.matchMedia(desktopQuery).matches, () => false);
   const anchor = useRef<HTMLDivElement>(null);
   const [section, setSection] = useState<HTMLElement | null>(null);
   const [near, setNear] = useState(false);
@@ -133,7 +142,7 @@ export function PixelSectionTransition({ disabled }: { disabled: boolean }) {
     const parent = anchor.current?.parentElement;
     if (
       !parent ||
-      disabled ||
+      disabled || !desktop ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     )
       return;
@@ -146,7 +155,7 @@ export function PixelSectionTransition({ disabled }: { disabled: boolean }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '500px 0px' },
+      { rootMargin: '1000px 0px' },
     );
     const showFocusedContent = () => setKeyboardVisit(true);
     parent.addEventListener('focusin', showFocusedContent);
@@ -155,11 +164,11 @@ export function PixelSectionTransition({ disabled }: { disabled: boolean }) {
       observer.disconnect();
       parent.removeEventListener('focusin', showFocusedContent);
     };
-  }, [disabled]);
+  }, [disabled, desktop]);
 
   return (
     <div ref={anchor} className="offers-pixel-anchor" aria-hidden="true">
-      {!disabled && !keyboardVisit && near && section && (
+      {desktop && !disabled && !keyboardVisit && near && section && (
         <RevealFallback>
           <Suspense fallback={null}>
             <ScrollCurtain section={section} />

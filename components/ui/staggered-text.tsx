@@ -25,6 +25,8 @@ export type StaggeredTextProps = {
   respectReducedMotion?: boolean;
   startDelay?: number;
   viewportReveal?: boolean;
+  desktopOnly?: boolean;
+  externallyAnimated?: boolean;
 };
 
 function splitText(text: string, segmentBy: SegmentBy, separator?: string) {
@@ -74,6 +76,8 @@ export function StaggeredText({
   respectReducedMotion = true,
   startDelay = 0,
   viewportReveal = false,
+  desktopOnly = false,
+  externallyAnimated = false,
 }: StaggeredTextProps) {
   const root = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -82,17 +86,21 @@ export function StaggeredText({
 
   useEffect(() => {
     const element = root.current;
-    if (!element) return;
+    if (!element || externallyAnimated) return;
     const reduced =
       respectReducedMotion &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
-    element.dataset.revealPending = '';
     let revealed = false;
     let observer: IntersectionObserver;
     const observe = () => {
       if (revealed) return;
       observer?.disconnect();
+      if (desktopOnly && !window.matchMedia('(min-width: 1024px)').matches) {
+        delete element.dataset.revealPending;
+        return;
+      }
+      element.dataset.revealPending = '';
       observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -107,13 +115,13 @@ export function StaggeredText({
       observer.observe(element);
     };
     observe();
-    if (viewportReveal) window.addEventListener('resize', observe);
+    if (viewportReveal || desktopOnly) window.addEventListener('resize', observe);
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       window.removeEventListener('resize', observe);
       delete element.dataset.revealPending;
     };
-  }, [respectReducedMotion, rootMargin, threshold, viewportReveal]);
+  }, [respectReducedMotion, rootMargin, threshold, viewportReveal, desktopOnly, externallyAnimated]);
 
   const style = {
     '--staggered-delay': `${delay}ms`,
@@ -126,6 +134,7 @@ export function StaggeredText({
       ref={(element) => { root.current = element; }}
       className={cn(
         'staggered-text',
+        desktopOnly && 'staggered-text--desktop',
         visible && 'staggered-text--in',
         blur && 'staggered-text--blur',
         `staggered-text--${direction}`,

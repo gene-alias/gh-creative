@@ -20,10 +20,15 @@ export function useScrollMotion(
   }, [root, paused, reduced]);
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReduced(preference.matches);
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const sync = () => setReduced(preference.matches || desktop.matches);
     sync();
     preference.addEventListener('change', sync);
-    return () => preference.removeEventListener('change', sync);
+    desktop.addEventListener('change', sync);
+    return () => {
+      preference.removeEventListener('change', sync);
+      desktop.removeEventListener('change', sync);
+    };
   }, []);
 
   useEffect(() => {
@@ -57,6 +62,7 @@ export function useScrollMotion(
             element.removeAttribute('data-hero-entrance');
             const hero = select('.hero')[0];
             const touchDevice = window.matchMedia('(pointer: coarse)').matches;
+            const desktopLayout = window.matchMedia('(min-width: 1024px)').matches;
             // Animate children for entrance; their parent owns scroll parallax.
             // Re-enabling motion never replays or hides the loaded hero.
             let stopEntrance = () => {};
@@ -70,13 +76,20 @@ export function useScrollMotion(
                 paused: true,
                 defaults: { duration: 0.45, ease: 'power3.out' },
               });
+              intro.from(select('.hero .nav'), { opacity: 0, y: -12 }, 0.7);
+              const titleTargets = desktopLayout
+                ? select('.hero-title-glow .staggered-text__seg')
+                : select('.hero-line-reveal');
+              const titleDuration = desktopLayout ? 0.85 : 0.5;
+              const titleStagger = desktopLayout ? 0.035 : 0.16;
+              const supportStart = 1.15 + titleDuration + Math.max(0, titleTargets.length - 1) * titleStagger;
               intro
-                .from(select('.hero .nav'), { opacity: 0, y: -12 }, 0.7)
-                .from(select('.hero-line-reveal'),
-                  { opacity: 0, y: 24, stagger: 0.16, duration: 0.5 }, 1.15)
-                .from(select('.hero-services-reveal'), { opacity: 0, y: 12 }, 1.81)
-                .from(select('.hero-support > .button'), { opacity: 0, y: 16 }, 2.26)
-                .from(select('.hero-footer > *'), { opacity: 0, y: 8 }, 2.71);
+                .from(titleTargets,
+                  { opacity: 0, y: 24, stagger: titleStagger, duration: titleDuration }, 1.15)
+                .from(select('.hero-services-reveal'), { opacity: 0, y: 12 }, supportStart)
+                .from(select('.hero-subheading'), { opacity: 0, y: 12 }, supportStart)
+                .from(select('.hero-support > .button'), { opacity: 0, y: 16 }, supportStart + 0.45)
+                .from(select('.hero-footer > *'), { opacity: 0, y: 8 }, supportStart + 0.9);
               // The globe fades for 700ms after its first complete rendered frame.
               // Observe its state so lazy-loading time cannot reorder the entrance.
               const globe = hero.querySelector('.hero-globe');
@@ -113,6 +126,39 @@ export function useScrollMotion(
                 element.removeEventListener('focusin', finish);
               };
               intro.eventCallback('onComplete', stopEntrance);
+            }
+            // Desktop shares the entrance, with continuous native scrolling.
+            if (desktopLayout) {
+              element.dataset.motion = 'desktop';
+              gsap.fromTo(select('.particle-layer--middle .planet-drift'), { y: 0 }, {
+                y: () => -Math.min(window.innerHeight * 1.5,
+                  Math.max(0, element.scrollHeight - window.innerHeight) * 0.18),
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: element, start: 'top top', end: 'bottom bottom',
+                  scrub: 0.8, invalidateOnRefresh: true, refreshPriority: -20,
+                },
+              });
+              gsap.fromTo(select('.services-globe'),
+                { xPercent: 22, opacity: 0, rotation: -10 },
+                { xPercent: 0, opacity: 0.32, rotation: 8, ease: 'none',
+                  scrollTrigger: {
+                    trigger: select('#services')[0], start: 'top bottom', end: 'top 25%',
+                    scrub: 0.8, invalidateOnRefresh: true,
+                  },
+                });
+              gsap.fromTo(select('.services-globe'), { y: 0 }, {
+                y: () => select('#services')[0].offsetHeight * 0.55,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: select('#services')[0], start: 'top top', end: 'bottom top',
+                  scrub: 0.6, invalidateOnRefresh: true,
+                },
+              });
+              return () => {
+                stopEntrance();
+                delete element.dataset.motion;
+              };
             }
             const floatingCleanup: (() => void)[] = [];
             // One star field tracks the whole page so parallax never restarts.
@@ -244,24 +290,6 @@ export function useScrollMotion(
                 },
               });
             });
-            select('.signal-ribbon__line').forEach(
-              (line: HTMLElement, index: number) => {
-                gsap.fromTo(
-                  line,
-                  { xPercent: index ? -16 : 0 },
-                  {
-                    xPercent: index ? 0 : -16,
-                    ease: 'none',
-                    scrollTrigger: {
-                      trigger: select('.signal-ribbon')[0],
-                      start: 'top bottom',
-                      end: 'bottom top',
-                      scrub: value('scrub'),
-                    },
-                  },
-                );
-              },
-            );
             const work = select('#work')[0];
             const stage = select('.work-stack')[0];
             const panels = select('.work-panel');

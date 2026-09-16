@@ -7,7 +7,8 @@ import {
 import { ArrowLeft, ArrowRight, Check, Download, Send, X } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { GHMonogram } from '@/components/brand/gh-monogram';
-import { BriefContext } from './brief-context';
+import { BriefContext, BriefMountContext } from './brief-context';
+import { createPortal } from 'react-dom';
 import {
   budgetOptions, emptyBrief, formatBrief, serviceOptions, timingOptions, validateBriefStep,
   type ProjectBrief,
@@ -37,6 +38,8 @@ export function ProjectBriefTrigger({ onClick, children, ...props }: ComponentPr
 
 export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [dialogMounted, setDialogMounted] = useState(false);
+  const [inlineMount, setInlineMount] = useState<HTMLDivElement | null>(null);
   const [brief, setBrief] = useState<ProjectBrief>(emptyBrief);
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -53,22 +56,22 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   const current = steps[step];
 
   useEffect(() => {
-    if (!open) return;
+    if (!open && (!inlineMount || (step === 0 && !complete))) return;
     const frame = requestAnimationFrame(() => {
       scroller.current?.scrollTo({ top: 0, behavior: 'instant' });
       heading.current?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [step, open, complete]);
+  }, [step, open, complete, inlineMount]);
 
   useEffect(() => {
-    if (!error || !open) return;
+    if (!error || (!open && !inlineMount)) return;
     const frame = requestAnimationFrame(() => {
       const panel = scroller.current;
       if (panel) panel.scrollTo({ top: panel.scrollHeight, behavior: 'instant' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [error, open]);
+  }, [error, open, inlineMount]);
 
   function update<K extends keyof ProjectBrief>(key: K, value: ProjectBrief[K]) {
     setBrief((previous) => ({ ...previous, [key]: value }));
@@ -152,22 +155,13 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   ];
   const errorAttributes = { 'aria-invalid': !!error, 'aria-describedby': error ? 'brief-error' : undefined };
 
-  return (
-    <BriefContext.Provider value={(opener) => { returnFocus.current = opener; setOpen(true); }}>
-      {children}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
-          className="project-brief"
-          showCloseButton={false}
-          initialFocus={heading}
-          finalFocus={() => returnFocus.current?.isConnected
-            ? returnFocus.current
-            : document.querySelector<HTMLElement>('.menu-trigger, .portfolio-nav a')}
-        >
+  const Title = dialogMounted ? DialogTitle : 'h3';
+  const Description = dialogMounted ? DialogDescription : 'p';
+  const content = <>
           <div className="brief-topbar">
             <GHMonogram />
             <span>LET’S MAKE IT HAPPEN</span>
-            <DialogClose className="brief-close" aria-label="Close project brief"><X size={20} /></DialogClose>
+            {open && <DialogClose className="brief-close" aria-label="Close project brief"><X size={20} /></DialogClose>}
           </div>
           <div className="brief-progress" aria-hidden="true">
             {steps.map((item, index) => <span key={item.label} data-complete={index <= step || complete ? '' : undefined} />)}
@@ -175,12 +169,12 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
           <div className="brief-scroll" ref={scroller}>
             <div className="brief-step" key={complete ? 'complete' : step}>
               <p className="brief-eyebrow">{complete ? 'BRIEF SENT' : `${String(step + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')} — ${current.label}`}</p>
-              <DialogTitle ref={heading} tabIndex={-1} className="brief-title">
+              <Title ref={heading} tabIndex={-1} className="brief-title">
                 {complete ? 'Your next chapter starts here.' : current.title}
-              </DialogTitle>
-              <DialogDescription className="brief-description">
+              </Title>
+              <Description className="brief-description">
                 {complete ? 'Thanks for sharing your idea. Your project brief has been sent to Gene at GH Creative.' : current.description}
-              </DialogDescription>
+              </Description>
               {complete ? (
                 <div className="brief-complete">
                   <span className="brief-complete-icon"><Check size={28} /></span>
@@ -190,7 +184,7 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
                     setBrief(emptyBrief()); setStep(0); setComplete(false); setEditing(false);
                     setError(null); setContactFax(''); submission.current = null;
                   }}>START ANOTHER PROJECT</button>
-                  <DialogClose className="brief-back">CLOSE</DialogClose>
+                  {open && <DialogClose className="brief-back">CLOSE</DialogClose>}
                 </div>
               ) : (
                 <form id="project-brief-form" onSubmit={advance} aria-busy={sending}>
@@ -268,9 +262,29 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
               <button type="submit" form="project-brief-form" className="brief-next" disabled={sending}>{sending ? 'SENDING…' : step === lastStep ? 'SEND PROJECT BRIEF' : editing ? 'SAVE CHANGES' : step === lastStep - 1 ? 'REVIEW DETAILS' : 'CONTINUE'}{step === lastStep ? <Send size={17} /> : <ArrowRight size={17} />}</button>
             </div>
             <p className="brief-footnote" aria-live="polite">{sending ? 'Sending your brief. Please wait for confirmation.' : 'Your answers stay here while you browse this visit.'}</p>
+            <p className="brief-call">Prefer a call? <a href="tel:+61405179803">+61 405 179 803</a></p>
           </div>}
+  </>;
+
+  return (
+    <BriefMountContext.Provider value={setInlineMount}>
+    <BriefContext.Provider value={(opener) => { returnFocus.current = opener; setDialogMounted(true); setOpen(true); }}>
+      {children}
+      {!dialogMounted && inlineMount && createPortal(
+        <div className="project-brief project-brief--inline" data-slot="dialog-content">{content}</div>, inlineMount)}
+      <Dialog open={open} onOpenChange={setOpen} onOpenChangeComplete={(isOpen) => { if (!isOpen) setDialogMounted(false); }}>
+        <DialogContent
+          className="project-brief"
+          showCloseButton={false}
+          initialFocus={heading}
+          finalFocus={() => returnFocus.current?.isConnected
+            ? returnFocus.current
+            : document.querySelector<HTMLElement>('.menu-trigger, .portfolio-nav a')}
+        >
+          {content}
         </DialogContent>
       </Dialog>
     </BriefContext.Provider>
+    </BriefMountContext.Provider>
   );
 }

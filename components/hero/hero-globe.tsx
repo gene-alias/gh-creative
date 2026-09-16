@@ -56,7 +56,11 @@ export function HeroGlobe({ controls: overrides }: { controls?: Partial<GlobeCon
       // Keep the globe optically centered in the gap between the header and
       // hero title, regardless of the title's responsive height.
       const centerY = top + available * 0.5;
-      const next = { centerX: hero.clientWidth / 2, centerY, diameter, copyTop };
+      const desktop = window.matchMedia('(min-width: 1024px)').matches;
+      const next = desktop
+        ? { centerX: hero.clientWidth * 0.70, centerY: hero.clientHeight * 0.47,
+          diameter: Math.min(hero.clientWidth * 0.40, hero.clientHeight * 0.65, 650), copyTop }
+        : { centerX: hero.clientWidth / 2, centerY, diameter, copyTop };
       runtime.current.layout = next;
       runtime.current.invalidate();
       setLayout((previous) => Object.keys(next).every((key) => previous[key as keyof typeof next] === next[key as keyof typeof next]) ? previous : next);

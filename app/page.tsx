@@ -1,6 +1,10 @@
 'use client';
+import { PixelSectionTransition } from '@/components/motion/pixel-section-transition';
+import { DesktopWorkGallery } from '@/components/work/desktop-work-gallery';
+import { StaggeredText } from '@/components/ui/staggered-text';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, ArrowUpRight, ArrowDown, Menu } from 'lucide-react';
 import {
   Sheet,
@@ -23,6 +27,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
+import { InlineProjectBrief } from '@/components/project/inline-project-brief';
 import { PricingSection } from '@/components/project/pricing-section';
 import { GHMonogram } from '@/components/brand/gh-monogram';
 
@@ -174,6 +179,7 @@ export default function Home() {
   useScrollMotion(root, motionPaused);
   const prepareServiceChange = useServiceExpansion(root, openServices);
   const [contactCardOpen, setContactCardOpen] = useState(false);
+  const contactCardOpener = useRef<HTMLButtonElement | null>(null);
   return (
     <main className="mobile-site immersive-site" id="top" ref={root}>
       <DepthScene hero />
@@ -223,7 +229,7 @@ export default function Home() {
                     }}
                   >
                     <span>0{i + 1}</span>
-                    {item}
+                    {item === 'Pricing' ? 'Work Together' : item}
                     <ArrowUpRight size={22} />
                   </a>
                 ))}
@@ -241,43 +247,46 @@ export default function Home() {
           </Sheet>
         </header>
         <div className="hero-copy">
-          <h1 id="hero-title">
-            <span className="hero-line">
-              <span className="hero-line-reveal">
-                <span className="hero-title-glow">SHARE YOUR VISION</span>
-              </span>
-            </span>
-            <span className="hero-line">
-              <span className="hero-line-reveal">
-                <span className="hero-title-glow">WITH THE WORLD</span>
-              </span>
-            </span>
-          </h1>
-          <div className="hero-support">
             <p className="eyebrow hero-services">
               <span className="hero-services-reveal">
                 WEB DESIGN / VISUAL / BRANDING / AUDIO
               </span>
             </p>
+          <h1 id="hero-title">
+            <span className="hero-line">
+              <span className="hero-line-reveal">
+                <StaggeredText as="span" className="hero-title-glow" externallyAnimated text="SHARE YOUR VISION" desktopOnly segmentBy="chars" delay={35} duration={0.85} direction="bottom" blur={false} />
+              </span>
+            </span>
+            <span className="hero-line">
+              <span className="hero-line-reveal">
+                <StaggeredText as="span" className="hero-title-glow" externallyAnimated text="WITH THE WORLD" desktopOnly segmentBy="chars" delay={35} duration={0.85} direction="bottom" blur={false} />
+              </span>
+            </span>
+          </h1>
+          <div className="hero-support">
+            <p className="hero-subheading">Digital experiences for brands that deserve attention.</p>
             <ProjectBriefTrigger className="button primary">
               <span className="cta-shimmer" aria-hidden="true" />
               START YOUR PROJECT. <ArrowRight size={22} />
             </ProjectBriefTrigger>
+            <a className="button hero-work-link" href="#work">
+              VIEW MY WORK <ArrowDown size={22} aria-hidden="true" />
+            </a>
           </div>
         </div>
         <div className="hero-footer meta">
           <Dialog open={contactCardOpen} onOpenChange={setContactCardOpen}>
-            <DialogTrigger className="contact-card-trigger">
+            <DialogTrigger className="contact-card-trigger" onClick={(event) => { contactCardOpener.current = event.currentTarget; }}>
               CONTACT ↗
             </DialogTrigger>
-            <DialogContent className="contact-card">
-              <div className="contact-card-header">
-                <GHMonogram />
-                <span className="meta">GH / 001</span>
-              </div>
+            <DialogContent className="contact-card" finalFocus={() => contactCardOpener.current ?? undefined}>
               <div className="contact-card-body">
                 <p className="eyebrow">INDEPENDENT CREATIVE STUDIO</p>
-                <DialogTitle>GH CREATIVE</DialogTitle>
+                <DialogTitle className="contact-card-wordmark">
+                  <span className="sr-only">GH CREATIVE</span>
+                  <GHMonogram wordmark />
+                </DialogTitle>
                 <DialogDescription>
                   Brand, web, visual and audio design for ideas that deserve
                   attention.
@@ -285,7 +294,8 @@ export default function Home() {
               </div>
               <div className="contact-card-meta meta">
                 <span>GENE / CREATIVE PARTNER</span>
-                <span>MELBOURNE / WORLDWIDE</span>
+                <a href="tel:+61405179803">+61 405 179 803</a>
+                <a href="mailto:gene@alias.com.ai">gene@alias.com.ai</a>
               </div>
               <ProjectBriefTrigger className="contact-card-cta" onClick={() => setContactCardOpen(false)}>
                 START A PROJECT <ArrowRight size={18} />
@@ -302,9 +312,10 @@ export default function Home() {
           <span>↗</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">Creativity with</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>intent.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="Creativity with" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em><StaggeredText as="span" text="intent." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></em></span></span>
         </h2>
+        <DesktopWorkGallery />
         <div className="work-stack" aria-label="Selected creative work">
           <figure className="work-panel work-panel--web">
             <Link prefetch={false} className="work-panel-link" href="/work/web-design" aria-label="Explore web design work" />
@@ -325,9 +336,11 @@ export default function Home() {
         </div>
       </section>
       <div className="signal-ribbon" aria-hidden="true">
-        <div className="signal-ribbon__line">GH CREATIVE * GH CREATIVE</div>
+        <div className="signal-ribbon__line">
+          {[0, 1].map((copy) => <span className="signal-ribbon__copy" key={copy}>GH CREATIVE * GH CREATIVE * GH CREATIVE * GH CREATIVE * </span>)}
+        </div>
         <div className="signal-ribbon__line signal-ribbon__outline">
-          SHOW THE WORLD YOUR VISION
+          {[0, 1].map((copy) => <span className="signal-ribbon__copy" key={copy}>SHOW THE WORLD YOUR VISION * SHOW THE WORLD YOUR VISION * </span>)}
         </div>
       </div>
       </div>
@@ -336,13 +349,18 @@ export default function Home() {
         id="services"
         data-service-expanded={openServices.length ? '' : undefined}
       >
+        <div className="services-globe" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none">
+            <use href="/assets/planet-wireframe.svg#mesh" />
+          </svg>
+        </div>
         <p className="eyebrow section-index">
           <span>02 / MY SERVICES</span>
           <span>↓</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">Bold Ideas.</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>Considered Execution.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="Bold Ideas." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em><StaggeredText as="span" text="Considered Execution." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></em></span></span>
         </h2>
         <p className="services-subhead">
           <a className="text-link" href="#service-list">
@@ -382,15 +400,17 @@ export default function Home() {
       </section>
       <div className="offers-scroll-region">
       <section className="section offers" id="offers">
+        <PixelSectionTransition disabled={motionPaused} />
         <p className="eyebrow section-index">
           <span>03 / HOW WE WORK</span>
           <span>↗</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">THE</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>PROCESS</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="THE" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em><StaggeredText as="span" text="PROCESS" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></em></span></span>
         </h2>
-        <article className="offer">
+        <ol className="process-list">
+        <li className="offer">
           <span className="eyebrow">01 / DISCOVERY & DIRECTION</span>
           <h3>Project brief.</h3>
           <ul className="process-points">
@@ -401,8 +421,8 @@ export default function Home() {
           <ProjectBriefTrigger className="offer-link">
             PLAN A PROJECT <ArrowUpRight size={20} aria-hidden="true" />
           </ProjectBriefTrigger>
-        </article>
-        <article className="offer">
+        </li>
+        <li className="offer">
           <span className="eyebrow">02 / CREATE, REFINE & DELIVER</span>
           <h3>Project build.</h3>
           <ul className="process-points">
@@ -413,8 +433,8 @@ export default function Home() {
           <ProjectBriefTrigger className="offer-link">
             DISCUSS YOUR PROJECT <ArrowUpRight size={20} aria-hidden="true" />
           </ProjectBriefTrigger>
-        </article>
-        <article className="offer">
+        </li>
+        <li className="offer">
           <span className="eyebrow">03 / SUPPORT & GROWTH</span>
           <h3>Ongoing partnership.</h3>
           <ul className="process-points">
@@ -425,7 +445,8 @@ export default function Home() {
           <ProjectBriefTrigger className="offer-link">
             EXPLORE A PARTNERSHIP <ArrowUpRight size={20} aria-hidden="true" />
           </ProjectBriefTrigger>
-        </article>
+        </li>
+        </ol>
       </section>
       </div>
       <PricingSection />
@@ -435,33 +456,53 @@ export default function Home() {
           <span>GH</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">About me.</span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="About me." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
           <span className="studio-portrait" aria-hidden="true" />
         </h2>
         <p className="body-copy">
-          I’m Gene. I bring web, visual design, audio and marketing together to
-          give your ideas a clear, consistent presence.
+          <span className="studio-copy-block">I’m Gene. My creative foundation is in audio engineering, where I
+          qualified and developed an ear for detail.</span>{' '}
+          <span className="studio-copy-block">Working across creative software and multimedia has since taken
+          that curiosity beyond sound.</span>
         </p>
         <p className="body-copy studio-follow">
-          Direct collaboration, thoughtful decisions and attention to the
-          details that make the work yours.
+          <span className="studio-copy-block">Today, I help people turn their ideas into digital experiences with
+          a personality of their own.</span>{' '}
+          <span className="studio-copy-block">I want to understand what makes your brand
+          yours, then bring it to life through design, visuals and audio so you
+          can share it with the world.</span>
         </p>
         <div className="studio-location meta">
           <span className="status-dot" /> <span data-content-reveal>MELBOURNE / WORKING WORLDWIDE</span>
         </div>
+        <button type="button" className="button primary studio-contact" aria-haspopup="dialog"
+          onClick={(event) => { contactCardOpener.current = event.currentTarget; setContactCardOpen(true); }}>
+          CONTACT <ArrowUpRight size={20} aria-hidden="true" />
+        </button>
+        <Image className="studio-desktop-portrait" src="/assets/hero-portrait.png" alt="Red refracted portrait artwork" width={780} height={1122} unoptimized />
       </section>
+      <div className="contact-finale">
       <section className="section contact" id="contact">
         <p className="eyebrow section-index">
           <span>06 / YOUR NEXT CHAPTER</span>
           <span>↗</span>
         </p>
+        <div className="contact-finale__copy">
         <h2 className="dot-heading">
-          <span className="section-title-line"><span className="section-title-reveal">LET’S MAKE</span></span>
-          <span className="section-title-line"><span className="section-title-reveal">SOMETHING</span></span>
-          <span className="section-title-line"><span className="section-title-reveal">MATTER.</span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="LET’S MAKE" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="SOMETHING" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="MATTER." desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
         </h2>
         <p className="body-copy">
           Have a project in mind? Start with the idea. We can work out the rest.
+        </p>
+        <p className="body-copy">
+          Whether you’re building something new or rethinking what’s already there,
+          I can help bring your brand, website, visuals and audio together.
+        </p>
+        <p className="body-copy">
+          Tell me where you’re at and what you’d like to achieve. You don’t need
+          a finished brief—just a starting point.
         </p>
         <div className="contact-form">
           <ProjectBriefTrigger className="button primary">
@@ -469,6 +510,8 @@ export default function Home() {
           </ProjectBriefTrigger>
           <p className="form-note">Tell me about your project, one step at a time.</p>
         </div>
+        </div>
+        <div className="contact-finale__form"><InlineProjectBrief /></div>
       </section>
       <footer className="footer">
         <a className="wordmark" href="#top">
@@ -478,6 +521,9 @@ export default function Home() {
           ↑
         </a>
         <p className="meta">INDEPENDENT BY DESIGN.</p>
+        <ProjectBriefTrigger className="footer-contact">
+          CONTACT <ArrowUpRight size={18} aria-hidden="true" />
+        </ProjectBriefTrigger>
         <div className="footer-bottom meta">
           <span>© {new Date().getFullYear()} GH CREATIVE</span>
           <a
@@ -497,6 +543,7 @@ export default function Home() {
           <span>MELBOURNE / WORLDWIDE</span>
         </div>
       </footer>
+      </div>
     </main>
   );
 }

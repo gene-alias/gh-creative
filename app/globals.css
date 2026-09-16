@@ -518,6 +518,6 @@ p.body-copy {
 }
 
 /* Hide entrance targets before the lazy-loaded motion timeline takes ownership. */
-[data-hero-entrance="pending"] .hero :is(.nav, .hero-line-reveal, .hero-services-reveal, .hero-support > .button, .hero-footer > *) {
+[data-hero-entrance="pending"] .hero :is(.nav, .hero-line-reveal, .hero-services-reveal, .hero-subheading, .hero-support > .button, .hero-footer > *) {
   opacity: 0;
 }

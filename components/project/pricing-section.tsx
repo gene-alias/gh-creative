@@ -1,24 +1,26 @@
 'use client';
+import { StaggeredText } from '@/components/ui/staggered-text';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Sparkles, Layers, Orbit } from 'lucide-react';
+import * as PricingCard from '@/components/ui/pricing-card';
 import { ProjectBriefTrigger } from './project-brief';
 
 const options = [
   {
-    menu: 'Essentials', title: 'Essentials.', tag: 'THE ESSENTIALS',
-    description: 'One-off projects with a simpler scope, tailored to smaller budgets.',
-    points: ['Focused scope, less complexity', 'Built around your budget', 'A high standard of delivery', 'Ongoing support after delivery'],
+    menu: 'Focused Project', title: 'Focused Project.', tag: 'ONE CLEAR GOAL',
+    description: 'A defined project in web, branding, visual design or audio, built around what you need next.',
+    points: ['One service with a focused scope', 'Clear deliverables and timeline', 'Feedback and refinement along the way', 'Final files and a considered handover'],
   },
   {
-    menu: 'Premium', title: 'Premium.', tag: 'MORE POSSIBILITIES',
-    description: 'Animation and motion graphics for a cinematic finish, with creative services combined around your project.',
-    points: ['Animation & motion graphics', 'Cinematic output across creative services', 'Discounts on bundled services', 'Ongoing support & project refinements'],
+    menu: 'Brand & Digital', title: 'Brand & Digital.', tag: 'BRING IT ALL TOGETHER',
+    description: 'A coordinated identity, website and launch assets that give your business a consistent presence.',
+    points: ['Brand identity and creative direction', 'Website design and development', 'Visual and audio assets as needed', 'A coordinated launch across your channels'],
   },
   {
-    menu: 'Pro', title: 'Pro.', tag: 'THE COMPLETE PICTURE',
-    description: 'Immersive digital experiences with our highest level of ongoing support, from project iterations to life after delivery.',
-    points: ['Immersive digital experiences', 'Ongoing project iterations & refinements', 'Our highest level of ongoing support after delivery'],
+    menu: 'Creative Partnership', title: 'Creative Partnership.', tag: 'KEEP MOVING FORWARD',
+    description: 'Ongoing creative support for businesses that need fresh work, regular updates and a familiar collaborator.',
+    points: ['Ongoing design, content and audio', 'Website updates and improvements', 'Agreed priorities and regular check-ins', 'A scope shaped around your ongoing needs'],
   },
 ];
 
@@ -43,12 +45,42 @@ export function PricingSection() {
 
   return (
     <section className="section pricing" id="pricing" aria-labelledby="pricing-title">
-      <p className="eyebrow section-index"><span>04 / PRICING</span><span>↗</span></p>
+      <p className="eyebrow section-index"><span>04 / WORK TOGETHER</span><span>↗</span></p>
       <h2 id="pricing-title">
-        <span className="section-title-line"><span className="section-title-reveal">Pricing tailored</span></span>
-        <span className="section-title-line"><span className="section-title-reveal"><em>to your needs</em></span></span>
+        <span className="section-title-line"><span className="section-title-reveal"><StaggeredText as="span" text="Ways to work" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></span></span>
+        <span className="section-title-line"><span className="section-title-reveal"><em><StaggeredText as="span" text="together" desktopOnly viewportReveal segmentBy="chars" delay={28} duration={0.8} direction="bottom" blur={false} /></em></span></span>
       </h2>
-      <p className="body-copy pricing-intro">Transparent pricing from day one.</p>
+      <p className="body-copy pricing-intro">Every project is different. Scope, timing and pricing are agreed around your needs.</p>
+      <div className="desktop-pricing-grid">
+        {options.map((option, index) => {
+          const Icon = [Sparkles, Layers, Orbit][index];
+          return (
+            <PricingCard.Card className="desktop-plan" key={option.menu}>
+              <PricingCard.Header className="desktop-plan__header">
+                <PricingCard.Plan className="desktop-plan__plan">
+                  <PricingCard.PlanName className="desktop-plan__name">
+                    <Icon aria-hidden="true" /><h3>{option.menu}</h3>
+                  </PricingCard.PlanName>
+                </PricingCard.Plan>
+                <p className="eyebrow desktop-plan__tag">{option.tag}</p>
+                <ProjectBriefTrigger className="button primary desktop-plan__cta">
+                  GET A PROJECT QUOTE <ArrowUpRight size={18} aria-hidden="true" />
+                </ProjectBriefTrigger>
+              </PricingCard.Header>
+              <PricingCard.Body className="desktop-plan__body">
+                <PricingCard.Description className="desktop-plan__description">{option.description}</PricingCard.Description>
+                <PricingCard.List>
+                  {option.points.map((point) => (
+                    <PricingCard.ListItem key={point} className="desktop-plan__feature">
+                      <CheckCircle2 size={18} aria-hidden="true" /><span>{point}</span>
+                    </PricingCard.ListItem>
+                  ))}
+                </PricingCard.List>
+              </PricingCard.Body>
+            </PricingCard.Card>
+          );
+        })}
+      </div>
       <div className="pricing-showcase">
       <fieldset className="pricing-menu" aria-label="Choose a pricing option">
         {options.map((option, index) => (
@@ -57,7 +89,7 @@ export function PricingSection() {
         ))}
       </fieldset>
       <section className="pricing-track" id="pricing-cards" ref={track}
-        aria-roledescription="carousel" aria-label="One-off project packages"
+        aria-roledescription="carousel" aria-label="Ways to work together"
         >
         {options.map((option, index) => (
           <article className="pricing-card" key={option.menu} data-active={selected === index ? '' : undefined}

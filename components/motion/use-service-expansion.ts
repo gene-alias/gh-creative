@@ -31,7 +31,8 @@ export function useServiceExpansion(
     const { title, fromTop, opening } = alignment;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const inset = parseFloat(getComputedStyle(title).scrollMarginTop) || 16;
-    const toTop = opening ? inset : fromTop;
+    const desktop = window.matchMedia('(min-width: 1024px)').matches;
+    const toTop = desktop ? fromTop : opening ? inset : fromTop;
     const started = performance.now();
     let frame = 0;
     let cancelled = false;

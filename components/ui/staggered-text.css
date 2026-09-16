@@ -47,3 +47,19 @@
     filter: none !important;
   }
 }
+
+/* Mobile keeps its inexpensive whole-heading entrance. */
+@media (max-width: 1023px) {
+  .staggered-text--desktop[data-reveal-pending] { opacity: 1; }
+  .staggered-text--desktop .staggered-text__seg {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+[data-menu-revealed] .staggered-text,
+[data-menu-revealed] .staggered-text__seg {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
