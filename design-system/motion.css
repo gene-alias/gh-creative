@@ -505,7 +505,7 @@
 /* Scroll sizing: text establishes its own height and stays inside its gutter. */
 .immersive-site .hero-copy { container-type: inline-size; }
 .immersive-site .hero h1 {
-  font-size: clamp(2.2rem, 12.4cqw, 4.2rem);
+  font-size: clamp(2.8rem, 15.2cqw, 4.75rem);
   line-height: 0.9;
 }
 .immersive-site .hero h1 .hero-line {
