@@ -1,10 +1,10 @@
 /* Desktop composition; the established mobile layout remains below 1024px. */
 @media (min-width: 1024px) {
   .immersive-site.mobile-site {
-    --gh-ref-layout-mobile-max: 1600px;
+    --gh-ref-layout-mobile-max: 100vw;
     --gh-gutter: clamp(40px, 6vw, 96px);
     --gh-frame-gutter: 32px;
-    max-width: 1600px;
+    max-width: none;
     width: 100%;
   }
   .immersive-site .hero {
@@ -30,7 +30,7 @@
   .immersive-site.mobile-site .section,
   .immersive-site .section:is(#work, #services) {
     width: calc(100% - 64px);
-    max-width: calc(min(100vw, 1600px) - 64px) !important;
+    max-width: calc(100vw - 64px) !important;
     margin: 48px 32px;
     padding: 80px max(32px, calc(var(--gh-gutter) - 32px));
   }
@@ -161,8 +161,8 @@
 
   /* The three work detail routes share one viewport-based composition. */
   .portfolio-page.mobile-site {
-    --gh-ref-layout-mobile-max: 1600px;
-    max-width: 1600px;
+    --gh-ref-layout-mobile-max: 100vw;
+    max-width: none;
     min-height: 100svh;
     padding: 0 40px;
     display: flex;
