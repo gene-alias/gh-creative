@@ -1,6 +1,12 @@
-/** Reveal starts a quarter-screen before pinning; both end at the same scroll offset. */
-export function getOffersScrollDistances(viewportHeight: number, sectionHeight: number) {
-  const approach = viewportHeight * 0.25;
-  const reveal = Math.max(approach + 240, Math.min(sectionHeight * 0.65, viewportHeight * 0.72));
-  return { approach, reveal, pin: reveal - approach };
+/** Fraction of the viewport where the pixel curtain starts dissolving. */
+export const OFFERS_REVEAL_APPROACH = 0.85;
+
+/** Finish before the section reaches the top, without pinning the page. */
+export function getOffersScrollDistances(viewportHeight: number, _sectionHeight: number) {
+  const approach = viewportHeight * OFFERS_REVEAL_APPROACH;
+  return { approach, reveal: viewportHeight * (OFFERS_REVEAL_APPROACH - 0.2), pin: 0 };
+}
+
+export function offersRevealStart(marginTop: number) {
+  return `top+=${marginTop} ${OFFERS_REVEAL_APPROACH * 100}%`;
 }

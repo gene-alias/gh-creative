@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { getOffersScrollDistances } from './offers-scroll-timing';
+import { getOffersScrollDistances, offersRevealStart } from './offers-scroll-timing';
 import type { PixelRevealRef } from '@/components/reactbits/pixel-reveal';
 
 const PixelReveal = lazy(() => import('@/components/reactbits/pixel-reveal'));
@@ -30,6 +30,7 @@ class RevealFallback extends Component<
 
 function ScrollCurtain({ section }: { section: HTMLElement }) {
   const reveal = useRef<PixelRevealRef>(null);
+  const curtain = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [colors] = useState(() => {
@@ -56,42 +57,35 @@ function ScrollCurtain({ section }: { section: HTMLElement }) {
         const marginTop = () => parseFloat(getComputedStyle(section).marginTop) || 0;
         const distances = () => getOffersScrollDistances(window.innerHeight, section.offsetHeight);
         const state = { progress: 0 };
+        const update = () => {
+          reveal.current?.setProgress(state.progress);
+          // Remove the fully transparent, section-sized canvas from compositing.
+          if (curtain.current) curtain.current.style.visibility = state.progress >= 1 ? 'hidden' : 'visible';
+        };
         const tween = gsap.fromTo(state, { progress: 0 }, {
           progress: 1,
           ease: 'none',
-          onUpdate: () => reveal.current?.setProgress(state.progress),
+          onUpdate: update,
           scrollTrigger: {
             id: 'offers-pixel-reveal',
             trigger: region,
-            start: () => `top+=${marginTop()} 25%`,
+            start: () => offersRevealStart(marginTop()),
             end: () => '+=' + distances().reveal,
             refreshPriority: 20,
             scrub: true,
             invalidateOnRefresh: true,
           },
         });
-        const pin = ScrollTrigger.create({
-          id: 'offers-top-pin',
-          trigger: region,
-          start: () => `top+=${marginTop()} top`,
-          end: () => '+=' + distances().pin,
-          refreshPriority: 10,
-          pin: section,
-          pinSpacing: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
         cleanup = () => {
-          pin.kill();
           tween.scrollTrigger?.kill();
           tween.kill();
         };
-        // Refresh the work pin first, then these two triggers, then downstream headings.
+        // Measure the upstream work pin before the reveal and downstream headings.
         ScrollTrigger.sort();
         ScrollTrigger.refresh();
         // Start at the actual scroll position, including restored/deep-linked visits.
         tween.progress(tween.scrollTrigger?.progress ?? 0);
-        reveal.current?.setProgress(state.progress);
+        update();
       })
       .catch(() => {
         cleanup?.();
@@ -106,6 +100,7 @@ function ScrollCurtain({ section }: { section: HTMLElement }) {
   if (unavailable) return null;
   return (
     <div
+      ref={curtain}
       className="offers-pixel-curtain"
       data-ready={ready || undefined}
       aria-hidden="true"
@@ -147,7 +142,7 @@ export function PixelSectionTransition({ disabled }: { disabled: boolean }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setNear(true);
-          // Keep the pin spacer mounted after leaving, preventing scroll jumps.
+          // Keep the reveal mounted so reverse scrolling uses the same progress.
           observer.disconnect();
         }
       },

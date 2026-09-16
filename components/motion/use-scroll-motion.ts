@@ -1,6 +1,9 @@
 'use client';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 import { getHeadingLineState } from './heading-scroll-timing';
+import { getHeroLineScrollMotion } from './hero-scroll-timing';
+import { viewportNeedsRefresh } from './scroll-layout';
+import { REVEAL_START, REVEAL_END, REVEAL_VIEWPORT_FRACTION } from './reveal-timing';
 
 export function useScrollMotion(
   root: RefObject<HTMLElement | null>,
@@ -8,6 +11,13 @@ export function useScrollMotion(
 ) {
   const [reduced, setReduced] = useState(false);
   const entrancePlayed = useRef(false);
+  useLayoutEffect(() => {
+    const element = root.current;
+    if (!element || paused || entrancePlayed.current || window.scrollY >= 80 ||
+      window.location.hash || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    element.setAttribute('data-hero-entrance', 'pending');
+    return () => { element.removeAttribute('data-hero-entrance'); };
+  }, [root, paused, reduced]);
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => setReduced(preference.matches);
@@ -31,6 +41,8 @@ export function useScrollMotion(
       .then(([{ gsap }, { ScrollTrigger }]) => {
         if (disposed) return;
         gsap.registerPlugin(ScrollTrigger);
+        // Browser chrome opening/closing must not recalculate pins mid-swipe.
+        ScrollTrigger.config({ ignoreMobileResize: true });
         const media = gsap.matchMedia();
         release = () => media.revert();
         media.add(
@@ -42,7 +54,9 @@ export function useScrollMotion(
             const settings = getComputedStyle(element);
             const value = (name: string) =>
               parseFloat(settings.getPropertyValue('--gh-scroll-' + name));
+            element.removeAttribute('data-hero-entrance');
             const hero = select('.hero')[0];
+            const touchDevice = window.matchMedia('(pointer: coarse)').matches;
             // Animate children for entrance; their parent owns scroll parallax.
             // Re-enabling motion never replays or hides the loaded hero.
             let stopEntrance = () => {};
@@ -53,42 +67,38 @@ export function useScrollMotion(
             ) {
               entrancePlayed.current = true;
               const intro = gsap.timeline({
-                defaults: { duration: 0.65, ease: 'power3.out' },
+                paused: true,
+                defaults: { duration: 0.45, ease: 'power3.out' },
               });
               intro
-                .from(select('.hero-art'), { opacity: 0, duration: 1 }, 0)
-                .from(
-                  select('.hero-logo, .hero .menu-trigger'),
-                  { opacity: 0, y: -12, stagger: 0.12 },
-                  0.12,
-                )
-                .from(
-                  select('.studio-index, .hero-services-reveal'),
-                  { opacity: 0, y: 12, stagger: 0.1 },
-                  0.3,
-                )
-                .from(
-                  select('.hero-line-reveal'),
-                  { opacity: 0, y: 24, stagger: 0.14, duration: 0.8 },
-                  0.5,
-                )
-                .from(
-                  select('.hero-description-reveal'),
-                  { opacity: 0, y: 16 },
-                  0.82,
-                )
-                .from(
-                  select('.hero-support > .button, .hero-support > .hero-secondary-actions'),
-                  { opacity: 0, y: 16, stagger: 0.12 },
-                  1,
-                )
-                .from(
-                  select('.hero-footer > *'),
-                  { opacity: 0, y: 8, stagger: 0.08 },
-                  1.15,
-                );
+                .from(select('.hero .nav'), { opacity: 0, y: -12 }, 0.7)
+                .from(select('.hero-line-reveal'),
+                  { opacity: 0, y: 24, stagger: 0.16, duration: 0.5 }, 1.15)
+                .from(select('.hero-services-reveal'), { opacity: 0, y: 12 }, 1.81)
+                .from(select('.hero-support > .button'), { opacity: 0, y: 16 }, 2.26)
+                .from(select('.hero-footer > *'), { opacity: 0, y: 8 }, 2.71);
+              // The globe fades for 700ms after its first complete rendered frame.
+              // Observe its state so lazy-loading time cannot reorder the entrance.
+              const globe = hero.querySelector('.hero-globe');
+              let started = false;
+              const start = () => {
+                if (started) return;
+                started = true;
+                intro.play();
+              };
+              const checkReady = () => {
+                if (!globe || globe.hasAttribute('data-ready') ||
+                  (globe.hasAttribute('data-unavailable') && globe.hasAttribute('data-fallback-ready'))) start();
+              };
+              const globeObserver = new MutationObserver(checkReady);
+              if (globe) globeObserver.observe(globe, { attributes: true,
+                attributeFilter: ['data-ready', 'data-unavailable', 'data-fallback-ready'] });
+              checkReady();
+              // Keep navigation available even if graphics never initialise.
+              const fallbackTimer = window.setTimeout(start, 5000);
               // Scrolling or keyboard interaction immediately reveals the controls.
               const finish = () => {
+                started = true;
                 intro.progress(1);
               };
               window.addEventListener('scroll', finish, {
@@ -97,24 +107,71 @@ export function useScrollMotion(
               });
               element.addEventListener('focusin', finish, { once: true });
               stopEntrance = () => {
+                globeObserver.disconnect();
+                window.clearTimeout(fallbackTimer);
                 window.removeEventListener('scroll', finish);
                 element.removeEventListener('focusin', finish);
               };
               intro.eventCallback('onComplete', stopEntrance);
             }
-            gsap.to(select('.hero-refraction'), {
-              y: value('hero-travel'),
-              scale: 1.18,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: hero,
-                start: 'top top',
-                end: 'bottom top',
-                scrub: value('scrub'),
-              },
+            const floatingCleanup: (() => void)[] = [];
+            // One star field tracks the whole page so parallax never restarts.
+            const scene = select('.depth-scene')[0];
+            if (scene) {
+              const camera = scene.querySelector('.depth-camera');
+              const depth = gsap.timeline({
+                scrollTrigger: {
+                  trigger: element,
+                  start: 'top top',
+                  end: 'bottom bottom',
+                  scrub: 0.85,
+                  invalidateOnRefresh: true,
+                  refreshPriority: -5,
+                },
+              });
+              depth.fromTo(camera,
+                { z: touchDevice ? 0 : -80, yPercent: 6, rotationX: touchDevice ? 0 : 4, rotationY: touchDevice ? 0 : -6 },
+                { z: touchDevice ? 0 : 220, yPercent: -16, rotationX: touchDevice ? 0 : -4, rotationY: touchDevice ? 0 : 6, ease: 'none', duration: 1 }, 0);
+              ['far', 'middle', 'near'].forEach((layer, layerIndex) => {
+                const distance = [-500, -180, 80][layerIndex];
+                depth.fromTo(scene.querySelector('.particle-layer--' + layer),
+                  { z: touchDevice ? 0 : distance, yPercent: 8 + layerIndex * 8, xPercent: -layerIndex * 3 },
+                  {
+                    z: touchDevice ? 0 : distance + 80 + layerIndex * 50,
+                    yPercent: -(18 + layerIndex * 22),
+                    xPercent: layerIndex * 5,
+                    ease: 'none', duration: 1,
+                  }, 0);
+                // Planets travel independently on top of each star layer's
+                // motion, making their foreground parallax visibly faster.
+                depth.fromTo(scene.querySelector('.particle-layer--' + layer + ' .planet-drift'),
+                  { yPercent: 0 },
+                  { yPercent: -(40 + layerIndex * 20), ease: 'none', duration: 1 }, 0);
+              });
+            }
+            // Float the interactive content as a single surface so accordion
+            // measurements and focus targets stay aligned while its height changes.
+            select('#services .services').forEach((surface, index) => {
+              const float = gsap.fromTo(surface,
+              { y: 16, z: touchDevice ? 0 : -20 },
+                {
+                  y: -12, z: 0,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: surface.parentElement,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.7 + index * 0.1,
+                    invalidateOnRefresh: true,
+                  },
+                });
+              // Native focus remains immediate even while scroll is catching up.
+              const settle = () => { float.scrollTrigger?.getTween()?.progress(1); };
+              surface.addEventListener('focusin', settle);
+              floatingCleanup.push(() => surface.removeEventListener('focusin', settle));
             });
             const shimmer = gsap.fromTo(
-              select('.refraction-shimmer, .hero .cta-shimmer'),
+              select('.hero .cta-shimmer'),
               { xPercent: -45 },
               {
                 xPercent: 110,
@@ -139,7 +196,10 @@ export function useScrollMotion(
             // Begin the visible light pass immediately, without waiting for scroll.
             shimmer.paused(!shimmerVisibility.isActive);
             gsap.to(select('.hero-copy'), {
-              y: -64,
+              y: -85,
+              z: touchDevice ? 0 : -20,
+              rotationX: 0,
+              transformPerspective: touchDevice ? 0 : 1100,
               ease: 'none',
               scrollTrigger: {
                 trigger: hero,
@@ -148,41 +208,6 @@ export function useScrollMotion(
                 scrub: value('scrub'),
               },
             });
-            const workLink = select('.hero-secondary-actions > .text-link')[0];
-            const workLinkRow = select('.hero-secondary-actions')[0];
-            const fallDistance = () => Math.max(280, window.innerHeight * 0.45);
-            const workLinkFall = gsap.timeline({
-              scrollTrigger: {
-                id: 'hero-work-link-fall',
-                // Measure the row, which stays in place while its link falls.
-                trigger: workLinkRow,
-                start: 'top 22%',
-                end: () => '+=' + fallDistance(),
-                scrub: true,
-                invalidateOnRefresh: true,
-                onToggle: (self) => {
-                  hero.toggleAttribute('data-work-falling', self.isActive);
-                },
-              },
-            });
-            workLinkFall
-              .fromTo(workLink,
-                { y: 0, rotation: 0 },
-                {
-                  // Compensate for page scroll so the visible motion is downward.
-                  y: () => window.innerHeight * 0.9 + fallDistance(),
-                  rotation: 5,
-                  transformOrigin: 'left center',
-                  duration: 1,
-                  ease: 'power2.in',
-                },
-                0,
-              )
-              .fromTo(workLink,
-                { autoAlpha: 1 },
-                { autoAlpha: 0, duration: 0.45, ease: 'power1.in' },
-                0.55,
-              );
             // Keep the entrance on the inner span and scrub a known 1 → 0
             // opacity on its parent, so scrolling back always restores it.
             gsap.fromTo(
@@ -199,27 +224,13 @@ export function useScrollMotion(
                 },
               },
             );
-            gsap.fromTo(
-              select('.hero-description'),
-              { opacity: 1 },
-              {
-                opacity: 0,
-                ease: 'none',
-                scrollTrigger: {
-                  trigger: hero,
-                  start: 'top top',
-                  end: '+=240',
-                  scrub: value('scrub'),
-                },
-              },
-            );
             // Separate layers keep entrance and scroll transforms independent.
             // Finish the title travel within the first screenful of scrolling.
             select('.hero-line').forEach((line, index) => {
               gsap.to(line, {
-                y: index === 0 ? -190 : -145,
-                x: index === 0 ? -180 : -100,
-                scale: index === 0 ? 1.04 : 1.015,
+                x: () => getHeroLineScrollMotion(index, hero.offsetWidth).x,
+                y: () => getHeroLineScrollMotion(index, hero.offsetWidth).y,
+                scale: getHeroLineScrollMotion(index, hero.offsetWidth).scale,
                 transformOrigin: 'right center',
                 ease: 'none',
                 scrollTrigger: {
@@ -251,197 +262,229 @@ export function useScrollMotion(
                 );
               },
             );
-            const services = select('#services')[0];
-            const servicesBackground = select('.services-background')[0];
-            if (services && servicesBackground) {
-              gsap.fromTo(
-                servicesBackground,
-                { yPercent: -14 },
-                {
-                  yPercent: 14,
-                  ease: 'none',
-                  scrollTrigger: {
-                    trigger: services,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: value('scrub'),
-                  },
-                },
-              );
-            }
             const work = select('#work')[0];
             const stage = select('.work-stack')[0];
             const panels = select('.work-panel');
-            const sequenceDuration = panels.length * 1.2;
-            const showcase = gsap.timeline({
-              scrollTrigger: {
-                id: 'work-showcase-pin',
-                refreshPriority: 30,
-                trigger: work,
-                start: 'top top',
-                end: () => '+=' + Math.max(1050, window.innerHeight * 2.4),
-                pin: true,
-                pinSpacing: true,
-                anticipatePin: 1,
-                // Direct scrubbing reaches the final frame before the pin releases.
-                scrub: true,
-                invalidateOnRefresh: true,
-              },
-            });
+            const workEntrances = new Map<HTMLElement, gsap.core.Timeline>();
+            // Each card enters, holds, then floats off into the star field.
             panels.forEach((panel, index) => {
-              showcase.fromTo(
+              const fromLeft = index % 2 === 0;
+              const drift = gsap.timeline({
+                scrollTrigger: {
+                  trigger: panel,
+                  start: REVEAL_START,
+                  end: 'bottom top',
+                  scrub: 0.65,
+                  invalidateOnRefresh: true,
+                },
+              });
+              drift.fromTo(
                 panel,
-                { xPercent: index % 2 === 0 ? -120 : 120 },
-                { xPercent: 0, duration: 1, ease: 'power2.out' },
-                index * 1.2,
+                {
+                  y: 48,
+                  xPercent: fromLeft ? -5 : 5,
+                  z: touchDevice ? 0 : -80,
+                  rotationY: touchDevice ? 0 : fromLeft ? 8 : -8,
+                  rotationX: touchDevice ? 0 : 6,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  xPercent: 0,
+                  z: 0,
+                  rotationY: 0,
+                  rotationX: 0,
+                  opacity: 1,
+                  duration: 0.18,
+                  ease: 'none',
+                },
               );
-              // The panel owns the slide-in; its image drifts independently inside it.
+              drift.to({}, { duration: 0.62 });
+              drift.to(panel, {
+                y: -150,
+                xPercent: fromLeft ? -16 : 16,
+                z: touchDevice ? 0 : 50,
+                rotationX: touchDevice ? 0 : -8,
+                rotationY: touchDevice ? 0 : fromLeft ? -10 : 10,
+                scale: 0.94,
+                opacity: 0,
+                duration: 0.2,
+                ease: 'none',
+              });
+              workEntrances.set(panel, drift);
               const image = panel.querySelector('img');
               if (image) {
                 const travel = [5, 7, 6][index] ?? 6;
-                const direction = index % 2 === 0 ? 1 : -1;
+                const direction = fromLeft ? 1 : -1;
                 const scale = index === 0 ? 1.08 : 1.18;
-                showcase.fromTo(image,
-                  { yPercent: travel * direction, scale },
+                const rotation = panel.classList.contains('work-panel--web') ? -7 : 0;
+                gsap.fromTo(
+                  image,
+                  { yPercent: travel * direction, scale, rotation },
                   {
-                    yPercent: -travel * direction, scale,
-                    duration: sequenceDuration - index * 1.2,
+                    yPercent: -travel * direction,
+                    scale,
+                    rotation,
                     ease: 'none',
+                    scrollTrigger: {
+                      trigger: panel,
+                      start: 'top bottom',
+                      end: 'bottom top',
+                      scrub: 0.45,
+                    },
                   },
-                  index * 1.2,
                 );
               }
             });
-            // Overscan keeps the background covered throughout its slower drift.
-            showcase.fromTo(select('.work-pattern-background'),
-              { y: -28, scale: 1.12 },
-              { y: 28, scale: 1.12, duration: sequenceDuration, ease: 'none' },
-              0,
-            );
-            // Leave a short scroll beat to see the completed stack before release.
-            showcase.fromTo(
+            gsap.fromTo(
               select('.project-meter span'),
               { scaleX: 0 },
-              { scaleX: 1, ease: 'none', duration: sequenceDuration },
-              0,
-            );
-            // Continue depth movement after the pin ends; no extra pin or scroll space.
-            // Exit uses the panels' vertical axis, separate from slide-in x and image y.
-            const workExitDistance = () => Math.max(280, Math.min(work.offsetHeight, window.innerHeight * 0.8));
-            const backgroundExitTravel = () => {
-              const pin = showcase.scrollTrigger!;
-              // Match the pinned background's 56px travel per scroll pixel.
-              // The inner layer inherits its parent's fixed 1.12 scale.
-              return 56 * workExitDistance() / Math.max(1, pin.end - pin.start) / 1.12;
-            };
-            const workExit = gsap.timeline({
-              scrollTrigger: {
-                id: 'work-showcase-exit',
-                trigger: work,
-                refreshPriority: 25,
-                start: () => showcase.scrollTrigger!.end,
-                end: () => '+=' + workExitDistance(),
-                scrub: true,
-                invalidateOnRefresh: true,
+              {
+                scaleX: 1,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: stage,
+                  start: 'top 85%',
+                  end: 'bottom 45%',
+                  scrub: true,
+                },
               },
-            });
-            panels.forEach((panel, index) => {
-              workExit.fromTo(panel,
-                { y: 0 },
-                { y: -(80 + index * 55), duration: 1, ease: 'none', immediateRender: false },
-                0,
-              );
-            });
-            workExit
-              .fromTo(select('.work-pattern-background > .blinking-squares'),
-                { y: 0 },
-                { y: backgroundExitTravel, duration: 1, ease: 'none', immediateRender: false },
-                0,
-              );
+            );
             // Keyboard navigation must not land on a panel still off screen.
             const revealFocusedWork = (event: FocusEvent) => {
-              if (
-                event.target instanceof Element &&
-                event.target.closest('.work-panel-link') &&
-                showcase.progress() < 1
-              ) {
-                const trigger = showcase.scrollTrigger;
-                if (!trigger) return;
-                window.scrollTo({ top: trigger.end, behavior: 'instant' });
-                ScrollTrigger.update();
-              }
+              const focusedPanel = event.target instanceof Element
+                ? event.target.closest<HTMLElement>('.work-panel') : null;
+              // Land on the readable hold, not the floated-away end of the scrub.
+              if (focusedPanel) workEntrances.get(focusedPanel)?.progress(0.4).pause();
             };
             work.addEventListener('focusin', revealFocusedWork);
-            // The remaining sections get a brief content reveal at the top.
-            // Keep work's panel sequence and offers' pixel reveal as their pin owners.
+            if (window.location.hash === '#work') {
+              workEntrances.forEach((entrance) => entrance.progress(0.4).pause());
+            }
+            // Contact copy fades in as it enters. The section still pins at the
+            // top. Offers keeps its pixel reveal as a pin owner.
             const contentFocusCleanup: (() => void)[] = [];
-            ['services', 'studio', 'contact'].forEach((id, index) => {
+            // The interactive services section stays in normal flow. Its size
+            // changes must never remove or recreate the surrounding page pins.
+            ['contact'].forEach((id, index) => {
               const section = select('#' + id)[0];
               if (!section) return;
               // Reveal text only; bordered rows, forms and controls stay visible.
               const content = Array.from(section.querySelectorAll(
                 ':scope > .body-copy, [data-content-reveal]',
               ));
-              const sequence = gsap.timeline({
+              const pin = touchDevice ? undefined : ScrollTrigger.create({
+                id: id + '-content-pin',
+                refreshPriority: [5, 4][index],
+                trigger: section,
+                start: 'top top',
+                end: () => '+=' + Math.max(240, window.innerHeight * 0.45),
+                pin: true,
+                pinSpacing: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+              });
+              const reveal = gsap.fromTo(content, { opacity: 0 }, {
+                opacity: 1,
+                stagger: 0.08,
+                ease: 'none',
                 scrollTrigger: {
-                  id: id + '-content-pin',
-                  refreshPriority: [28, 5, 4][index],
-                  trigger: section,
-                  start: 'top top',
-                  end: () => '+=' + (id === 'services'
-                    ? Math.max(480, window.innerHeight * 0.85)
-                    : Math.max(240, window.innerHeight * 0.45)),
-                  pin: true,
-                  pinSpacing: true,
+                  id: id + '-copy-reveal',
+                  trigger: content[0] ?? section,
+                  start: REVEAL_START,
+                  end: REVEAL_END,
                   scrub: true,
-                  anticipatePin: 1,
                   invalidateOnRefresh: true,
                 },
               });
-              if (id === 'services') {
-                sequence.fromTo(section.querySelectorAll(':scope > .body-copy'),
-                  { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'none' },
-                );
-                section.querySelectorAll('.service-trigger').forEach((row) => {
-                  const start = sequence.duration() + 0.08;
-                  // Finish each row before the next begins. The button, row
-                  // dividers and SVG icon frames remain completely static.
-                  sequence.fromTo(row.querySelectorAll(':scope > span'),
-                    { opacity: 0, y: 10 },
-                    { opacity: 1, y: 0, duration: 0.5, ease: 'none' }, start,
-                  );
-                  sequence.fromTo(row.querySelectorAll('[data-slot="accordion-trigger-icon"] > *'),
-                    { opacity: 0 },
-                    { opacity: 1, duration: 0.5, ease: 'none' }, start,
-                  );
-                });
-              } else {
-                sequence.fromTo(content, { opacity: 0 }, {
-                  opacity: 1, stagger: 0.15, duration: 0.6, ease: 'none',
-                });
-              }
-              sequence.to({}, { duration: 0.15 });
               // Tabbing to native controls finishes the reveal before focus lands.
               const revealOnFocus = () => {
-                const pin = sequence.scrollTrigger;
-                if (pin && sequence.progress() < 1) {
-                  window.scrollTo({ top: pin.end, behavior: 'instant' });
-                  ScrollTrigger.update();
+                if (reveal.progress() < 1) {
+                  if (pin) {
+                    window.scrollTo({ top: pin.end, behavior: 'instant' });
+                    ScrollTrigger.update();
+                  } else {
+                    reveal.progress(1);
+                  }
                 }
               };
               section.addEventListener('focusin', revealOnFocus);
               contentFocusCleanup.push(() => section.removeEventListener('focusin', revealOnFocus));
             });
+            // Process and service cards follow the same lower-third entry rule.
+            select('.offer, .services [data-slot="accordion-item"]').forEach((card) => {
+              const reveal = gsap.fromTo(card, { y: 24, opacity: 0 }, {
+                y: 0, opacity: 1, duration: 0.55, ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: card, start: REVEAL_START, end: 'bottom top',
+                  toggleActions: 'play none none reverse',
+                },
+              });
+              const revealOnFocus = () => { reveal.progress(1).pause(); };
+              card.addEventListener('focusin', revealOnFocus);
+              contentFocusCleanup.push(() => card.removeEventListener('focusin', revealOnFocus));
+            });
+            const pricingTrack = select('.pricing-track')[0];
+            // Pricing is a click-through carousel. Keep a short content reveal only.
+            select('.pricing-intro, .pricing-menu, .pricing-track, .pricing-controls').forEach((block) => {
+              const isMenu = block.classList.contains('pricing-menu');
+              const targets = isMenu ? Array.from(block.querySelectorAll('button')) : block;
+              const reveal = gsap.fromTo(targets, {
+                x: block.classList.contains('pricing-track') || isMenu ? 0 : -20,
+                y: block.classList.contains('pricing-track') ? 0 : isMenu ? 20 : 12,
+                opacity: 0,
+              }, {
+                x: 0,
+                y: 0,
+                opacity: 1,
+                stagger: isMenu ? 0.08 : 0,
+                duration: 0.6,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: block,
+                  start: REVEAL_START,
+                  end: 'bottom top',
+                  toggleActions: 'play reverse play reverse',
+                },
+              });
+              // Keyboard users can reach carousel controls before an entrance
+              // completes. Reveal them immediately without moving the page.
+              const revealOnFocus = () => { reveal.progress(1).pause(); };
+              block.addEventListener('focusin', revealOnFocus);
+              contentFocusCleanup.push(() => block.removeEventListener('focusin', revealOnFocus));
+            });
             select('.section h2').forEach((heading: HTMLElement) => {
               const section = heading.closest<HTMLElement>('.section');
               const lines = Array.from(heading.querySelectorAll<HTMLElement>('.section-title-reveal'));
               if (!section || !lines.length) return;
-              const pinId = section.id === 'work' ? 'work-showcase-pin'
-                : section.id === 'offers' ? 'offers-top-pin' : section.id + '-content-pin';
+              if (touchDevice) {
+                // A finite entrance avoids rewriting every title transform on
+                // every scroll frame on iOS. Keep the same lower-third trigger.
+                const sideways = section.id === 'work' || section.id === 'services';
+                const entrance = gsap.fromTo(lines, {
+                  x: (index: number) => sideways ? (index % 2 === 0 ? -32 : 32) : 0,
+                  y: sideways ? 0 : 24,
+                  opacity: 0,
+                }, {
+                  x: 0, y: 0, opacity: 1,
+                  duration: 0.95, stagger: 0.12, ease: 'power2.out',
+                  scrollTrigger: {
+                    trigger: heading, start: REVEAL_START,
+                    toggleActions: 'play none none none', once: true,
+                  },
+                });
+                const revealOnFocus = () => { entrance.progress(1).pause(); };
+                section.addEventListener('focusin', revealOnFocus);
+                contentFocusCleanup.push(() => section.removeEventListener('focusin', revealOnFocus));
+                return;
+              }
+              const pinId = section.id === 'offers' ? 'offers-top-pin'
+                : section.id + '-content-pin';
               // Capture original styles in the GSAP context for pause/reduced-motion cleanup.
-              gsap.set(lines, { yPercent: 0, opacity: 1, rotation: 0 });
+              gsap.set(lines, { xPercent: 0, yPercent: 0, opacity: 1, rotation: 0 });
               const setters = lines.map((line) => ({
                 y: gsap.quickSetter(line, 'yPercent'),
+                x: gsap.quickSetter(line, 'xPercent'),
                 opacity: gsap.quickSetter(line, 'opacity'),
               }));
               let lineTops: number[] = [];
@@ -458,7 +501,15 @@ export function useScrollMotion(
                 const pin = ScrollTrigger.getById(pinId);
                 setters.forEach((setter, index) => {
                   const state = getHeadingLineState(scroll, window.innerHeight, lineTops[index], pin);
-                  setter.y(state.yPercent);
+                  if (section.id === 'work' || section.id === 'services') {
+                    // Split the work title into a restrained editorial entrance.
+                    const entrance = Math.min(1, Math.max(0, 1 - Math.max(0, state.yPercent) / 105));
+                    setter.y(0);
+                    setter.x((index % 2 === 0 ? -1 : 1) * 100 * (1 - entrance));
+                  } else {
+                    setter.y(state.yPercent);
+                    setter.x(0);
+                  }
                   setter.opacity(state.opacity);
                 });
               };
@@ -468,43 +519,83 @@ export function useScrollMotion(
                 id: section.id + '-heading-sequence',
                 trigger: element,
                 refreshPriority: -10,
-                start: () => { measure(); return lineTops[0] - window.innerHeight; },
+                start: () => { measure(); return lineTops[0] - window.innerHeight * REVEAL_VIEWPORT_FRACTION; },
                 end: () => {
                   const pin = measure();
-                  return lineTops[lineTops.length - 1] + (pin ? pin.end - pin.start : 0) + 180;
+                  return lineTops[lineTops.length - 1] + (pin ? pin.end - pin.start : 0);
                 },
                 onUpdate: (self) => render(self.scroll()),
                 onRefresh: (self) => { measure(); render(self.scroll()); },
               });
             });
-            select('.studio .signal-wordmark__echo').forEach(
-              (line: HTMLElement, index: number) => {
-                gsap.fromTo(
-                  line,
-                  { x: index ? -18 : 18 },
-                  {
-                    x: index ? 18 : -18,
-                    ease: 'none',
-                    scrollTrigger: {
-                      trigger: select('.studio')[0],
-                      start: 'top bottom',
-                      end: 'bottom top',
-                      scrub: value('scrub'),
-                    },
-                  },
-                );
-              },
-            );
-            // Re-measure after fonts, images and expandable service content settle.
-            let frame = 0;
-            let active = true;
-            const refresh = () => {
-              cancelAnimationFrame(frame);
-              frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+            const navigateFromMenu = (event: Event) => {
+              const id = (event as CustomEvent<string>).detail;
+              const destination = select('.section').find((section) => section.id === id);
+              if (!destination) return;
+              event.preventDefault();
+              ScrollTrigger.refresh();
+              const pinId = id === 'offers' ? 'offers-top-pin'
+                : id === 'contact' ? 'contact-content-pin' : '';
+              const pin = pinId ? ScrollTrigger.getById(pinId) : undefined;
+              window.scrollTo({
+                top: pin ? pin.end : destination.getBoundingClientRect().top + window.scrollY,
+                behavior: 'instant',
+              });
+              ScrollTrigger.update();
+              // Complete entrance tweens without changing the carousel's first card.
+              ScrollTrigger.getAll().forEach((trigger) => {
+                if (trigger.trigger instanceof Element && destination.contains(trigger.trigger)
+                  && !trigger.vars.scrub) {
+                  trigger.animation?.progress(1).pause();
+                }
+              });
+              pricingTrack?.dispatchEvent(new CustomEvent('pricing:select', { detail: 0 }));
+              destination.setAttribute('data-menu-revealed', '');
             };
-            const observer = new ResizeObserver(refresh);
-            observer.observe(element);
-            observer.observe(stage);
+            element.addEventListener('site:navigate', navigateFromMenu);
+            contentFocusCleanup.push(() => {
+              element.removeEventListener('site:navigate', navigateFromMenu);
+            });
+            // Re-measure after fonts, images and expandable service content settle.
+            let refreshTimer = 0;
+            let active = true;
+            let refreshPending = false;
+            let viewport = { width: window.innerWidth, height: window.innerHeight };
+            const flushRefresh = () => {
+              if (!active || !refreshPending || ScrollTrigger.isScrolling()) return;
+              window.clearTimeout(refreshTimer);
+              refreshPending = false;
+              ScrollTrigger.refresh(true);
+            };
+            const refresh = () => {
+              // Coalesce layout changes and wait for native momentum to finish.
+              // Keep existing timelines, transforms and pin spacers mounted.
+              refreshPending = true;
+              window.clearTimeout(refreshTimer);
+              refreshTimer = window.setTimeout(flushRefresh, 160);
+            };
+            const resize = () => {
+              const next = { width: window.innerWidth, height: window.innerHeight };
+              if (!viewportNeedsRefresh(viewport, next, ScrollTrigger.isTouch === 1)) return;
+              viewport = next;
+              refresh();
+            };
+            window.addEventListener('resize', resize);
+            ScrollTrigger.addEventListener('scrollEnd', flushRefresh);
+            // Observe content, not the page whose height includes GSAP's spacers.
+            // A pin refresh changing spacer height must not schedule another refresh.
+            const sizes = new WeakMap<Element, { width: number; height: number }>();
+            const observer = new ResizeObserver((entries) => {
+              let changed = false;
+              for (const { target, contentRect } of entries) {
+                const previous = sizes.get(target);
+                if (previous && (Math.abs(previous.width - contentRect.width) > 1 ||
+                  Math.abs(previous.height - contentRect.height) > 1)) changed = true;
+                sizes.set(target, { width: contentRect.width, height: contentRect.height });
+              }
+              if (changed) refresh();
+            });
+            select('.hero, .section').forEach((section) => observer.observe(section));
             void document.fonts.ready.then(() => {
               if (!disposed && active) refresh();
             });
@@ -515,10 +606,13 @@ export function useScrollMotion(
             return () => {
               active = false;
               stopEntrance();
+              floatingCleanup.forEach((cleanup) => cleanup());
               work.removeEventListener('focusin', revealFocusedWork);
               contentFocusCleanup.forEach((cleanup) => cleanup());
               observer.disconnect();
-              cancelAnimationFrame(frame);
+              window.removeEventListener('resize', resize);
+              ScrollTrigger.removeEventListener('scrollEnd', flushRefresh);
+              window.clearTimeout(refreshTimer);
               element
                 .querySelectorAll('img')
                 .forEach((img) => img.removeEventListener('load', refresh));
@@ -532,6 +626,7 @@ export function useScrollMotion(
       })
       .catch(() => {
         release?.();
+        element.removeAttribute('data-hero-entrance');
         delete element.dataset.motion;
         /* Keep the complete static experience if motion cannot load. */
       });

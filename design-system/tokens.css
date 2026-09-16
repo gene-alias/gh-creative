@@ -58,8 +58,8 @@
   --gh-ref-space-24: 6rem;
   /* Angular live display typography; not a reproduction of the custom logo */
   --gh-ref-font-display: "Chakra Petch", "Arial Narrow", sans-serif;
-  /* Neutral readable body copy */
-  --gh-ref-font-body: "Helvetica Neue", Arial, sans-serif;
+  /* IBM Plex Mono for body copy */
+  --gh-ref-font-body: Plex, "Courier New", monospace;
   /* IBM Plex Mono for short technical labels */
   --gh-ref-font-mono: Plex, "Courier New", monospace;
   /* Condensed screen headlines; retain Chakra Petch for the brand lockup */

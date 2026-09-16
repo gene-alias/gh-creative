@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 
 type WorkPageProps = {
@@ -39,9 +40,9 @@ export function WorkPage(props: WorkPageProps) {
             <p>{props.caption}</p>
           </figcaption>
         </figure>
-        <Link className="button primary" href="/#contact">
+        <ProjectBriefTrigger className="button primary">
           START A PROJECT <ArrowUpRight size={20} />
-        </Link>
+        </ProjectBriefTrigger>
       </section>
       <nav className="portfolio-links" aria-label="Explore work disciplines">
         <Link href="/work/web-design">WEB DESIGN <ArrowUpRight size={16} /></Link>

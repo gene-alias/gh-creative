@@ -1,7 +1,8 @@
 import { sites } from '@openai/sites-vite-plugin';
 import tailwindcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
+import { projectBriefDev } from './scripts/project-brief-dev';
 import hostingConfig from './.openai/hosting.json';
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
@@ -34,7 +35,8 @@ const localBindingConfig = {
     : [],
 };
 
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  const localEnv = loadEnv(mode, process.cwd(), '');
   const staticExport = process.env.GH_STATIC_EXPORT === '1';
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
@@ -61,6 +63,10 @@ export default defineConfig(async () => {
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,
     plugins: [
+      projectBriefDev({
+        apiKey: process.env.RESEND_API_KEY || localEnv.RESEND_API_KEY,
+        from: process.env.PROJECT_BRIEF_FROM || localEnv.PROJECT_BRIEF_FROM,
+      }),
       vinext(),
       ...hostingPlugins,
     ],

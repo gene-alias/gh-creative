@@ -1,6 +1,5 @@
 'use client';
-import { lazy, Suspense, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, ArrowDown, Menu } from 'lucide-react';
 import {
@@ -18,121 +17,210 @@ import {
 } from '@/components/ui/accordion';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Download } from 'lucide-react';
-import { SignalWordmark } from '@/components/brand/signal-wordmark';
+import { ProjectBriefTrigger } from '@/components/project/project-brief';
+import { PricingSection } from '@/components/project/pricing-section';
 import { GHMonogram } from '@/components/brand/gh-monogram';
 
 import { useScrollMotion } from '@/components/motion/use-scroll-motion';
-import { PixelSectionTransition } from '@/components/motion/pixel-section-transition';
-
-const BlinkingSquares = lazy(() => import('@/components/reactbits/blinking-squares'));
+import { useServiceExpansion } from '@/components/motion/use-service-expansion';
+import { DepthScene } from '@/components/motion/depth-scene';
+import { HeroGlobe } from '@/components/hero/hero-globe';
 
 const services = [
   {
-    name: 'Web design',
-    tag: 'YOUR DIGITAL HOME',
-    description:
-      'Distinctive websites with a clear purpose. From the first wireframe to the final mobile detail.',
-    items: [
-      'Website strategy & structure',
-      'UX / UI & responsive design',
-      'Website builds & landing pages',
-    ],
+    "name": "Web design",
+    "tag": "Web Design & Development",
+    "items": [
+      {
+        "label": "Custom websites",
+        "description": "Distinctive websites designed around your brand and business goals."
+      },
+      {
+        "label": "Landing pages",
+        "description": "Focused pages for campaigns, product launches and lead generation."
+      },
+      {
+        "label": "E-commerce websites",
+        "description": "Online stores that make browsing and buying feel effortless."
+      },
+      {
+        "label": "UI & UX design",
+        "description": "Thoughtful layouts and intuitive navigation that guide users through your site."
+      },
+      {
+        "label": "Responsive design",
+        "description": "Websites that look and work beautifully across desktop, tablet and mobile."
+      },
+      {
+        "label": "Website redesigns",
+        "description": "Refreshing existing sites with stronger visuals, clearer messaging and improved usability."
+      },
+      {
+        "label": "Motion & interaction",
+        "description": "Purposeful animations and interactive details that bring your website to life."
+      },
+      {
+        "label": "Ongoing updates & support",
+        "description": "Keeping your website fresh, functional and aligned with your business."
+      }
+    ]
   },
   {
-    name: 'Visual design',
-    tag: 'A RECOGNISABLE IDENTITY',
-    description:
-      'A visual language that feels like you, wherever your brand shows up.',
-    items: [
-      'Brand identity & art direction',
-      'Typography & design systems',
-      'Digital & print design',
-    ],
+    "name": "Visual",
+    "tag": "Visual Design & Content Creation",
+    "items": [
+      {
+        "label": "Brand imagery",
+        "description": "Custom visuals that reflect your brand’s identity."
+      },
+      {
+        "label": "Product imagery",
+        "description": "Product shots, lifestyle scenes and styled compositions."
+      },
+      {
+        "label": "Campaign visuals",
+        "description": "Creative assets for launches, promotions and advertising."
+      },
+      {
+        "label": "Social media content",
+        "description": "Static posts, stories, reels and short-form videos."
+      },
+      {
+        "label": "Brand films & video",
+        "description": "Promotional videos, brand stories and product showcases."
+      },
+      {
+        "label": "Motion design",
+        "description": "Animated graphics, typography and visual effects."
+      },
+      {
+        "label": "Website imagery",
+        "description": "Hero images, banners and supporting visuals."
+      }
+    ]
   },
   {
-    name: 'Audio design',
-    tag: 'SOUND WITH INTENTION',
-    description:
-      'Sound that brings another dimension to your brand, content and campaigns.',
-    items: [
-      'Sonic identity',
-      'Sound design & audio editing',
-      'Podcast & campaign audio',
-    ],
+    "name": "Marketing",
+    "tag": "Marketing & Campaign Content",
+    "items": [
+      {
+        "label": "Ad creatives",
+        "description": "Static and video ads for paid social and digital campaigns."
+      },
+      {
+        "label": "Social media creatives",
+        "description": "Branded posts, carousels, stories and reels."
+      },
+      {
+        "label": "Email marketing content",
+        "description": "Email design and copy for newsletters, promotions and automated sequences."
+      },
+      {
+        "label": "Campaign concepts",
+        "description": "Creative ideas and messaging that connect your marketing across channels."
+      },
+      {
+        "label": "Launch content",
+        "description": "Coordinated assets for product releases, announcements and promotions."
+      },
+      {
+        "label": "Landing page content",
+        "description": "Campaign-focused copy and visuals that turn interest into action."
+      },
+      {
+        "label": "Marketing copywriting",
+        "description": "Headlines, captions and messaging shaped around your brand’s voice."
+      },
+      {
+        "label": "Promotional materials",
+        "description": "Digital brochures, flyers and presentations that showcase your offering."
+      }
+    ]
   },
   {
-    name: 'Marketing',
-    tag: 'READY TO GO LIVE',
-    description:
-      'Connected creative for your next launch. One idea, carried across every touchpoint.',
-    items: [
-      'Campaign concepts & creative',
-      'Social & email assets',
-      'Launch packages & ongoing support',
-    ],
-  },
+    "name": "Audio",
+    "tag": "Audio Production & Sound Design",
+    "items": [
+      {
+        "label": "Royalty-free music samples",
+        "description": "Original loops, beats and musical elements for creative projects."
+      },
+      {
+        "label": "Sound effects",
+        "description": "Custom sounds for videos, animations and digital experiences."
+      },
+      {
+        "label": "Sound design",
+        "description": "Atmospheric textures and audio layers that bring visuals to life."
+      },
+      {
+        "label": "Sonic branding",
+        "description": "Audio logos and signature sounds that give your brand a recognisable identity."
+      }
+    ]
+  }
 ];
 export default function Home() {
   const root = useRef<HTMLElement>(null);
   const motionPaused = false;
-  const reducedMotion = useScrollMotion(root, motionPaused);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [saved, setSaved] = useState(false);
-  function saveBrief(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const text = `GH CREATIVE — PROJECT BRIEF\n\nName: ${data.get('name')}\nEmail: ${data.get('email')}\n\nProject:\n${data.get('project')}\n\nThis brief has been saved locally. It has not been sent.`;
-    const url = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'gh-creative-project-brief.txt';
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setSaved(true);
-  }
+  const pendingNavigation = useRef<string | null>(null);
+  const [openServices, setOpenServices] = useState<string[]>([]);
+  useScrollMotion(root, motionPaused);
+  const prepareServiceChange = useServiceExpansion(root, openServices);
+  const [contactCardOpen, setContactCardOpen] = useState(false);
   return (
-    <main className="mobile-site" id="top" ref={root}>
+    <main className="mobile-site immersive-site" id="top" ref={root}>
+      <DepthScene hero />
       <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-art">
-          <div className="hero-refraction">
-            <img
-              src="/assets/hero-portrait.png"
-              alt="A silhouette distorted through red refracted glass"
-              fetchPriority="high"
-              width="780"
-              height="1122"
-            />
-            <div className="refraction-shimmer" aria-hidden="true" />
-          </div>
-        </div>
+        <HeroGlobe />
         <header className="nav">
-          <a
-            href="#top"
-            className="hero-logo"
-            aria-label="GH Creative — back to top"
-          >
-            <GHMonogram />
+          <a href="#top" className="hero-logo" aria-label="GH Creative — back to top">
+            <GHMonogram wordmark />
           </a>
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger className="menu-trigger">
-              MENU <Menu aria-hidden="true" size={17} strokeWidth={1.3} />
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={async (open) => {
+            if (open || !pendingNavigation.current) return;
+            const id = pendingNavigation.current;
+            // Let accordion height animations finish before measuring destinations.
+            const animations = root.current?.querySelector('#services')?.getAnimations({ subtree: true }) ?? [];
+            await Promise.allSettled(animations.map((animation) => animation.finished));
+            if (pendingNavigation.current !== id) return;
+            pendingNavigation.current = null;
+            const target = root.current?.querySelector<HTMLElement>('#' + id);
+            if (!target) return;
+            target.dataset.menuRevealed = '';
+            root.current?.querySelector('.pricing-track')?.dispatchEvent(new CustomEvent('pricing:select', { detail: 0 }));
+            const handled = root.current && !root.current.dispatchEvent(new CustomEvent('site:navigate', { detail: id, cancelable: true }));
+            if (!handled) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+            history.replaceState(null, '', '#' + id);
+            const heading = target.querySelector<HTMLElement>('h2');
+            heading?.setAttribute('tabindex', '-1');
+            heading?.focus({ preventScroll: true });
+          }}>
+            <SheetTrigger className="menu-trigger" aria-label="Open menu">
+              <Menu aria-hidden="true" size={22} strokeWidth={1.5} />
             </SheetTrigger>
-            <SheetContent className="site-menu">
+            <SheetContent className="site-menu" finalFocus={() => pendingNavigation.current ? false : undefined}>
               <SheetTitle>GH CREATIVE</SheetTitle>
               <SheetDescription>Brand / Web / Visual / Audio</SheetDescription>
               <nav aria-label="Main navigation">
-                {['Work', 'Services', 'Studio', 'Contact'].map((item, i) => (
+                {['Work', 'Services', 'Process', 'Pricing', 'Studio', 'Contact'].map((item, i) => (
                   <a
                     key={item}
-                    href={'#' + item.toLowerCase()}
-                    onClick={() => setMenuOpen(false)}
+                    href={'#' + (item === 'Process' ? 'offers' : item.toLowerCase())}
+                    onClick={(event) => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                      event.preventDefault();
+                      pendingNavigation.current = item === 'Process' ? 'offers' : item.toLowerCase();
+                      setOpenServices([]);
+                      setContactCardOpen(false);
+                      setMenuOpen(false);
+                    }}
                   >
                     <span>0{i + 1}</span>
                     {item}
@@ -140,61 +228,45 @@ export default function Home() {
                   </a>
                 ))}
               </nav>
-              <a
-                href="#contact"
-                className="button menu-cta"
-                onClick={() => setMenuOpen(false)}
-              >
-                START A PROJECT <ArrowRight size={20} />
-              </a>
-              <p className="meta">MELBOURNE / WORLDWIDE</p>
+              <div className="site-menu-actions">
+                <p className="meta">MELBOURNE / WORLDWIDE</p>
+                <ProjectBriefTrigger
+                  className="button menu-cta"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  START A PROJECT <ArrowRight size={20} />
+                </ProjectBriefTrigger>
+              </div>
             </SheetContent>
           </Sheet>
         </header>
-        <span className="studio-index meta">
-          <span className="crosshair" aria-hidden="true" />
-          STUDIO / 001
-        </span>
         <div className="hero-copy">
-          <p className="eyebrow hero-services">
-            <span className="hero-services-reveal">
-              BRAND / WEB / VISUAL / AUDIO
-            </span>
-          </p>
           <h1 id="hero-title">
             <span className="hero-line">
-              <span className="hero-line-reveal"><span className="hero-title-glow">BRING YOUR</span></span>
+              <span className="hero-line-reveal">
+                <span className="hero-title-glow">SHARE YOUR VISION</span>
+              </span>
             </span>
             <span className="hero-line">
-              <span className="hero-line-reveal"><span className="hero-title-glow">VISION TO LIFE</span></span>
+              <span className="hero-line-reveal">
+                <span className="hero-title-glow">WITH THE WORLD</span>
+              </span>
             </span>
           </h1>
           <div className="hero-support">
-            <p className="hero-description">
-              <span className="hero-description-reveal">
-                Creatives for ideas that deserve attention.
+            <p className="eyebrow hero-services">
+              <span className="hero-services-reveal">
+                WEB DESIGN / VISUAL / BRANDING / AUDIO
               </span>
             </p>
-            <a className="button primary" href="#contact">
+            <ProjectBriefTrigger className="button primary">
               <span className="cta-shimmer" aria-hidden="true" />
-              START A PROJECT <ArrowRight size={22} />
-            </a>
-            <div className="hero-secondary-actions">
-              <a className="text-link" href="#work">
-                VIEW THE WORK <ArrowDown size={15} />
-              </a>
-              <span className="hero-instagram" role="img" aria-label="Instagram">
-                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                </svg>
-              </span>
-            </div>
+              START YOUR PROJECT. <ArrowRight size={22} />
+            </ProjectBriefTrigger>
           </div>
         </div>
         <div className="hero-footer meta">
-          <Dialog>
+          <Dialog open={contactCardOpen} onOpenChange={setContactCardOpen}>
             <DialogTrigger className="contact-card-trigger">
               CONTACT ↗
             </DialogTrigger>
@@ -215,86 +287,35 @@ export default function Home() {
                 <span>GENE / CREATIVE PARTNER</span>
                 <span>MELBOURNE / WORLDWIDE</span>
               </div>
-              <DialogClose
-                render={
-                  <a
-                    className="contact-card-cta"
-                    href="#contact"
-                    aria-label="Start a project"
-                  />
-                }
-              >
+              <ProjectBriefTrigger className="contact-card-cta" onClick={() => setContactCardOpen(false)}>
                 START A PROJECT <ArrowRight size={18} />
-              </DialogClose>
+              </ProjectBriefTrigger>
             </DialogContent>
           </Dialog>
           <span>MELBOURNE / WORLDWIDE</span>
         </div>
       </section>
-      <div className="signal-ribbon" aria-hidden="true">
-        <div className="signal-ribbon__line">FORM / FREQUENCY / FEELING /</div>
-        <div className="signal-ribbon__line signal-ribbon__outline">
-          MAKE THE SIGNAL CLEAR /
-        </div>
-      </div>
+      <div className="work-field">
       <section className="section work" id="work">
-        <div className="work-pattern-background" aria-hidden="true">
-          <Suspense fallback={null}>
-            <BlinkingSquares
-              width="100%" height="100%"
-              direction="right" gridSize={52}
-              squareColor="#E4272C" backgroundColor="#08080B"
-              falloff={1.25} fadeStart={0.2} fadeEnd={1}
-              squareSize={0.57} minBrightness={0.55}
-              twinkleSpeed={1} twinkleStrength={0.6}
-              intensity={1} opacity={0.65} dpr={1.5}
-              paused={motionPaused || reducedMotion}
-            />
-          </Suspense>
-        </div>
         <p className="eyebrow section-index">
-          <span>01 / IN THE STUDIO</span>
+          <span>01 / MY WORK</span>
           <span>↗</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">Identity with</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>a point of view.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal">Creativity with</span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em>intent.</em></span></span>
         </h2>
         <div className="work-stack" aria-label="Selected creative work">
           <figure className="work-panel work-panel--web">
-            <Link className="work-panel-link" href="/work/web-design" aria-label="Explore web design work" />
-            <Image
-              unoptimized
-              src="/assets/mobile-hero-reference.png"
-              alt="GH Creative website concept with a red portrait and bold typography"
-              width="390"
-              height="844"
-              loading="lazy"
-            />
+            <Link prefetch={false} className="work-panel-link" href="/work/web-design" aria-label="Explore web design work" />
             <figcaption><span>01 / WEB DESIGN</span><span>↗</span></figcaption>
           </figure>
           <figure className="work-panel work-panel--visual">
-            <Link className="work-panel-link" href="/work/visual-design" aria-label="Explore visual design work" />
-            <Image
-              unoptimized
-              src="/assets/hero-portrait.png"
-              alt="Red refracted portrait exploring distortion and contrast"
-              width="780"
-              height="1122"
-              loading="lazy"
-            />
+            <Link prefetch={false} className="work-panel-link" href="/work/visual-design" aria-label="Explore visual design work" />
             <figcaption><span>02 / VISUAL DESIGN</span><span>↗</span></figcaption>
           </figure>
           <figure className="work-panel work-panel--brand">
-            <Link className="work-panel-link" href="/work/branding" aria-label="Explore branding work" />
-            <Image
-              unoptimized
-              src="/assets/brand-direction.png"
-              alt="GH Creative brand identity with a red wordmark and outline echoes"
-              width="1086"
-              height="1448"
-              loading="lazy"
-            />
+            <Link prefetch={false} className="work-panel-link" href="/work/branding" aria-label="Explore branding work" />
             <figcaption><span>03 / BRANDING</span><span>↗</span></figcaption>
           </figure>
         </div>
@@ -303,33 +324,52 @@ export default function Home() {
           <div className="project-meter" aria-hidden="true"><span /></div>
         </div>
       </section>
-      <section className="section intro" id="services">
-        <div className="services-background" aria-hidden="true" />
+      <div className="signal-ribbon" aria-hidden="true">
+        <div className="signal-ribbon__line">GH CREATIVE * GH CREATIVE</div>
+        <div className="signal-ribbon__line signal-ribbon__outline">
+          SHOW THE WORLD YOUR VISION
+        </div>
+      </div>
+      </div>
+      <section
+        className="section intro"
+        id="services"
+        data-service-expanded={openServices.length ? '' : undefined}
+      >
         <p className="eyebrow section-index">
-          <span>02 / CAPABILITIES</span>
+          <span>02 / MY SERVICES</span>
           <span>↓</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">Different disciplines.</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>One clear direction.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal">Bold Ideas.</span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em>Considered Execution.</em></span></span>
         </h2>
-        <p className="body-copy">
-          Websites, identities, campaigns and sound. Considered together, made
-          to work together.
+        <p className="services-subhead">
+          <a className="text-link" href="#service-list">
+            VIEW MY SERVICES <ArrowDown size={15} />
+          </a>
         </p>
-        <Accordion className="services" defaultValue={[]}>
+        <Accordion
+          className="services"
+          id="service-list"
+          multiple={false}
+          value={openServices}
+          onValueChange={(values) => {
+            prepareServiceChange(values);
+            setOpenServices(values);
+          }}
+        >
           {services.map((s, i) => (
             <AccordionItem key={s.name} value={s.name}>
-              <AccordionTrigger className="service-trigger">
-                <span className="service-number">0{i + 1}</span>
+              <AccordionTrigger className="service-trigger" data-service={s.name}>
+                <span className="service-number">0{i + 1} /</span>
                 <span data-content-reveal>{s.name}</span>
               </AccordionTrigger>
               <AccordionContent className="service-content">
                 <p className="eyebrow">{s.tag}</p>
-                <p>{s.description}</p>
                 <ul>
                   {s.items.map((item) => (
-                    <li key={item}>{item}</li>
+                    <li key={item.label}><strong>{item.label}</strong> — {item.description}</li>
                   ))}
                 </ul>
                 <a href="#contact">
@@ -342,59 +382,61 @@ export default function Home() {
       </section>
       <div className="offers-scroll-region">
       <section className="section offers" id="offers">
-        <PixelSectionTransition disabled={motionPaused || reducedMotion} />
         <p className="eyebrow section-index">
-          <span>03 / WAYS TO WORK TOGETHER</span>
+          <span>03 / HOW WE WORK</span>
           <span>↗</span>
         </p>
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">Start where</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>you need me.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal">THE</span></span>
+          <span className="section-title-line"><span className="section-title-reveal"><em>PROCESS</em></span></span>
         </h2>
-        <a className="offer" href="#contact">
-          <span className="eyebrow">01 / A FOCUSED PROJECT</span>
-          <h3>Make your next move.</h3>
-          <p>
-            A website, identity or campaign. A clear scope, built around what
-            you need.
-          </p>
-          <span className="offer-link">
-            PLAN A PROJECT <ArrowUpRight size={20} />
-          </span>
-        </a>
-        <a className="offer" href="#contact">
-          <span className="eyebrow">02 / A COMPLETE LAUNCH</span>
-          <h3>Bring it all together.</h3>
-          <p>
-            Brand, website and launch creative, considered as one connected
-            experience.
-          </p>
-          <span className="offer-link">
-            PLAN A LAUNCH <ArrowUpRight size={20} />
-          </span>
-        </a>
-        <a className="offer" href="#contact">
-          <span className="eyebrow">03 / AN ONGOING PARTNERSHIP</span>
-          <h3>Keep things moving.</h3>
-          <p>
-            Regular creative support for the ideas, updates and campaigns that
-            come next.
-          </p>
-          <span className="offer-link">
-            EXPLORE A PARTNERSHIP <ArrowUpRight size={20} />
-          </span>
-        </a>
+        <article className="offer">
+          <span className="eyebrow">01 / DISCOVERY & DIRECTION</span>
+          <h3>Project brief.</h3>
+          <ul className="process-points">
+            <li>First contact & discovery meeting</li>
+            <li>Project goals & requirements</li>
+            <li>Agreed scope, budget & timeline</li>
+          </ul>
+          <ProjectBriefTrigger className="offer-link">
+            PLAN A PROJECT <ArrowUpRight size={20} aria-hidden="true" />
+          </ProjectBriefTrigger>
+        </article>
+        <article className="offer">
+          <span className="eyebrow">02 / CREATE, REFINE & DELIVER</span>
+          <h3>Project build.</h3>
+          <ul className="process-points">
+            <li>Design & development</li>
+            <li>Regular feedback & refinements</li>
+            <li>Final review, testing & delivery</li>
+          </ul>
+          <ProjectBriefTrigger className="offer-link">
+            DISCUSS YOUR PROJECT <ArrowUpRight size={20} aria-hidden="true" />
+          </ProjectBriefTrigger>
+        </article>
+        <article className="offer">
+          <span className="eyebrow">03 / SUPPORT & GROWTH</span>
+          <h3>Ongoing partnership.</h3>
+          <ul className="process-points">
+            <li>Support after delivery</li>
+            <li>Updates & improvements</li>
+            <li>Planning your next steps together</li>
+          </ul>
+          <ProjectBriefTrigger className="offer-link">
+            EXPLORE A PARTNERSHIP <ArrowUpRight size={20} aria-hidden="true" />
+          </ProjectBriefTrigger>
+        </article>
       </section>
       </div>
+      <PricingSection />
       <section className="section studio" id="studio">
         <p className="eyebrow section-index">
-          <span>04 / THE PERSON BEHIND THE WORK</span>
+          <span>05 / THE PERSON BEHIND THE WORK</span>
           <span>GH</span>
         </p>
-        <SignalWordmark className="studio-mark" />
         <h2>
-          <span className="section-title-line"><span className="section-title-reveal">One creative partner.</span></span>
-          <span className="section-title-line"><span className="section-title-reveal"><em>From idea to output.</em></span></span>
+          <span className="section-title-line"><span className="section-title-reveal">About me.</span></span>
+          <span className="studio-portrait" aria-hidden="true" />
         </h2>
         <p className="body-copy">
           I’m Gene. I bring web, visual design, audio and marketing together to
@@ -410,7 +452,7 @@ export default function Home() {
       </section>
       <section className="section contact" id="contact">
         <p className="eyebrow section-index">
-          <span>05 / YOUR NEXT CHAPTER</span>
+          <span>06 / YOUR NEXT CHAPTER</span>
           <span>↗</span>
         </p>
         <h2 className="dot-heading">
@@ -421,47 +463,12 @@ export default function Home() {
         <p className="body-copy">
           Have a project in mind? Start with the idea. We can work out the rest.
         </p>
-        <form onSubmit={saveBrief} className="contact-form">
-          <label>
-            <span data-content-reveal>Your name</span>
-            <input
-              name="name"
-              autoComplete="name"
-              placeholder="Name"
-              required
-              maxLength={120}
-            />
-          </label>
-          <label>
-            <span data-content-reveal>Email address</span>
-            <input
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@company.com"
-              required
-              maxLength={254}
-            />
-          </label>
-          <label>
-            <span data-content-reveal>What are you thinking?</span>
-            <textarea
-              name="project"
-              rows={4}
-              placeholder="A new website, a brand launch, something different…"
-              required
-              maxLength={5000}
-            />
-          </label>
-          <button className="button primary" type="submit">
-            <span data-content-reveal>SAVE MY PROJECT BRIEF</span> <Download size={19} />
-          </button>
-          <p className="form-note" role="status">
-            {saved
-              ? 'Your brief is downloaded. Nothing has been sent.'
-              : 'Preview: save a brief to your device. Enquiry delivery will be connected next.'}
-          </p>
-        </form>
+        <div className="contact-form">
+          <ProjectBriefTrigger className="button primary">
+            START A PROJECT <ArrowRight size={19} />
+          </ProjectBriefTrigger>
+          <p className="form-note">Tell me about your project, one step at a time.</p>
+        </div>
       </section>
       <footer className="footer">
         <a className="wordmark" href="#top">
@@ -473,6 +480,20 @@ export default function Home() {
         <p className="meta">INDEPENDENT BY DESIGN.</p>
         <div className="footer-bottom meta">
           <span>© {new Date().getFullYear()} GH CREATIVE</span>
+          <a
+            className="footer-instagram"
+            href="https://www.instagram.com/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+          >
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+            </svg>
+            INSTAGRAM
+          </a>
           <span>MELBOURNE / WORLDWIDE</span>
         </div>
       </footer>

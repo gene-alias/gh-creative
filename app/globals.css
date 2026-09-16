@@ -23,11 +23,14 @@
   --font-mono: var(--gh-font-mono);
   --radius-lg: var(--gh-radius-control);
 }
+html {
+  background-color: var(--gh-surface-page);
+}
 .mobile-site {
   max-width: var(--gh-ref-layout-mobile-max);
   margin: 0 auto;
   background: var(--gh-surface-canvas);
-  overflow: clip;
+  overflow-x: clip;
 }
 .hero {
   position: relative;
@@ -91,7 +94,7 @@
   min-height: var(--gh-navigation-height);
   background: none;
   border: 0;
-  color: var(--gh-text-primary);
+  color: var(--gh-accent);
   font: 400 var(--gh-ref-size-label)/1 var(--gh-font-mono);
   padding: 0;
 }
@@ -108,7 +111,8 @@
 .hero-services {
   text-align: right;
   color: var(--gh-accent-hover);
-  margin: 0 0 var(--gh-ref-space-6);
+  margin: 0;
+  padding-bottom: 0;
   font-size: var(--gh-ref-size-meta);
   letter-spacing: var(--gh-ref-tracking-normal);
 }
@@ -398,9 +402,6 @@ p.body-copy {
 .offer:hover .offer-link {
   color: var(--gh-accent-hover);
 }
-.studio-mark {
-  margin: var(--gh-ref-space-12) 0;
-}
 .studio-follow {
   margin-top: var(--gh-ref-space-5) !important;
 }
@@ -465,6 +466,16 @@ p.body-copy {
   color: var(--gh-text-secondary);
   margin: 0;
 }
+.footer-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gh-ref-space-2);
+  color: inherit;
+}
+.footer-instagram:hover,
+.footer-instagram:focus-visible {
+  color: var(--gh-accent-hover);
+}
 .footer-bottom {
   grid-column: 1/-1;
   display: flex;
@@ -492,7 +503,7 @@ p.body-copy {
     padding-top: 380px;
   }
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
   }
   h2 {
     font-size: 1.75rem;
@@ -504,4 +515,9 @@ p.body-copy {
   .service-content {
     padding-left: 0 !important;
   }
+}
+
+/* Hide entrance targets before the lazy-loaded motion timeline takes ownership. */
+[data-hero-entrance="pending"] .hero :is(.nav, .hero-line-reveal, .hero-services-reveal, .hero-support > .button, .hero-footer > *) {
+  opacity: 0;
 }

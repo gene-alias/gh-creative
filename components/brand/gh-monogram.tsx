@@ -1,20 +1,16 @@
-/** Compact GH mark from the approved brand artwork. */
-export function GHMonogram() {
+import Image from 'next/image';
+
+/** Supplied GH cube artwork, shared by navigation and contact surfaces. */
+export function GHMonogram({ wordmark = false }: { wordmark?: boolean }) {
   return (
-    <svg
-      className="hero-monogram"
-      viewBox="51 64 80 76"
-      width="52"
-      height="50"
+    <Image
+      className={wordmark ? 'hero-wordmark' : 'hero-monogram'}
+      src={wordmark ? '/assets/gh-logo-wordmark.svg' : '/assets/gh-cube-logo.png'}
+      width={wordmark ? 744 : 1302}
+      height={wordmark ? 95 : 1208}
+      alt=""
       aria-hidden="true"
-      focusable="false"
-    >
-      <image
-        href="/assets/brand-direction.png"
-        width="1086"
-        height="1448"
-        preserveAspectRatio="none"
-      />
-    </svg>
+      unoptimized
+    />
   );
 }

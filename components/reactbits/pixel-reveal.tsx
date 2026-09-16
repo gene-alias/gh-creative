@@ -591,6 +591,7 @@ const PixelReveal = React.forwardRef<PixelRevealRef, PixelRevealProps>(
       >
         <Canvas
           frameloop="demand"
+          resize={{ scroll: false, offsetSize: true }}
           fallback={null}
           onCreated={({ invalidate, gl, camera }) => {
             camera.updateProjectionMatrix();
@@ -612,8 +613,8 @@ const PixelReveal = React.forwardRef<PixelRevealRef, PixelRevealProps>(
             top: 1,
             bottom: -1,
           }}
-          gl={{ antialias: true, alpha: true }}
-          dpr={[1, 1.5]}
+          gl={{ antialias: !revealContent, alpha: true }}
+          dpr={revealContent ? 1 : [1, 1.5]}
           className="pixel-reveal-canvas"
         >
           <Scene

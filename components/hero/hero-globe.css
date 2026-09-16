@@ -1,0 +1,57 @@
+.hero-globe {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+}
+.hero-globe-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(var(--globe-copy-top) - 16px), #0003 var(--globe-copy-top), transparent calc(var(--globe-copy-top) + 100px));
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+.hero-globe[data-ready] .hero-globe-canvas { opacity: 1; }
+.hero-globe-canvas > div {
+  pointer-events: none !important;
+  position: absolute !important;
+  left: var(--globe-x);
+  top: var(--globe-y);
+  width: min(100%, calc(var(--globe-diameter) * 2.4)) !important;
+  height: calc(var(--globe-diameter) * 2.4) !important;
+  transform: translate(-50%, -50%);
+}
+.hero-globe-visibility,
+.hero-globe-fallback {
+  position: absolute;
+  left: var(--globe-x);
+  top: var(--globe-y);
+  width: var(--globe-diameter);
+  height: var(--globe-diameter);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+/* Keep the renderer awake until the expanded globe has also left view. */
+.hero-globe-visibility {
+  width: calc(var(--globe-diameter) * 2.4);
+  height: calc(var(--globe-diameter) * 2.4);
+}
+.hero:has(.hero-globe) > :is(.nav, .hero-copy, .hero-footer) {
+  position: relative;
+  z-index: 2;
+}
+.hero-globe-fallback {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+.hero-globe-fallback img { display: block; width: 100%; height: 100%; }
+.hero-globe[data-unavailable][data-fallback-ready] .hero-globe-fallback { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-globe-canvas,
+  .hero-globe-fallback { transition: none; }
+}
+/* The Earth supplies the visual detail; the page star field stays behind it. */

@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowDown, Check, AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import {
   Accordion,
   AccordionItem,
@@ -321,13 +322,9 @@ export default function DesignSystem() {
         <div className="ds-grid">
           <div className="ds-panel">
             <h3>Actions</h3>
-            <Button
-              nativeButton={false}
-              render={<a href="/#contact" />}
-              className="button primary"
-            >
+            <ProjectBriefTrigger className="button primary">
               START A PROJECT <ArrowRight />
-            </Button>
+            </ProjectBriefTrigger>
             <Button
               nativeButton={false}
               render={<a href="/#work" />}
