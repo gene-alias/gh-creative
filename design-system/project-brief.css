@@ -39,10 +39,10 @@ body:has(.project-brief[data-open]) [data-slot='dialog-overlay'] {
   padding: 14px 16px 8px 24px;
   flex-shrink: 0;
 }
-.brief-topbar .hero-monogram {
-  width: 36px;
-  height: 30px;
-  color: #ff454e;
+.brief-topbar .hero-wordmark {
+  width: 170px;
+  height: auto;
+  flex-shrink: 0;
 }
 .brief-topbar > span {
   font: 400 9px/1.4 var(--gh-font-mono);
@@ -50,6 +50,7 @@ body:has(.project-brief[data-open]) [data-slot='dialog-overlay'] {
   color: #bebac0;
 }
 .brief-close {
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   width: 44px;
@@ -229,4 +230,8 @@ body:has(.project-brief[data-open]) [data-slot='dialog-overlay'] {
   text-decoration: underline;
   text-underline-offset: 3px;
   white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .brief-topbar > span { display: none; }
 }

@@ -34,9 +34,9 @@ export function HeroGlobe({ controls: overrides }: { controls?: Partial<GlobeCon
 
   useEffect(() => {
     const element = host.current;
-    const hero = element?.closest<HTMLElement>('.hero');
+    const hero = element?.closest<HTMLElement>('.hero, .mini-hero');
     const title = hero?.querySelector<HTMLElement>('h1');
-    const nav = hero?.querySelector<HTMLElement>('.nav');
+    const nav = hero?.querySelector<HTMLElement>('.nav, .mini-hero-meta');
     if (!element || !hero || !title || !nav) return;
     let disposed = false;
     const state = runtime.current;
@@ -56,7 +56,7 @@ export function HeroGlobe({ controls: overrides }: { controls?: Partial<GlobeCon
       // Keep the globe optically centered in the gap between the header and
       // hero title, regardless of the title's responsive height.
       const centerY = top + available * 0.5;
-      const desktop = window.matchMedia('(min-width: 1024px)').matches;
+      const desktop = hero.clientWidth >= 1024;
       const next = desktop
         ? { centerX: hero.clientWidth * 0.70, centerY: hero.clientHeight * 0.47,
           diameter: Math.min(hero.clientWidth * 0.40, hero.clientHeight * 0.65, 650), copyTop }

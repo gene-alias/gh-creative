@@ -1,0 +1,47 @@
+{
+  "app-icon": {
+    "src": "/assets/work/alias/app-icon.webp",
+    "width": 1024,
+    "height": 1024
+  },
+  "invoice": {
+    "src": "/assets/work/alias/invoice.webp",
+    "width": 830,
+    "height": 1210
+  },
+  "business-card-back": {
+    "src": "/assets/work/alias/business-card-back.webp",
+    "width": 1284,
+    "height": 832
+  },
+  "business-card-front": {
+    "src": "/assets/work/alias/business-card-front.webp",
+    "width": 1284,
+    "height": 832
+  },
+  "link-preview": {
+    "src": "/assets/work/alias/link-preview.webp",
+    "width": 1200,
+    "height": 630
+  },
+  "email-dark": {
+    "src": "/assets/work/alias/email-dark.webp",
+    "width": 1200,
+    "height": 400
+  },
+  "email-light": {
+    "src": "/assets/work/alias/email-light.webp",
+    "width": 1200,
+    "height": 400
+  },
+  "facebook-dark": {
+    "src": "/assets/work/alias/facebook-dark.webp",
+    "width": 1640,
+    "height": 624
+  },
+  "facebook-light": {
+    "src": "/assets/work/alias/facebook-light.webp",
+    "width": 1640,
+    "height": 624
+  }
+}
