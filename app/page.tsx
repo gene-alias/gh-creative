@@ -40,33 +40,33 @@ const services = [
 
 const work = [
   {
-    title: 'Digital experiences.',
-    category: 'WEB DESIGN',
+    title: 'CENTUM. INCREDIBLE KITCHENS. LOVERBOY CLUB.',
+    category: 'WEBSITES',
     href: '/work/web-design',
-    image: '/assets/work/gh-creative-monitor-mockup.png',
-    width: 1152,
-    height: 864,
-    alt: 'GH Creative website on a desktop monitor',
+    image: '/assets/work/centum-hero.jpg',
+    width: 1920,
+    height: 1080,
+    alt: 'CENTUM website hero imagery',
     treatment: 'web',
   },
   {
-    title: 'A different perspective.',
-    category: 'VISUAL DESIGN',
+    title: 'Visual art. Before & after.',
+    category: 'VISUAL',
     href: '/work/visual-design',
-    image: '/assets/hero-portrait.png',
-    width: 780,
-    height: 1122,
-    alt: 'Red refraction portrait study',
+    image: '',
+    width: 0,
+    height: 0,
+    alt: '',
     treatment: 'visual',
   },
   {
-    title: 'Make your mark.',
+    title: 'INCREDIBLE KITCHENS. ALIAS.',
     category: 'BRANDING',
     href: '/work/branding',
-    image: '/assets/brand-direction.png',
-    width: 1086,
-    height: 1448,
-    alt: 'GH Creative red wordmark and outline identity study',
+    image: '/assets/work/incredible-kitchens-branding.webp',
+    width: 800,
+    height: 533,
+    alt: 'Incredible Kitchens identity applications',
     treatment: 'brand',
   },
 ];
@@ -139,7 +139,7 @@ export default function Home() {
           WITH <span>INTENT.</span>
         </h2>
         <p className="mini-intro">
-          A few studio explorations. Tap to take a closer look.
+          Websites, visual art and brand identities. Tap to explore.
         </p>
         <div className="mini-work-list">
           {work.map((item, index) => (
@@ -150,14 +150,32 @@ export default function Home() {
               prefetch={false}
             >
               <div className="mini-work-image">
-                <Image
-                  unoptimized
-                  src={item.image}
-                  width={item.width}
-                  height={item.height}
-                  alt={item.alt}
-                  sizes="(max-width: 480px) 90vw, 432px"
-                />
+                {item.image ? (
+                  <Image
+                    unoptimized
+                    src={item.image}
+                    width={item.width}
+                    height={item.height}
+                    alt={item.alt}
+                    sizes="(max-width: 480px) 90vw, 432px"
+                  />
+                ) : (
+                  <div className="mini-visual-cover" aria-hidden="true">
+                    <span>BEFORE.</span>
+                    <ArrowRight size={32} />
+                    <span>AFTER.</span>
+                  </div>
+                )}
+                {item.treatment === 'web' && (
+                  <Image
+                    className="mini-work-cover-logo"
+                    unoptimized
+                    src="/assets/work/centum-wordmark.svg"
+                    width={620}
+                    height={54}
+                    alt="CENTUM"
+                  />
+                )}
               </div>
               <div className="mini-work-label">
                 <span>
@@ -184,6 +202,15 @@ export default function Home() {
         <h2 id="mini-about-title">
           HI, I’M <span>GENE.</span>
         </h2>
+        <Image
+          className="mini-studio-image"
+          src="/assets/gene-studio.png"
+          alt="Gene at GH Creative — digital experiences, web design, branding, visual, motion and audio"
+          width={1281}
+          height={1575}
+          unoptimized
+          sizes="(max-width: 480px) 90vw, 432px"
+        />
         <p>
           I bring web, visual design, branding and audio together to give your
           ideas a clear, consistent presence.

@@ -11,6 +11,7 @@ type WorkMedia = (
       width: number;
       height: number;
       alt: string;
+      presentation?: 'cover';
     }
   | {
       type: 'audio';
@@ -84,6 +85,11 @@ export function WorkPage(props: WorkPageProps) {
                     {media.type === 'image' ? (
                       <Image
                         unoptimized
+                        className={
+                          media.presentation === 'cover'
+                            ? 'mini-example-image--cover'
+                            : undefined
+                        }
                         src={media.src}
                         alt={media.alt}
                         width={media.width}
@@ -128,16 +134,10 @@ export function WorkPage(props: WorkPageProps) {
       </div>
       <nav className="mini-work-links" aria-label="Explore work disciplines">
         <Link href="/work/web-design">
-          WEB DESIGN <ArrowUpRight size={16} />
+          WEBSITES <ArrowUpRight size={16} />
         </Link>
         <Link href="/work/visual-design">
-          VISUAL DESIGN <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/marketing">
-          MARKETING <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/audio">
-          AUDIO <ArrowUpRight size={16} />
+          VISUAL <ArrowUpRight size={16} />
         </Link>
         <Link href="/work/branding">
           BRANDING <ArrowUpRight size={16} />

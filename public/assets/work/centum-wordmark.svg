@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1675" height="146" viewBox="0 0 1675 146" fill="none" role="img" aria-label="CENTUM">
+  <g fill="#FFFFFF">
+    <!-- E: three bars, no spine -->
+    <rect x="308" y="0" width="148" height="24" rx="4"/>
+    <rect x="308" y="61" width="148" height="24" rx="4"/>
+    <rect x="308" y="122" width="148" height="24" rx="4"/>
+    <!-- N -->
+    <rect x="608" y="0" width="24" height="146" rx="4"/>
+    <rect x="734" y="0" width="24" height="146" rx="4"/>
+    <polygon points="608,0 631,0 758,135.5 758,146 736,146 608,9.6"/>
+    <!-- T -->
+    <rect x="905" y="0" width="150" height="24" rx="4"/>
+    <rect x="968" y="0" width="24" height="146" rx="4"/>
+    <!-- M -->
+    <rect x="1497" y="0" width="24" height="146" rx="4"/>
+    <rect x="1650" y="0" width="24" height="146" rx="4"/>
+    <polygon points="1497.6,0 1521.8,0 1585,111.5 1648.2,0 1672.4,0 1592.1,146 1577.9,146"/>
+  </g>
+  <g stroke="#FFFFFF" stroke-width="24">
+    <!-- C -->
+    <path d="M149 12H36A24 24 0 0 0 12 36V110A24 24 0 0 0 36 134H149"/>
+    <!-- U -->
+    <path d="M1213 0V110A24 24 0 0 0 1237 134H1311A24 24 0 0 0 1335 110V0"/>
+  </g>
+</svg>

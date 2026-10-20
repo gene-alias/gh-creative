@@ -1,50 +1,62 @@
 import { WorkPage } from '@/components/work/work-page';
-
-export const metadata = { title: 'Web Design / GH Creative' };
-
-export default function WebDesign() {
-  return <WorkPage
-    title="Web design."
-    number="01"
-    description="Digital experiences with a clear purpose and a distinct point of view."
-    examples={[{
-      title: 'GH Creative website',
-      label: 'STUDIO EXPLORATION',
-      summary: 'The live studio site: a desktop-first composition with a clear headline, a direct next step, and motion that stays in service of the work.',
-      media: [
+export const metadata = { title: 'Websites / GH Creative' };
+export default function Websites() {
+  return (
+    <WorkPage
+      title="Websites."
+      number="01"
+      description="Selected website work for CENTUM, Incredible Kitchens and Loverboy Club."
+      examples={[
         {
-          type: 'image',
-          src: '/assets/work/gh-creative-monitor-mockup.png',
-          width: 1152,
-          height: 864,
-          alt: 'GH Creative website shown on a cinematic desktop monitor',
-          caption: 'Desktop homepage / 3D monitor',
+          title: 'CENTUM',
+          label: 'WEBSITE',
+          summary:
+            'A training and nutrition platform built around a 100-day challenge.',
+          media: [
+            {
+              type: 'image',
+              src: '/assets/work/centum-hero.jpg',
+              width: 1920,
+              height: 1080,
+              alt: 'CENTUM website hero imagery featuring runners',
+              caption: 'CENTUM / hero imagery',
+              presentation: 'cover',
+            },
+          ],
         },
         {
-          type: 'image',
-          src: '/assets/work/gh-creative-desktop.png',
-          width: 1600,
-          height: 1000,
-          alt: 'GH Creative desktop homepage with SHARE YOUR VISION WITH THE WORLD',
-          caption: 'Desktop homepage / live site',
+          title: 'Incredible Kitchens',
+          label: 'WEBSITE',
+          summary: 'An online home for kitchen projects and design services.',
+          media: [
+            {
+              type: 'image',
+              src: '/assets/work/incredible-kitchens-hero.webp',
+              width: 2160,
+              height: 3840,
+              alt: 'Kitchen imagery from the Incredible Kitchens website',
+              caption: 'Incredible Kitchens / website imagery',
+              presentation: 'cover',
+            },
+          ],
         },
         {
-          type: 'image',
-          src: '/assets/mobile-hero-reference.png',
-          width: 390,
-          height: 844,
-          alt: 'GH Creative mobile website concept with a red portrait and bold headline',
-          caption: 'Mobile concept / hero composition',
+          title: 'Loverboy Club',
+          label: 'WEBSITE',
+          summary: 'An online storefront for Loverboy Club.',
+          media: [
+            {
+              type: 'image',
+              src: '/assets/work/loverboy-hero.jpg',
+              width: 2400,
+              height: 1350,
+              alt: 'Loverboy Club website hero imagery',
+              caption: 'Loverboy Club / hero imagery',
+              presentation: 'cover',
+            },
+          ],
         },
-        {
-          type: 'image',
-          src: '/assets/services-code-background.png',
-          width: 576,
-          height: 1024,
-          alt: 'Red code artwork used in the GH Creative services direction',
-          caption: 'Services visual / code texture',
-        },
-      ],
-    }]}
-  />;
+      ]}
+    />
+  );
 }

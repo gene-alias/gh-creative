@@ -7,7 +7,7 @@ galleries and a conversational inquiry form. A shared design system retains the 
 
 ```sh
 npm ci
-npm run dev -- --port 3005
+GH_STATIC_EXPORT=1 npm run dev -- --port 4317
 ```
 
 The default development and build commands retain the existing Vinext/Cloudflare
@@ -102,3 +102,30 @@ Preview it with fixture details before sending real mail. It includes a greeting
 a receipt message, selected services, budget and timing; replies go to Gene.
 No live receipt can be sent until the Resend sender domain is verified and both
 server environment variables are configured for the intended deployment.
+
+
+## Selected work and inquiry receipt design
+
+Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
+Loverboy Club), Visual (before/after artwork), and Branding (Incredible Kitchens,
+ALIAS). Website cards currently use imagery from the local projects; they are
+captioned as imagery rather than finished website screenshots. The visual gallery
+is intentionally empty until Gene supplies the artwork pairs. Add those pairs in
+`app/work/visual-design/page.tsx`; the gallery includes a keyboard-accessible
+before/after range control.
+
+Section 03 uses Gene's supplied `GH STATIC.png`, copied without changes to
+`public/assets/gene-studio.png`. Portfolio assets were copied from these local
+projects: `centum-website`, `incredible-kitchens/incredible-kitchens-web`,
+`loverboy-club-website`, and `ALIAS CREATIVE`, under Gene's Cursor directory.
+
+The confirmation email was redesigned in Paper, with desktop and mobile layouts:
+https://app.paper.design/file/01M5D2HNFGD2X2JCWSX4P58S0Z/p-1-0
+
+Its logo and scarlet receipt artwork were exported from those layouts and are
+bundled as inline CID attachments in `lib/server/receipt-art.ts`. The greeting,
+project recap, reply link and signature remain live HTML text. Body styles prefer
+Inter Light and fall back to the recipient's Arial/Helvetica when Inter is not
+available. No image host is required. To update artwork, export the Paper nodes,
+replace the PNGs in `public/assets/email`, and regenerate the corresponding
+base64 strings in the server module.

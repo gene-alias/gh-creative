@@ -267,7 +267,7 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   const content = (
     <>
       <div className="brief-topbar">
-        <GHMonogram />
+        <GHMonogram wordmark />
         <span>LET’S MAKE IT HAPPEN</span>
         {open && (
           <DialogClose className="brief-close" aria-label="Close project brief">
