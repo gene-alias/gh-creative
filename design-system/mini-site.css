@@ -227,6 +227,9 @@ body:has(.mini-site) {
 .mini-work-card--visual .mini-work-image img {
   object-position: center 34%;
 }
+.mini-work-card--brand .mini-work-image {
+  aspect-ratio: 3 / 2;
+}
 .mini-work-card--brand .mini-work-image img {
   object-position: center 45%;
 }
@@ -740,4 +743,32 @@ body:has(.mini-site) {
 .mini-comparison-control > span {
   color: #aaa7a6;
   font-size: 12px;
+}
+
+/* Deliverable groups within branding case studies. */
+.mini-case-section {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid #393333;
+}
+.mini-case-section h3 {
+  margin: 0 0 14px;
+  font: 400 24px/1.15 var(--gh-font-condensed);
+  text-transform: uppercase;
+}
+.mini-case-section > p {
+  color: #c3c0bf;
+  font: 300 15px/1.8 var(--gh-font-body);
+}
+.mini-artwork-link {
+  display: block;
+  cursor: zoom-in;
+}
+.mini-artwork-link:focus-visible {
+  outline: 2px solid var(--mini-red);
+  outline-offset: 4px;
+}
+.mini-case-section figcaption {
+  font: 300 12px/1.7 var(--gh-font-body);
+  color: #aaa7a6;
 }

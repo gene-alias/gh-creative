@@ -109,7 +109,7 @@ server environment variables are configured for the intended deployment.
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
 Loverboy Club, KONSTRUKT), Visual (before/after artwork), and Branding (Incredible Kitchens,
 ALIAS). Website thumbnails use still frames from Gene’s supplied screen recordings.
-The homepage category covers use the CENTUM and ALIAS previews. The visual gallery
+The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The visual gallery
 is intentionally empty until Gene supplies the artwork pairs. Add those pairs in
 `app/work/visual-design/page.tsx`; the gallery includes a keyboard-accessible
 before/after range control.
@@ -139,3 +139,22 @@ Thumbnail source recordings (from Gene’s Desktop) and selected timestamps:
 
 Frames retain the full recording aspect ratio and are exported as 1440px-wide
 JPEGs in `public/assets/work/*-thumbnail.jpg`. Original recordings remain local.
+
+
+## Incredible Kitchens branding case study
+
+The supplied branding artwork is shown in six groups: Logo & visual identity,
+Print & stationery, Business documents, Advertising & campaign assets, Social
+brand assets, and Email signatures. Captions describe the supplied work, including
+mockups and sample invoice fields; no campaign performance or production claims
+are added. All twelve supplied images are included, with the two individual
+story ads alongside the campaign contact sheet. Each image opens a larger version
+in a new tab for inspection.
+
+Sources: Gene’s Desktop/BRANDING folder, plus Story 1.png under
+INCREDIBLE KITCHENS/Ads Creatives and
+01-your-home-made-incredible-1080x1920.png under INCREDIBLE KITCHENS/9.16 Ads.
+WebP copies retain full image proportions and are stored in
+public/assets/work/incredible-kitchens. The originals are unchanged. The artwork
+is compressed for mobile browsing, with the ad contact sheet retained at its full
+2560px width for legibility.

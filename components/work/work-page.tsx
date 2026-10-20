@@ -12,6 +12,7 @@ type WorkMedia = (
       height: number;
       alt: string;
       presentation?: 'cover';
+      enlarge?: boolean;
     }
   | {
       type: 'audio';
@@ -25,6 +26,7 @@ export type WorkExample = {
   label: string;
   summary: string;
   media: WorkMedia[];
+  sections?: { title: string; description: string; media: WorkMedia[] }[];
   brief?: string;
   approach?: string;
   outcome?: string;
@@ -81,38 +83,16 @@ export function WorkPage(props: WorkPageProps) {
                   ) : null}
                 </div>
                 {example.media.map((media) => (
-                  <figure key={media.src}>
-                    {media.type === 'image' ? (
-                      <Image
-                        unoptimized
-                        className={
-                          media.presentation === 'cover'
-                            ? 'mini-example-image--cover'
-                            : undefined
-                        }
-                        src={media.src}
-                        alt={media.alt}
-                        width={media.width}
-                        height={media.height}
-                        sizes="(max-width: 480px) 90vw, 432px"
-                      />
-                    ) : (
-                      <div className="mini-audio">
-                        <p>{media.label}</p>
-                        {/* Audio examples may be non-speech music or sound design. */}
-                        {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
-                        <audio
-                          controls
-                          preload="none"
-                          src={media.src}
-                          aria-label={media.label}
-                        />
-                      </div>
-                    )}
-                    {media.caption ? (
-                      <figcaption>{media.caption}</figcaption>
-                    ) : null}
-                  </figure>
+                  <WorkFigure key={media.src} media={media} />
+                ))}
+                {example.sections?.map((section) => (
+                  <section className="mini-case-section" key={section.title}>
+                    <h3>{section.title}</h3>
+                    <p>{section.description}</p>
+                    {section.media.map((media) => (
+                      <WorkFigure key={media.src} media={media} />
+                    ))}
+                  </section>
                 ))}
               </div>
             </article>
@@ -145,5 +125,56 @@ export function WorkPage(props: WorkPageProps) {
       </nav>
       <MiniFooter />
     </main>
+  );
+}
+
+function WorkFigure({ media }: { media: WorkMedia }) {
+  const picture =
+    media.type === 'image' ? (
+      <Image
+        unoptimized
+        className={
+          media.presentation === 'cover'
+            ? 'mini-example-image--cover'
+            : undefined
+        }
+        src={media.src}
+        alt={media.alt}
+        width={media.width}
+        height={media.height}
+        sizes="(max-width: 480px) 90vw, 432px"
+      />
+    ) : null;
+  return (
+    <figure>
+      {media.type === 'image' ? (
+        media.enlarge ? (
+          <a
+            className="mini-artwork-link"
+            href={media.src}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Enlarge: ${media.alt} (opens in a new tab)`}
+          >
+            {picture}
+          </a>
+        ) : (
+          picture
+        )
+      ) : (
+        <div className="mini-audio">
+          <p>{media.label}</p>
+          {/* Audio examples may be non-speech music or sound design. */}
+          {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
+          <audio
+            controls
+            preload="none"
+            src={media.src}
+            aria-label={media.label}
+          />
+        </div>
+      )}
+      {media.caption ? <figcaption>{media.caption}</figcaption> : null}
+    </figure>
   );
 }
