@@ -31,6 +31,7 @@ type WorkMedia = (
 ) & { caption?: string };
 
 export type WorkExample = {
+  id?: string;
   title: string;
   label: string;
   summary: string;
@@ -67,7 +68,11 @@ export function WorkPage(props: WorkPageProps) {
       <div>
         {props.examples.length ? (
           props.examples.map((example, index) => (
-            <article className="mini-example" key={example.title}>
+            <article
+              className="mini-example"
+              id={example.id}
+              key={example.title}
+            >
               <p className="mini-index">
                 0{index + 1} / {example.label}
               </p>

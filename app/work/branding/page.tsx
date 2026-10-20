@@ -1,4 +1,5 @@
 import { WorkPage } from '@/components/work/work-page';
+import { aliasBranding } from '@/lib/alias-branding';
 
 export const metadata = { title: 'Branding / GH Creative' };
 
@@ -149,22 +150,7 @@ export default function Branding() {
             },
           ],
         },
-        {
-          title: 'ALIAS',
-          label: 'BRAND IDENTITY',
-          summary: 'The ALIAS identity applied across its digital presence.',
-          media: [
-            {
-              type: 'video',
-              src: '/assets/work/videos/alias.mp4',
-              poster: '/assets/work/alias-thumbnail.jpg',
-              width: 1440,
-              height: 838,
-              label: 'ALIAS Creative website video preview',
-              caption: 'ALIAS / digital brand application',
-            },
-          ],
-        },
+        aliasBranding,
       ]}
     />
   );

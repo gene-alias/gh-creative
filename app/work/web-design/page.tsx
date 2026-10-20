@@ -5,7 +5,7 @@ export default function Websites() {
     <WorkPage
       title="Websites."
       number="01"
-      description="Selected website work for CENTUM, Incredible Kitchens, Loverboy Club and KONSTRUKT."
+      description="Selected website work for CENTUM, Incredible Kitchens, Loverboy Club, KONSTRUKT and ALIAS."
       examples={[
         {
           title: 'CENTUM',
@@ -69,6 +69,24 @@ export default function Websites() {
               height: 868,
               label: 'KONSTRUKT website video preview',
               caption: 'KONSTRUKT / website walkthrough',
+            },
+          ],
+        },
+        {
+          id: 'alias-website',
+          title: 'ALIAS',
+          label: 'WEBSITE',
+          summary:
+            'A digital home for ALIAS, with a service-led layout and a showcase of selected work.',
+          media: [
+            {
+              type: 'video',
+              src: '/assets/work/videos/alias.mp4',
+              poster: '/assets/work/alias-thumbnail.jpg',
+              width: 1440,
+              height: 838,
+              label: 'ALIAS Creative website video preview',
+              caption: 'ALIAS / website walkthrough',
             },
           ],
         },

@@ -41,7 +41,7 @@ const services = [
 
 const work = [
   {
-    title: 'CENTUM. INCREDIBLE KITCHENS. LOVERBOY CLUB. KONSTRUKT.',
+    title: 'CENTUM. INCREDIBLE KITCHENS. LOVERBOY CLUB. KONSTRUKT. ALIAS.',
     category: 'WEBSITES',
     href: '/work/web-design',
     image: '/assets/work/centum-thumbnail.jpg',

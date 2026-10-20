@@ -107,7 +107,7 @@ server environment variables are configured for the intended deployment.
 ## Selected work and inquiry receipt design
 
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
-Loverboy Club, KONSTRUKT), Visual (a curated gallery of finished work), and Branding (Incredible Kitchens,
+Loverboy Club, KONSTRUKT, ALIAS), Visual (a curated gallery of finished work), and Branding (Incredible Kitchens,
 ALIAS). Website previews play Gene’s supplied screen recordings as silent, looping videos. Still frames serve as loading posters.
 The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The Visual gallery follows Gene’s revised six local categories and contains 70 images: Product & campaigns (9), Fashion & eyewear (16), Jewellery & portraits (15), Cinematic & character work (14), Architecture & interiors (7), and Fitness & training (9). The empty untitled folder is ignored, and the removed image is not included. The gallery contains individual artworks, with no before-and-after comparisons.
 
@@ -159,7 +159,7 @@ is compressed for mobile browsing, with the ad contact sheet retained at its ful
 
 ## Website video previews
 
-The four website examples, ALIAS digital brand example, and homepage Websites
+The five website examples and homepage Websites
 card use the supplied recordings. Mobile MP4 copies are in public/assets/work/videos:
 H.264, 1280px wide, 24fps, yuv420p and fast-start metadata. The complete recordings
 are retained; audio is removed for silent portfolio playback. Files total about
@@ -192,3 +192,17 @@ Public WebP copies are under public/assets/work/visual: thumbnails fit within
 600×900, and viewer images fit within 1800×2200. Originals are unchanged. Below-fold
 thumbnails load lazily, and larger assets load only when selected. The homepage
 Visual cover remains a text placeholder while Gene selects a replacement image.
+
+
+## ALIAS branding and website work
+
+The ALIAS website recording is listed under Websites. Branding now uses Gene’s
+supplied ALIAS Brand Kit: app icon, liquid-metal logo loop, business card front
+and reverse, sample invoice, dark/light email signatures, sharing preview and
+dark/light Facebook covers. Written descriptions explain each application.
+
+Static WebP copies in public/assets/work/alias preserve their proportions. The
+supplied six-second GIF is delivered as a silent H.264 MP4 with its original
+square proportions, a loading poster, native controls and the shared visible-only
+playback behaviour. The original source assets remain unchanged. Invoice captions
+identify the example content and placeholders as a template.
