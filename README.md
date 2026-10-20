@@ -107,9 +107,9 @@ server environment variables are configured for the intended deployment.
 ## Selected work and inquiry receipt design
 
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
-Loverboy Club), Visual (before/after artwork), and Branding (Incredible Kitchens,
-ALIAS). Website cards currently use imagery from the local projects; they are
-captioned as imagery rather than finished website screenshots. The visual gallery
+Loverboy Club, KONSTRUKT), Visual (before/after artwork), and Branding (Incredible Kitchens,
+ALIAS). Website thumbnails use still frames from Gene’s supplied screen recordings.
+The homepage category covers use the CENTUM and ALIAS previews. The visual gallery
 is intentionally empty until Gene supplies the artwork pairs. Add those pairs in
 `app/work/visual-design/page.tsx`; the gallery includes a keyboard-accessible
 before/after range control.
@@ -129,3 +129,13 @@ Inter Light and fall back to the recipient's Arial/Helvetica when Inter is not
 available. No image host is required. To update artwork, export the Paper nodes,
 replace the PNGs in `public/assets/email`, and regenerate the corresponding
 base64 strings in the server module.
+
+Thumbnail source recordings (from Gene’s Desktop) and selected timestamps:
+- CENTUM.mov: 00:03
+- Incredible Kitchens.mov: 00:01
+- Loverboy CLub.mov: 00:02.5
+- ALIAS Creative.mov: 00:03
+- KONSTRUKT demo.mov: 00:01
+
+Frames retain the full recording aspect ratio and are exported as 1440px-wide
+JPEGs in `public/assets/work/*-thumbnail.jpg`. Original recordings remain local.

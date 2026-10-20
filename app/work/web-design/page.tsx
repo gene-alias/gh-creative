@@ -5,7 +5,7 @@ export default function Websites() {
     <WorkPage
       title="Websites."
       number="01"
-      description="Selected website work for CENTUM, Incredible Kitchens and Loverboy Club."
+      description="Selected website work for CENTUM, Incredible Kitchens, Loverboy Club and KONSTRUKT."
       examples={[
         {
           title: 'CENTUM',
@@ -15,12 +15,11 @@ export default function Websites() {
           media: [
             {
               type: 'image',
-              src: '/assets/work/centum-hero.jpg',
-              width: 1920,
-              height: 1080,
-              alt: 'CENTUM website hero imagery featuring runners',
-              caption: 'CENTUM / hero imagery',
-              presentation: 'cover',
+              src: '/assets/work/centum-thumbnail.jpg',
+              width: 1440,
+              height: 838,
+              alt: 'CENTUM website thumbnail showing its boxing hero and wordmark',
+              caption: 'CENTUM / website preview',
             },
           ],
         },
@@ -31,12 +30,11 @@ export default function Websites() {
           media: [
             {
               type: 'image',
-              src: '/assets/work/incredible-kitchens-hero.webp',
-              width: 2160,
-              height: 3840,
-              alt: 'Kitchen imagery from the Incredible Kitchens website',
-              caption: 'Incredible Kitchens / website imagery',
-              presentation: 'cover',
+              src: '/assets/work/incredible-kitchens-thumbnail.jpg',
+              width: 1440,
+              height: 838,
+              alt: 'Incredible Kitchens website thumbnail showing the homepage',
+              caption: 'Incredible Kitchens / website preview',
             },
           ],
         },
@@ -47,12 +45,26 @@ export default function Websites() {
           media: [
             {
               type: 'image',
-              src: '/assets/work/loverboy-hero.jpg',
-              width: 2400,
-              height: 1350,
-              alt: 'Loverboy Club website hero imagery',
-              caption: 'Loverboy Club / hero imagery',
-              presentation: 'cover',
+              src: '/assets/work/loverboy-thumbnail.jpg',
+              width: 1440,
+              height: 838,
+              alt: 'Loverboy Club website thumbnail showing the homepage',
+              caption: 'Loverboy Club / website preview',
+            },
+          ],
+        },
+        {
+          title: 'KONSTRUKT',
+          label: 'WEBSITE',
+          summary: 'A website for a construction intelligence platform.',
+          media: [
+            {
+              type: 'image',
+              src: '/assets/work/konstrukt-thumbnail.jpg',
+              width: 1440,
+              height: 868,
+              alt: 'KONSTRUKT website thumbnail showing its construction intelligence homepage',
+              caption: 'KONSTRUKT / website preview',
             },
           ],
         },

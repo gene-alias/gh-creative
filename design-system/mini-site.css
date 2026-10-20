@@ -214,7 +214,7 @@ body:has(.mini-site) {
 }
 .mini-work-image {
   width: 100%;
-  height: 225px;
+  aspect-ratio: 1858 / 1080;
   overflow: hidden;
   background: #080808;
 }
@@ -665,14 +665,7 @@ body:has(.mini-site) {
 .mini-work-image {
   position: relative;
 }
-.mini-work-image .mini-work-cover-logo {
-  position: absolute;
-  left: 10%;
-  top: 44%;
-  width: 80%;
-  height: auto;
-  object-fit: contain;
-}
+
 .mini-work-label strong {
   font-size: 16px;
   line-height: 1.55;

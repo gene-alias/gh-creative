@@ -15,6 +15,14 @@ export default function Branding() {
           media: [
             {
               type: 'image',
+              src: '/assets/work/incredible-kitchens-thumbnail.jpg',
+              width: 1440,
+              height: 838,
+              alt: 'Incredible Kitchens identity on its website homepage',
+              caption: 'Incredible Kitchens / digital brand application',
+            },
+            {
+              type: 'image',
               src: '/assets/work/incredible-kitchens-branding.webp',
               width: 800,
               height: 533,
@@ -30,9 +38,9 @@ export default function Branding() {
           media: [
             {
               type: 'image',
-              src: '/assets/work/alias-identity.webp',
-              width: 800,
-              height: 533,
+              src: '/assets/work/alias-thumbnail.jpg',
+              width: 1440,
+              height: 838,
               alt: 'ALIAS identity and visual direction applied to a website',
               caption: 'ALIAS / digital brand application',
             },

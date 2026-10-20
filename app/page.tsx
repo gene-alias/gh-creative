@@ -40,13 +40,13 @@ const services = [
 
 const work = [
   {
-    title: 'CENTUM. INCREDIBLE KITCHENS. LOVERBOY CLUB.',
+    title: 'CENTUM. INCREDIBLE KITCHENS. LOVERBOY CLUB. KONSTRUKT.',
     category: 'WEBSITES',
     href: '/work/web-design',
-    image: '/assets/work/centum-hero.jpg',
-    width: 1920,
-    height: 1080,
-    alt: 'CENTUM website hero imagery',
+    image: '/assets/work/centum-thumbnail.jpg',
+    width: 1440,
+    height: 838,
+    alt: 'CENTUM website preview',
     treatment: 'web',
   },
   {
@@ -63,10 +63,10 @@ const work = [
     title: 'INCREDIBLE KITCHENS. ALIAS.',
     category: 'BRANDING',
     href: '/work/branding',
-    image: '/assets/work/incredible-kitchens-branding.webp',
-    width: 800,
-    height: 533,
-    alt: 'Incredible Kitchens identity applications',
+    image: '/assets/work/alias-thumbnail.jpg',
+    width: 1440,
+    height: 838,
+    alt: 'ALIAS website and brand preview',
     treatment: 'brand',
   },
 ];
@@ -165,16 +165,6 @@ export default function Home() {
                     <ArrowRight size={32} />
                     <span>AFTER.</span>
                   </div>
-                )}
-                {item.treatment === 'web' && (
-                  <Image
-                    className="mini-work-cover-logo"
-                    unoptimized
-                    src="/assets/work/centum-wordmark.svg"
-                    width={620}
-                    height={54}
-                    alt="CENTUM"
-                  />
                 )}
               </div>
               <div className="mini-work-label">
