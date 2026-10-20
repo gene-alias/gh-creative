@@ -27,7 +27,8 @@ export default function Websites() {
         {
           title: 'Incredible Kitchens',
           label: 'WEBSITE',
-          summary: 'An online home for kitchen projects and design services.',
+          summary:
+            'Custom kitchens and joinery, from design and manufacture through to installation.',
           media: [
             {
               type: 'video',

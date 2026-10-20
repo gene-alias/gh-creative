@@ -191,7 +191,7 @@ opening tile. Full image links support native browser zoom in a separate tab.
 Public WebP copies are under public/assets/work/visual: thumbnails fit within
 600×900, and viewer images fit within 1800×2200. Originals are unchanged. Below-fold
 thumbnails load lazily, and larger assets load only when selected. The homepage
-Visual cover remains a text placeholder while Gene selects a replacement image.
+Visual cover uses the selected Eyewear / teal I artwork.
 
 
 ## ALIAS branding and website work
