@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
-import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
-import { HeroGlobe } from '@/components/hero/hero-globe';
+import { MiniFooter } from '@/components/mini/site-shell';
+import { OriginalHero } from '@/components/hero/original-hero';
 
 const services = [
   {
@@ -77,45 +77,7 @@ export default function Home() {
       <a className="mini-skip" href="#services">
         Skip to services
       </a>
-      <MiniHeader />
-      <section className="mini-hero" aria-labelledby="mini-hero-title">
-        <HeroGlobe />
-        <div className="mini-hero-meta">
-          <span>INDEPENDENT CREATIVE STUDIO</span>
-          <span className="mini-cross" aria-hidden="true">
-            ✳
-          </span>
-        </div>
-        <div className="mini-hero-art" aria-hidden="true">
-          <span>
-            LOCAL THINKING.
-            <br />
-            WORLDWIDE POSSIBILITIES.
-          </span>
-        </div>
-        <h1 id="mini-hero-title">
-          SHARE YOUR
-          <br />
-          <span>VISION.</span>
-          <br />
-          WITH THE WORLD.
-        </h1>
-        <p>
-          Web, visuals, branding and sound.
-          <br />
-          Made with intent. Made for you.
-        </p>
-        <ProjectBriefTrigger className="mini-button mini-button-primary">
-          LET’S TALK ABOUT YOUR IDEA{' '}
-          <ArrowUpRight size={20} aria-hidden="true" />
-        </ProjectBriefTrigger>
-        <a className="mini-hero-explore" href="#work">
-          EXPLORE MY WORK <ArrowDown size={15} aria-hidden="true" />
-        </a>
-        <div className="mini-location">
-          <span className="mini-dot" /> MELBOURNE / WORKING WORLDWIDE
-        </div>
-      </section>
+      <OriginalHero />
       <section
         className="mini-section"
         id="services"

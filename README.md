@@ -1,7 +1,7 @@
 # GH Creative
 
 Mobile creative mini-site with an animated Earth, expandable services, work
-galleries and a short inquiry form. A shared design system retains the GH identity.
+galleries and a conversational inquiry form. A shared design system retains the GH identity.
 
 ## Local development
 
@@ -27,10 +27,13 @@ the local development server continues using its original configuration.
 
 ## Project brief delivery (Resend)
 
-The popup ends with **Review details → Send project brief → Confirmation**.
+The original one-question-at-a-time popup ends with **Review details → Send project brief → Confirmation**.
 `POST /api/project-brief` emails the brief to **gene@alias.com.ai** using Resend.
-The visitor's email is the Reply-To address. The recipient is fixed on the server;
-requests cannot override it. Downloads are optional after a successful send.
+The visitor’s email is the Reply-To address for Gene’s notification. After Resend
+accepts that notification, the server sends a separate branded confirmation to
+the validated visitor email. Replies to the confirmation go to gene@alias.com.ai.
+Both messages use the verified PROJECT_BRIEF_FROM sender. Request payloads cannot
+override Gene’s address, the confirmation recipient or the confirmation copy. Downloads are optional after a successful send.
 
 Configure these **server-only** environment variables in Vercel (Preview and
 Production) and in `.env.local` for development:
@@ -51,8 +54,12 @@ would require its own route adapter; current production email hosting targets Ve
 
 Delivery is not live until the Resend settings are configured and deployed.
 Missing configuration, provider errors, and timeouts show an error and retain the
-visitor's answers. The success screen appears only after Resend returns a message
-ID (acceptance for delivery, not an inbox delivery receipt). Unchanged retries use
+visitor's answers. The inquiry success screen appears only after Resend returns a notification
+message ID (acceptance for delivery, not an inbox delivery receipt). The receipt
+uses a separate idempotency key. If only the receipt fails, the inquiry remains
+successful and the page offers **Try confirmation again**. That retry reuses both
+message keys to avoid resending Gene’s notification within the provider’s retention
+window. No confirmation is sent when Gene’s notification fails. Unchanged retries use
 the same idempotency key to avoid duplicate sends within Resend's retention window.
 Server-side validation, body-size limits, same-origin checks, and a honeypot are
 included. No project content or credentials are written to application logs.
@@ -76,15 +83,22 @@ excluded from both Git and deployment uploads.
 
 ## Mobile mini-site
 
-The homepage and work galleries now share a 480px maximum width on every screen,
+The homepage and work galleries share a 480px maximum width on every screen,
 with native scrolling, expandable services and persistent bottom navigation.
-The original animated Earth remains in the hero, sized to its containing column;
-it pauses offscreen and respects reduced motion. Body copy uses locally hosted Inter Light (300); existing display headings, wordmark and technical labels are retained.
-The former pinned desktop presentation and cursor effect are not mounted on these pages.
+The full studio hero is retained: GH wordmark, hamburger menu, animated Earth,
+original two-line headline, outlined project action and contact footer. The Earth
+uses column-based measurements, pauses offscreen and respects reduced motion.
+Body copy uses locally hosted Inter Light (300); existing display headings,
+wordmark and technical labels are retained.
 
-Inquiry flow: **Your idea → Review & send → Confirmation**. Name, email, at
-least one service and a short project description are required. Budget, timing,
-phone and business details are optional; omitted budget and timing use the
-existing “Let’s work it out” and “I’m flexible” choices. Service-specific inquiry
-buttons preselect that service. Answers persist while browsing during this visit.
-The same Resend endpoint, recipient, server validation and retry keys are used.
+The original conversational form is restored: introductions, contact details,
+optional business details, services, project idea, budget, timing and a final
+review. Each step validates before advancing; answers persist while browsing
+this visit. Review items can be edited individually. Service-specific inquiry
+buttons preselect the service. After sending, clients can download their brief.
+
+The branded confirmation template is in lib/server/inquiry-confirmation.ts.
+Preview it with fixture details before sending real mail. It includes a greeting,
+a receipt message, selected services, budget and timing; replies go to Gene.
+No live receipt can be sent until the Resend sender domain is verified and both
+server environment variables are configured for the intended deployment.

@@ -8,14 +8,7 @@ import {
   type ComponentProps,
   type ReactNode,
 } from 'react';
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  Send,
-  X,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Download, Send, X } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -23,22 +16,68 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { BriefContext } from './brief-context';
+import { GHMonogram } from '@/components/brand/gh-monogram';
+import { BriefContext, BriefMountContext } from './brief-context';
+import { createPortal } from 'react-dom';
 import {
   budgetOptions,
   emptyBrief,
+  formatBrief,
   serviceOptions,
   timingOptions,
   validateBriefStep,
   type ProjectBrief,
 } from './brief-model';
 
-type Phase = 'draft' | 'review' | 'sent';
-const newInquiry = (): ProjectBrief => ({
-  ...emptyBrief(),
-  budget: 'Let’s work it out',
-  timing: 'I’m flexible',
-});
+const steps = [
+  {
+    label: 'INTRODUCTIONS',
+    title: 'First, what’s your name?',
+    description:
+      'Good projects start with a conversation. Let’s get to know you.',
+  },
+  {
+    label: 'YOUR DETAILS',
+    title: 'How can we reach you?',
+    description:
+      'An email is all we need. Add a phone number if you prefer a call.',
+  },
+  {
+    label: 'YOUR BUSINESS',
+    title: 'Who are we creating for?',
+    description:
+      'A business, a personal project, or something new. These details are optional.',
+  },
+  {
+    label: 'THE DISCIPLINES',
+    title: 'What do you have in mind?',
+    description:
+      'Choose all that apply. We can work out the right mix together.',
+  },
+  {
+    label: 'YOUR PROJECT',
+    title: 'Tell us about your idea.',
+    description:
+      'What are you making, who is it for, and what would a great outcome look like? Include any links or references.',
+  },
+  {
+    label: 'THE INVESTMENT',
+    title: 'What’s your budget?',
+    description:
+      'An approximate range helps shape the scope. All amounts are in AUD.',
+  },
+  {
+    label: 'THE TIMING',
+    title: 'When do you need it?',
+    description:
+      'A rough timeframe is fine. We’ll work through the details together.',
+  },
+  {
+    label: 'YOUR BRIEF',
+    title: 'Confirm your details.',
+    description: 'Review your answers, then send your project brief to Gene.',
+  },
+];
 
 export function ProjectBriefTrigger({
   onClick,
@@ -65,23 +104,42 @@ export function ProjectBriefTrigger({
 
 export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [brief, setBrief] = useState<ProjectBrief>(newInquiry);
-  const [phase, setPhase] = useState<Phase>('draft');
+  const [dialogMounted, setDialogMounted] = useState(false);
+  const [inlineMount, setInlineMount] = useState<HTMLDivElement | null>(null);
+  const [brief, setBrief] = useState<ProjectBrief>(emptyBrief);
+  const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [invalidStep, setInvalidStep] = useState<number | null>(null);
+  const [complete, setComplete] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [sending, setSending] = useState(false);
   const [contactFax, setContactFax] = useState('');
   const inFlight = useRef(false);
   const submission = useRef<{ content: string; id: string } | null>(null);
-  const returnFocus = useRef<HTMLElement | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  const lastStep = steps.length - 1;
+  const current = steps[step];
 
   useEffect(() => {
-    if (!open) return;
-    scroller.current?.scrollTo({ top: 0, behavior: 'instant' });
-    heading.current?.focus({ preventScroll: true });
-  }, [open, phase]);
+    if (!open && (!inlineMount || (step === 0 && !complete))) return;
+    const frame = requestAnimationFrame(() => {
+      scroller.current?.scrollTo({ top: 0, behavior: 'instant' });
+      heading.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [step, open, complete, inlineMount]);
+
+  useEffect(() => {
+    if (!error || (!open && !inlineMount)) return;
+    const frame = requestAnimationFrame(() => {
+      const panel = scroller.current;
+      if (panel)
+        panel.scrollTo({ top: panel.scrollHeight, behavior: 'instant' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [error, open, inlineMount]);
 
   function update<K extends keyof ProjectBrief>(
     key: K,
@@ -89,31 +147,31 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
   ) {
     setBrief((previous) => ({ ...previous, [key]: value }));
     setError(null);
-    setInvalidStep(null);
   }
 
-  function validate() {
-    for (const step of [0, 1, 3, 4, 5, 6]) {
-      const problem = validateBriefStep(step, brief);
-      if (problem) {
-        setError(problem);
-        setInvalidStep(step);
-        setPhase('draft');
-        return false;
-      }
-    }
-    return true;
+  function download() {
+    const url = URL.createObjectURL(
+      new Blob([formatBrief(brief)], { type: 'text/plain;charset=utf-8' }),
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'gh-creative-project-brief.txt';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  async function send() {
-    if (inFlight.current || !validate()) return;
+  async function sendBrief() {
+    if (inFlight.current) return;
     inFlight.current = true;
     setSending(true);
     setError(null);
     try {
       const content = JSON.stringify(brief);
-      if (submission.current?.content !== content)
+      if (submission.current?.content !== content) {
         submission.current = { content, id: crypto.randomUUID() };
+      }
       const response = await fetch('/api/project-brief', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,7 +180,7 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
           contactFax,
           submissionId: submission.current.id,
         }),
-        signal: AbortSignal.timeout(20_000),
+        signal: AbortSignal.timeout(30_000),
       });
       const result: unknown = await response.json();
       if (
@@ -132,20 +190,23 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
         'sent' in result &&
         result.sent === true
       ) {
-        setPhase('sent');
-      } else {
-        setError(
-          result &&
-            typeof result === 'object' &&
-            'error' in result &&
-            typeof result.error === 'string'
-            ? result.error
-            : 'We couldn’t confirm your inquiry was sent. Please try again.',
+        setConfirmationSent(
+          'confirmationSent' in result && result.confirmationSent === true,
         );
+        setComplete(true);
+      } else {
+        const message =
+          result &&
+          typeof result === 'object' &&
+          'error' in result &&
+          typeof result.error === 'string'
+            ? result.error
+            : 'We couldn’t confirm your brief was sent. Please try again.';
+        setError(message);
       }
     } catch {
       setError(
-        'We couldn’t confirm your inquiry was sent. Check your connection and try again. Your answers are still here.',
+        'We couldn’t confirm your brief was sent. Check your connection and try again. Your answers are still here.',
       );
     } finally {
       inFlight.current = false;
@@ -153,371 +214,462 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function openInquiry(opener: HTMLElement) {
-    returnFocus.current = opener;
-    const service = opener.dataset.service;
-    if (
-      service &&
-      serviceOptions.includes(service) &&
-      phase !== 'sent' &&
-      !inFlight.current
-    ) {
-      setBrief((previous) => ({
-        ...previous,
-        services: [...new Set([...previous.services, service])],
-      }));
-      setPhase('draft');
+  function advance(event: React.SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (inFlight.current) return;
+    const problem = validateBriefStep(step, brief);
+    if (problem) {
+      setError(problem);
+      return;
     }
-    setOpen(true);
+    if (step < lastStep) {
+      setStep(editing ? lastStep : step + 1);
+      setEditing(false);
+    } else {
+      const invalid = steps.findIndex((_, index) =>
+        validateBriefStep(index, brief),
+      );
+      if (invalid !== -1) {
+        setStep(invalid);
+        setError(validateBriefStep(invalid, brief));
+        return;
+      }
+      void sendBrief();
+    }
   }
 
-  const fieldError = (step: number) => ({
-    'aria-invalid': invalidStep === step,
-    'aria-describedby': invalidStep === step ? 'inquiry-error' : undefined,
-  });
   const review = [
-    ['Name', brief.name],
-    ['Email', brief.email],
-    ['Services', brief.services.join(', ')],
-    ['Your idea', brief.project],
-    ...(brief.phone ? [['Phone', brief.phone]] : []),
-    ...(brief.company ? [['Business', brief.company]] : []),
-    ...(brief.website ? [['Website', brief.website]] : []),
-    ['Budget · AUD', brief.budget],
-    ['Timing', brief.timing],
+    { label: 'Name', value: brief.name, step: 0 },
+    {
+      label: 'Contact',
+      value: [brief.email, brief.phone].filter(Boolean).join('\n'),
+      step: 1,
+    },
+    {
+      label: 'Business',
+      value:
+        [brief.company, brief.website].filter(Boolean).join('\n') ||
+        'Not provided',
+      step: 2,
+    },
+    { label: 'Services', value: brief.services.join(', '), step: 3 },
+    { label: 'Project', value: brief.project, step: 4 },
+    { label: 'Budget · AUD', value: brief.budget, step: 5 },
+    { label: 'Timing', value: brief.timing, step: 6 },
   ];
+  const errorAttributes = {
+    'aria-invalid': !!error,
+    'aria-describedby': error ? 'brief-error' : undefined,
+  };
 
-  return (
-    <BriefContext.Provider value={openInquiry}>
-      {children}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
-          className="mini-inquiry"
-          showCloseButton={false}
-          initialFocus={heading}
-          finalFocus={() =>
-            returnFocus.current?.isConnected
-              ? returnFocus.current
-              : document.querySelector<HTMLElement>('.mini-header-cta')
-          }
-        >
-          <div className="mini-inquiry-top">
-            <span>GH CREATIVE / LET’S TALK</span>
-            <DialogClose aria-label="Close inquiry">
-              <X size={20} aria-hidden="true" />
-            </DialogClose>
-          </div>
-          <div className="mini-inquiry-scroll" ref={scroller}>
-            <p className="mini-inquiry-step">
-              {phase === 'sent'
-                ? 'INQUIRY SENT'
-                : phase === 'review'
-                  ? '02 / REVIEW & SEND'
-                  : '01 / YOUR IDEA'}
-            </p>
-            <DialogTitle
-              className="mini-inquiry-title"
-              ref={heading}
-              tabIndex={-1}
-            >
-              {phase === 'sent'
-                ? 'WE’RE IN TOUCH.'
-                : phase === 'review'
-                  ? 'LOOKING GOOD?'
-                  : 'WHAT’S ON YOUR MIND?'}
-            </DialogTitle>
-            <DialogDescription className="mini-inquiry-description">
-              {phase === 'sent'
-                ? `Thanks, ${brief.name.trim()}. Your inquiry has been sent to Gene. He’ll reply to ${brief.email.trim()}.`
-                : phase === 'review'
-                  ? 'Check your details before sending them to Gene.'
-                  : 'A few details and a little about your idea. We can work out the rest together.'}
-            </DialogDescription>
-            {phase === 'sent' ? (
-              <div className="mini-inquiry-success">
-                <Check size={40} aria-hidden="true" />
-                <p>You’re all set. Thanks for sharing your idea.</p>
-                <DialogClose className="mini-button mini-button-primary">
-                  BACK TO EXPLORING <ArrowRight size={18} aria-hidden="true" />
-                </DialogClose>
+  const Title = dialogMounted ? DialogTitle : 'h3';
+  const Description = dialogMounted ? DialogDescription : 'p';
+  const content = (
+    <>
+      <div className="brief-topbar">
+        <GHMonogram />
+        <span>LET’S MAKE IT HAPPEN</span>
+        {open && (
+          <DialogClose className="brief-close" aria-label="Close project brief">
+            <X size={20} />
+          </DialogClose>
+        )}
+      </div>
+      <div className="brief-progress" aria-hidden="true">
+        {steps.map((item, index) => (
+          <span
+            key={item.label}
+            data-complete={index <= step || complete ? '' : undefined}
+          />
+        ))}
+      </div>
+      <div className="brief-scroll" ref={scroller}>
+        <div className="brief-step" key={complete ? 'complete' : step}>
+          <p className="brief-eyebrow">
+            {complete
+              ? 'BRIEF SENT'
+              : `${String(step + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')} / ${current.label}`}
+          </p>
+          <Title ref={heading} tabIndex={-1} className="brief-title">
+            {complete ? 'Your next chapter starts here.' : current.title}
+          </Title>
+          <Description className="brief-description">
+            {complete
+              ? 'Thanks for sharing your idea. Your project brief has been sent to Gene at GH Creative.'
+              : current.description}
+          </Description>
+          {complete ? (
+            <div className="brief-complete">
+              <span className="brief-complete-icon">
+                <Check size={28} />
+              </span>
+              <p>
+                {confirmationSent
+                  ? `A confirmation email is on its way to ${brief.email}. Gene will review your brief and reply to you.`
+                  : `Your inquiry was sent to Gene, but we couldn’t confirm your receipt email was sent to ${brief.email}. You can save a copy below.`}
+              </p>
+              {!confirmationSent && (
                 <button
                   type="button"
-                  className="mini-text-button"
-                  onClick={() => {
-                    setBrief(newInquiry());
-                    setPhase('draft');
-                    setError(null);
-                    setInvalidStep(null);
-                    setContactFax('');
-                    submission.current = null;
-                  }}
+                  className="brief-next"
+                  disabled={sending}
+                  onClick={() => void sendBrief()}
                 >
-                  START ANOTHER INQUIRY
+                  {sending ? 'SENDING…' : 'TRY CONFIRMATION AGAIN'}{' '}
+                  <Send size={18} />
                 </button>
-              </div>
-            ) : (
-              <form
-                id="mini-inquiry-form"
-                aria-busy={sending}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (inFlight.current) return;
-                  if (phase === 'review') void send();
-                  else if (validate()) setPhase('review');
-                }}
-              >
-                <div className="mini-honeypot" aria-hidden="true">
-                  <label htmlFor="inquiry-fax">Leave this field empty</label>
-                  <input
-                    id="inquiry-fax"
-                    name="contactFax"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={contactFax}
-                    onChange={(event) => setContactFax(event.target.value)}
-                  />
-                </div>
-                {phase === 'draft' ? (
-                  <div className="mini-fields">
-                    <label htmlFor="inquiry-name">
-                      Your name
-                      <input
-                        id="inquiry-name"
-                        name="name"
-                        autoComplete="name"
-                        required
-                        maxLength={120}
-                        value={brief.name}
-                        onChange={(event) => update('name', event.target.value)}
-                        {...fieldError(0)}
-                      />
-                    </label>
-                    <label htmlFor="inquiry-email">
-                      Email address
-                      <input
-                        id="inquiry-email"
-                        name="email"
-                        type="email"
-                        inputMode="email"
-                        autoComplete="email"
-                        placeholder="you@company.com"
-                        required
-                        maxLength={254}
-                        value={brief.email}
-                        onChange={(event) =>
-                          update('email', event.target.value)
-                        }
-                        {...fieldError(1)}
-                      />
-                    </label>
-                    <fieldset
-                      className="mini-service-options"
-                      aria-describedby={
-                        invalidStep === 3 ? 'inquiry-error' : undefined
-                      }
-                    >
-                      <legend>What can I help with?</legend>
-                      <div>
-                        {serviceOptions.map((service) => (
-                          <label key={service}>
-                            <input
-                              type="checkbox"
-                              name="services"
-                              value={service}
-                              checked={brief.services.includes(service)}
-                              onChange={(event) =>
-                                update(
-                                  'services',
-                                  event.target.checked
-                                    ? [...brief.services, service]
-                                    : brief.services.filter(
-                                        (item) => item !== service,
-                                      ),
-                                )
-                              }
-                            />
-                            <span>{service}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </fieldset>
-                    <label htmlFor="inquiry-project">
-                      Tell me about your idea
-                      <textarea
-                        id="inquiry-project"
-                        name="project"
-                        rows={4}
-                        placeholder="What are you looking to create?"
-                        required
-                        minLength={20}
-                        maxLength={5000}
-                        value={brief.project}
-                        onChange={(event) =>
-                          update('project', event.target.value)
-                        }
-                        {...fieldError(4)}
-                      />
-                      <small>
-                        A couple of sentences is plenty (20 characters minimum).
-                      </small>
-                    </label>
-                    <details className="mini-optional-details">
-                      <summary>
-                        Add budget, timing or business details{' '}
-                        <span>optional +</span>
-                      </summary>
-                      <div className="mini-fields">
-                        <label htmlFor="inquiry-budget">
-                          Budget · AUD
-                          <select
-                            id="inquiry-budget"
-                            name="budget"
-                            value={brief.budget}
-                            onChange={(event) =>
-                              update('budget', event.target.value)
-                            }
-                          >
-                            {budgetOptions.map((option) => (
-                              <option key={option}>{option}</option>
-                            ))}
-                          </select>
-                        </label>
-                        <label htmlFor="inquiry-timing">
-                          Timing
-                          <select
-                            id="inquiry-timing"
-                            name="timing"
-                            value={brief.timing}
-                            onChange={(event) =>
-                              update('timing', event.target.value)
-                            }
-                          >
-                            {timingOptions.map((option) => (
-                              <option key={option}>{option}</option>
-                            ))}
-                          </select>
-                        </label>
-                        <label htmlFor="inquiry-phone">
-                          Phone
-                          <input
-                            id="inquiry-phone"
-                            type="tel"
-                            name="phone"
-                            autoComplete="tel"
-                            maxLength={40}
-                            value={brief.phone}
-                            onChange={(event) =>
-                              update('phone', event.target.value)
-                            }
-                          />
-                        </label>
-                        <label htmlFor="inquiry-company">
-                          Business or project name
-                          <input
-                            id="inquiry-company"
-                            name="company"
-                            autoComplete="organization"
-                            maxLength={160}
-                            value={brief.company}
-                            onChange={(event) =>
-                              update('company', event.target.value)
-                            }
-                          />
-                        </label>
-                        <label htmlFor="inquiry-website">
-                          Current website
-                          <input
-                            id="inquiry-website"
-                            name="website"
-                            inputMode="url"
-                            autoComplete="url"
-                            maxLength={500}
-                            value={brief.website}
-                            onChange={(event) =>
-                              update('website', event.target.value)
-                            }
-                          />
-                        </label>
-                      </div>
-                    </details>
-                  </div>
-                ) : (
-                  <>
-                    <dl className="mini-review">
-                      {review.map(([label, value]) => (
-                        <div key={label}>
-                          <dt>{label}</dt>
-                          <dd>{value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p className="mini-inquiry-note">
-                      Your details will be emailed to Gene at GH Creative so he
-                      can respond to your inquiry.
-                    </p>
-                  </>
-                )}
-              </form>
-            )}
-          </div>
-          {phase !== 'sent' && (
-            <div className="mini-inquiry-bottom">
+              )}
               {error && (
-                <p
-                  id="inquiry-error"
-                  className="mini-inquiry-error"
-                  role="alert"
-                >
-                  {error}{' '}
-                  {invalidStep === null && (
-                    <a href="mailto:gene@alias.com.ai">
-                      Email Gene directly{' '}
-                      <ArrowUpRight size={13} aria-hidden="true" />
-                    </a>
-                  )}
+                <p className="brief-error" role="alert">
+                  {error}
                 </p>
               )}
-              <div className="mini-inquiry-actions">
-                {phase === 'review' && (
-                  <button
-                    type="button"
-                    className="mini-inquiry-back"
-                    disabled={sending}
-                    onClick={() => {
-                      setPhase('draft');
-                      setError(null);
-                    }}
-                  >
-                    <ArrowLeft size={16} aria-hidden="true" /> EDIT
-                  </button>
-                )}
-                <button
-                  type="submit"
-                  form="mini-inquiry-form"
-                  className="mini-button mini-button-primary"
-                  disabled={sending}
-                >
-                  {sending
-                    ? 'SENDING…'
-                    : phase === 'review'
-                      ? 'SEND INQUIRY'
-                      : 'REVIEW YOUR INQUIRY'}
-                  {phase === 'review' ? (
-                    <Send size={18} aria-hidden="true" />
-                  ) : (
-                    <ArrowRight size={18} aria-hidden="true" />
-                  )}
-                </button>
-              </div>
-              <p className="mini-inquiry-note" aria-live="polite">
-                {sending
-                  ? 'Sending your inquiry. Please wait for confirmation.'
-                  : 'Your answers stay here while you browse this visit.'}
-              </p>
+              <button type="button" className="brief-next" onClick={download}>
+                SAVE A COPY <Download size={18} />
+              </button>
+              <button
+                type="button"
+                className="brief-back"
+                disabled={sending}
+                onClick={() => {
+                  setBrief(emptyBrief());
+                  setStep(0);
+                  setComplete(false);
+                  setConfirmationSent(false);
+                  setEditing(false);
+                  setError(null);
+                  setContactFax('');
+                  submission.current = null;
+                }}
+              >
+                START ANOTHER PROJECT
+              </button>
+              {open && <DialogClose className="brief-back">CLOSE</DialogClose>}
             </div>
+          ) : (
+            <form
+              id="project-brief-form"
+              onSubmit={advance}
+              aria-busy={sending}
+            >
+              <div className="brief-honeypot" aria-hidden="true">
+                <label htmlFor="brief-fax">Leave this field empty</label>
+                <input
+                  id="brief-fax"
+                  name="contactFax"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={contactFax}
+                  onChange={(event) => setContactFax(event.target.value)}
+                />
+              </div>
+              {step === 0 && (
+                <label className="brief-field" htmlFor="brief-name">
+                  Your name
+                  <input
+                    id="brief-name"
+                    name="name"
+                    autoComplete="name"
+                    placeholder="Your name"
+                    required
+                    maxLength={120}
+                    value={brief.name}
+                    onChange={(event) => update('name', event.target.value)}
+                    {...errorAttributes}
+                  />
+                </label>
+              )}
+              {step === 1 && (
+                <>
+                  <label className="brief-field" htmlFor="brief-email">
+                    Email address
+                    <input
+                      id="brief-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      inputMode="email"
+                      placeholder="you@company.com"
+                      required
+                      maxLength={254}
+                      value={brief.email}
+                      onChange={(event) => update('email', event.target.value)}
+                      {...errorAttributes}
+                    />
+                  </label>
+                  <label className="brief-field" htmlFor="brief-phone">
+                    Phone <span>optional</span>
+                    <input
+                      id="brief-phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="Your phone number"
+                      maxLength={40}
+                      value={brief.phone}
+                      onChange={(event) => update('phone', event.target.value)}
+                    />
+                  </label>
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  <label className="brief-field" htmlFor="brief-company">
+                    Business or project name <span>optional</span>
+                    <input
+                      id="brief-company"
+                      name="company"
+                      autoComplete="organization"
+                      placeholder="Your business or project"
+                      maxLength={160}
+                      value={brief.company}
+                      onChange={(event) =>
+                        update('company', event.target.value)
+                      }
+                    />
+                  </label>
+                  <label className="brief-field" htmlFor="brief-website">
+                    Current website <span>optional</span>
+                    <input
+                      id="brief-website"
+                      name="website"
+                      inputMode="url"
+                      autoComplete="url"
+                      placeholder="yourwebsite.com"
+                      maxLength={500}
+                      value={brief.website}
+                      onChange={(event) =>
+                        update('website', event.target.value)
+                      }
+                    />
+                  </label>
+                </>
+              )}
+              {step === 3 && (
+                <fieldset
+                  className="brief-options"
+                  aria-describedby={error ? 'brief-error' : undefined}
+                >
+                  <legend className="sr-only">Choose services</legend>
+                  {serviceOptions.map((service) => (
+                    <label className="brief-option" key={service}>
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value={service}
+                        checked={brief.services.includes(service)}
+                        onChange={(event) =>
+                          update(
+                            'services',
+                            event.target.checked
+                              ? [...brief.services, service]
+                              : brief.services.filter(
+                                  (item) => item !== service,
+                                ),
+                          )
+                        }
+                      />
+                      <span>{service}</span>
+                      <Check size={17} aria-hidden="true" />
+                    </label>
+                  ))}
+                </fieldset>
+              )}
+              {step === 4 && (
+                <label className="brief-field" htmlFor="brief-project">
+                  Your project brief
+                  <textarea
+                    id="brief-project"
+                    name="project"
+                    rows={5}
+                    placeholder="The idea, the audience, the ambition…"
+                    required
+                    minLength={20}
+                    maxLength={5000}
+                    value={brief.project}
+                    onChange={(event) => update('project', event.target.value)}
+                    {...errorAttributes}
+                  />
+                  <span className="brief-character-count">
+                    {brief.project.length} / 5,000
+                  </span>
+                </label>
+              )}
+              {(step === 5 || step === 6) && (
+                <fieldset
+                  className="brief-options"
+                  aria-describedby={error ? 'brief-error' : undefined}
+                >
+                  <legend className="sr-only">
+                    {step === 5 ? 'Budget in AUD' : 'Project timeframe'}
+                  </legend>
+                  {(step === 5 ? budgetOptions : timingOptions).map(
+                    (option) => {
+                      const field = step === 5 ? 'budget' : 'timing';
+                      return (
+                        <label className="brief-option" key={option}>
+                          <input
+                            type="radio"
+                            name={field}
+                            value={option}
+                            checked={brief[field] === option}
+                            onChange={() => update(field, option)}
+                          />
+                          <span>{option}</span>
+                          <Check size={17} aria-hidden="true" />
+                        </label>
+                      );
+                    },
+                  )}
+                </fieldset>
+              )}
+              {step === lastStep && (
+                <>
+                  <dl className="brief-review">
+                    {review.map((item) => (
+                      <div key={item.label}>
+                        <dt>
+                          {item.label}
+                          <button
+                            type="button"
+                            disabled={sending}
+                            onClick={() => {
+                              setEditing(true);
+                              setError(null);
+                              setStep(item.step);
+                            }}
+                            aria-label={`Edit ${item.label}`}
+                          >
+                            EDIT
+                          </button>
+                        </dt>
+                        <dd>{item.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="brief-delivery-note">
+                    Your details and project brief will be emailed to Gene at GH
+                    Creative. You’ll also receive a confirmation email, with
+                    replies going directly to Gene.
+                  </p>
+                </>
+              )}
+              {error && (
+                <p id="brief-error" className="brief-error" role="alert">
+                  {error}
+                </p>
+              )}
+            </form>
           )}
-        </DialogContent>
-      </Dialog>
-    </BriefContext.Provider>
+        </div>
+      </div>
+      {!complete && (
+        <div className="brief-footer">
+          <div className="brief-actions">
+            <button
+              type="button"
+              className="brief-back"
+              disabled={sending || (step === 0 && !editing)}
+              onClick={() => {
+                setError(null);
+                setStep(editing ? lastStep : step - 1);
+                setEditing(false);
+              }}
+            >
+              <ArrowLeft size={16} /> BACK
+            </button>
+            <button
+              type="submit"
+              form="project-brief-form"
+              className="brief-next"
+              disabled={sending}
+            >
+              {sending
+                ? 'SENDING…'
+                : step === lastStep
+                  ? 'SEND PROJECT BRIEF'
+                  : editing
+                    ? 'SAVE CHANGES'
+                    : step === lastStep - 1
+                      ? 'REVIEW DETAILS'
+                      : 'CONTINUE'}
+              {step === lastStep ? (
+                <Send size={17} />
+              ) : (
+                <ArrowRight size={17} />
+              )}
+            </button>
+          </div>
+          <p className="brief-footnote" aria-live="polite">
+            {sending
+              ? 'Sending your brief. Please wait for confirmation.'
+              : 'Your answers stay here while you browse this visit.'}
+          </p>
+          <p className="brief-call">
+            Prefer a call? <a href="tel:+61405179803">+61 405 179 803</a>
+          </p>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <BriefMountContext.Provider value={setInlineMount}>
+      <BriefContext.Provider
+        value={(opener) => {
+          returnFocus.current = opener;
+          const service = opener.dataset.service;
+          if (
+            service &&
+            serviceOptions.includes(service) &&
+            !complete &&
+            !inFlight.current
+          ) {
+            setBrief((previous) => ({
+              ...previous,
+              services: [...new Set([...previous.services, service])],
+            }));
+            if (step === lastStep) setStep(3);
+          }
+          setDialogMounted(true);
+          setOpen(true);
+        }}
+      >
+        {children}
+        {!dialogMounted &&
+          inlineMount &&
+          createPortal(
+            <div
+              className="project-brief project-brief--inline"
+              data-slot="dialog-content"
+            >
+              {content}
+            </div>,
+            inlineMount,
+          )}
+        <Dialog
+          open={open}
+          onOpenChange={setOpen}
+          onOpenChangeComplete={(isOpen) => {
+            if (!isOpen) setDialogMounted(false);
+          }}
+        >
+          <DialogContent
+            className="project-brief"
+            showCloseButton={false}
+            initialFocus={heading}
+            finalFocus={() =>
+              returnFocus.current?.isConnected
+                ? returnFocus.current
+                : document.querySelector<HTMLElement>(
+                    '.menu-trigger, .portfolio-nav a',
+                  )
+            }
+          >
+            {content}
+          </DialogContent>
+        </Dialog>
+      </BriefContext.Provider>
+    </BriefMountContext.Provider>
   );
 }

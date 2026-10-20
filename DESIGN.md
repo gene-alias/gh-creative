@@ -25,3 +25,13 @@ service titles and the existing GH artwork remain. Inquiry delivery still uses
 the server endpoint and gene@alias.com.ai; the flow is now details, review, send,
 with budget and timing optional. The historical prototype notes above describe
 previous iterations.
+
+
+## Hero and inquiry revision
+
+Restore the full studio hero’s original visual language in the mobile column,
+including its rotating Earth, headline, navigation, outlined CTA and contact
+card. Retain Inter Light for body text. Restore the original conversational
+question flow and progress indicators. Add a branded transactional confirmation
+email after the inquiry notification is accepted, with honest handling and a
+retry when only the client receipt fails.
