@@ -1,6 +1,7 @@
 'use client';
 import { PixelSectionTransition } from '@/components/motion/pixel-section-transition';
 import { DesktopWorkGallery } from '@/components/work/desktop-work-gallery';
+import { DesktopScreenMockup } from '@/components/work/desktop-screen-mockup';
 import { StaggeredText } from '@/components/ui/staggered-text';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
@@ -14,11 +15,11 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from '@/components/ui/accordion';
+  ColourWipeAccordion as Accordion,
+  ColourWipeAccordionItem as AccordionItem,
+  ColourWipeAccordionTrigger as AccordionTrigger,
+  ColourWipeAccordionContent as AccordionContent,
+} from '@/components/ui/colour-wipe-accordion';
 import {
   Dialog,
   DialogContent,
@@ -40,6 +41,7 @@ const services = [
   {
     "name": "Web design",
     "tag": "Web Design & Development",
+    "workHref": "/work/web-design",
     "items": [
       {
         "label": "Custom websites",
@@ -78,6 +80,7 @@ const services = [
   {
     "name": "Visual",
     "tag": "Visual Design & Content Creation",
+    "workHref": "/work/visual-design",
     "items": [
       {
         "label": "Brand imagery",
@@ -112,6 +115,7 @@ const services = [
   {
     "name": "Marketing",
     "tag": "Marketing & Campaign Content",
+    "workHref": "/work/marketing",
     "items": [
       {
         "label": "Ad creatives",
@@ -150,6 +154,7 @@ const services = [
   {
     "name": "Audio",
     "tag": "Audio Production & Sound Design",
+    "workHref": "/work/audio",
     "items": [
       {
         "label": "Royalty-free music samples",
@@ -255,7 +260,7 @@ export default function Home() {
           <h1 id="hero-title">
             <span className="hero-line">
               <span className="hero-line-reveal">
-                <StaggeredText as="span" className="hero-title-glow" externallyAnimated text="SHARE YOUR VISION" desktopOnly segmentBy="chars" delay={35} duration={0.85} direction="bottom" blur={false} />
+                <StaggeredText as="span" className="hero-title-glow" externallyAnimated text="SHARE YOUR " desktopOnly segmentBy="chars" delay={35} duration={0.85} direction="bottom" blur={false} /><StaggeredText as="span" className="hero-title-glow hero-title-outline" externallyAnimated text="VISION" desktopOnly segmentBy="chars" delay={35} duration={0.85} direction="bottom" blur={false} />
               </span>
             </span>
             <span className="hero-line">
@@ -318,16 +323,20 @@ export default function Home() {
         <DesktopWorkGallery />
         <div className="work-stack" aria-label="Selected creative work">
           <figure className="work-panel work-panel--web">
-            <Link prefetch={false} className="work-panel-link" href="/work/web-design" aria-label="Explore web design work" />
-            <figcaption><span>01 / WEB DESIGN</span><span>↗</span></figcaption>
+            <DesktopScreenMockup />
+            <Link prefetch={false} className="work-panel-link" href="/work/web-design">
+              <span>01 / WEB DESIGN</span><span aria-hidden="true">↗</span>
+            </Link>
           </figure>
           <figure className="work-panel work-panel--visual">
-            <Link prefetch={false} className="work-panel-link" href="/work/visual-design" aria-label="Explore visual design work" />
-            <figcaption><span>02 / VISUAL DESIGN</span><span>↗</span></figcaption>
+            <Link prefetch={false} className="work-panel-link" href="/work/visual-design">
+              <span>02 / VISUAL DESIGN</span><span aria-hidden="true">↗</span>
+            </Link>
           </figure>
           <figure className="work-panel work-panel--brand">
-            <Link prefetch={false} className="work-panel-link" href="/work/branding" aria-label="Explore branding work" />
-            <figcaption><span>03 / BRANDING</span><span>↗</span></figcaption>
+            <Link prefetch={false} className="work-panel-link" href="/work/branding">
+              <span>03 / BRANDING</span><span aria-hidden="true">↗</span>
+            </Link>
           </figure>
         </div>
         <div className="work-sequence-footer">
@@ -393,6 +402,9 @@ export default function Home() {
                 <a href="#contact">
                   LET’S TALK {s.name.toUpperCase()} <ArrowUpRight size={16} />
                 </a>
+                <Link className="service-work-link" href={s.workHref}>
+                  SEE MY WORK <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
               </AccordionContent>
             </AccordionItem>
           ))}

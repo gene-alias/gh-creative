@@ -351,7 +351,7 @@ export function useScrollMotion(
                 ease: 'none',
               });
               workEntrances.set(panel, drift);
-              const image = panel.querySelector('img');
+              const image = panel.querySelector<HTMLImageElement>(':scope > img');
               if (image) {
                 const travel = [5, 7, 6][index] ?? 6;
                 const direction = fromLeft ? 1 : -1;

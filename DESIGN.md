@@ -10,4 +10,4 @@ The page includes the original hero artwork, a self-initiated studio design feat
 
 The mobile site is capped at 480px on large screens for design review. Run npm run dev to preview, npm run tokens:build to update the tokens, and npm run build for the production build.
 
-Screen treatment v1.1 now incorporates the supplied Nueva Tech Instagram reference: condensed headlines, thin red panel frames, a red menu and spotlight offers section. See DESIGN-SYSTEM.md for attribution and usage.
+Screen treatment v1.1 incorporates the supplied Nueva Tech Instagram reference: condensed headlines, thin red panel frames, a red menu and a red Process section with black text. See DESIGN-SYSTEM.md for attribution and usage.

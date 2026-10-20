@@ -218,8 +218,8 @@ export default function DesignSystem() {
         <div className="ds-panel">
           <h3>Reveal the next chapter.</h3>
           <p>
-            A downward sweep of scarlet pixels dissolves the dark cover into the
-            red offers panel. The reveal follows your scroll and reverses on the
+            A pixel wipe from the bottom dissolves the dark cover into the dark
+            How We Work panel. The reveal follows your scroll and reverses on the
             way back. The text and links stay selectable and usable.
           </p>
           <p className="ds-small">

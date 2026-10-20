@@ -353,7 +353,7 @@ p.body-copy {
   color: var(--gh-accent-hover);
 }
 .offers {
-  background: var(--gh-surface-panel);
+  background: var(--gh-surface-page);
 }
 .offer {
   display: block;

@@ -2,6 +2,7 @@
 // Vendor gallery uses imperative frame refs and a keyboard-operable carousel region.
 /* oxlint-disable react/react-compiler, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex, jsx-a11y/prefer-tag-over-role */
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   useCallback,
   useEffect,
@@ -16,9 +17,11 @@ import {
 } from "react";
 import "./dolly-gallery.css";
 export interface DollyGalleryImage {
-  src: string;
+  src?: string;
   alt?: string;
   label?: string;
+  href?: string;
+  content?: ReactNode;
 }
 export interface DollyGalleryProps {
   images?: (string | DollyGalleryImage)[];
@@ -35,6 +38,7 @@ export interface DollyGalleryProps {
   scatter?: number;
   revealRange?: number;
   passRange?: number;
+  opacityFloor?: number;
   parallaxX?: number;
   parallaxY?: number;
   parallaxSmooth?: number;
@@ -80,6 +84,7 @@ const readMotion = () => window.matchMedia(motionQuery).matches;
 interface Drag {
   y: number;
   at: number;
+  startY: number;
 }
 export const DollyGallery = ({
   images = DEFAULT_IMAGES,
@@ -96,6 +101,7 @@ export const DollyGallery = ({
   scatter = 0.1,
   revealRange = 1.5,
   passRange = 1,
+  opacityFloor = 0,
   parallaxX = 0.12,
   parallaxY = 0.06,
   parallaxSmooth = 0.85,
@@ -113,7 +119,8 @@ export const DollyGallery = ({
   children,
 }: DollyGalleryProps) => {
   const rootRef = useRef<HTMLDivElement>(null);
-  const slots = useRef<(HTMLDivElement | null)[]>([]);
+  const slots = useRef<(HTMLElement | null)[]>([]);
+  const scrollDriven = pageScroll || pinSection;
   const target = useRef(pinSection ? -spacing * revealRange : 0);
   const shown = useRef(pinSection ? -spacing * revealRange : 0);
   const speed = useRef(0);
@@ -124,6 +131,7 @@ export const DollyGallery = ({
   const hovering = useRef(false);
   const visible = useRef(true);
   const dragging = useRef<Drag | null>(null);
+  const suppressClick = useRef(false);
   const flick = useRef(0);
   const aim = useRef({ x: 0, y: 0 });
   const eased = useRef({ x: 0, y: 0 });
@@ -216,7 +224,8 @@ export const DollyGallery = ({
         const swell = 1 + pulse * rush * alpha;
         const rx = -py * tilt * rush * alpha;
         const ry = px * tilt * rush * alpha;
-        slot.style.opacity = alpha.toFixed(3);
+        const floor = clamp(opacityFloor, 0, 1);
+        slot.style.opacity = (floor + (1 - floor) * alpha).toFixed(3);
         slot.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${(-depth).toFixed(1)}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(${swell.toFixed(4)})`;
       }
       if (nearest >= 0 && nearest !== lastIndex.current) {
@@ -232,6 +241,7 @@ export const DollyGallery = ({
       infinite,
       revealRange,
       passRange,
+      opacityFloor,
       perspective,
       spread,
       scatter,
@@ -402,17 +412,26 @@ export const DollyGallery = ({
     );
   };
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
-    dragging.current = { y: event.clientY, at: performance.now() };
+    if (scrollDriven || event.button !== 0) return;
+    dragging.current = { y: event.clientY, at: performance.now(), startY: event.clientY };
+    suppressClick.current = false;
     flick.current = 0;
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     track(event);
+    if (scrollDriven) {
+      wake();
+      return;
+    }
     const drag = dragging.current;
     if (!drag) {
       wake();
       return;
+    }
+    if (!suppressClick.current) {
+      if (Math.abs(event.clientY - drag.startY) <= 6) return;
+      suppressClick.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
     }
     const dy = event.clientY - drag.y;
     const now = performance.now();
@@ -462,9 +481,9 @@ export const DollyGallery = ({
       ref={rootRef}
       role="region"
       aria-roledescription="carousel"
-      aria-label="Image gallery"
-      tabIndex={0}
-      className={["dolly-gallery", className].filter(Boolean).join(" ")}
+      aria-label="Selected work"
+      tabIndex={scrollDriven ? undefined : 0}
+      className={["dolly-gallery", scrollDriven && "dolly-gallery--scroll", className].filter(Boolean).join(" ")}
       style={{ backgroundColor }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -479,41 +498,63 @@ export const DollyGallery = ({
         aim.current.y = 0;
         wake();
       }}
-      onKeyDown={onKeyDown}
+      onKeyDown={scrollDriven ? undefined : onKeyDown}
     >
       <div
         className="dolly-gallery__stage"
         style={{ perspective: `${perspective}px` }}
       >
-        {ring.map(({ image, index }, k) => (
+        {ring.map(({ image, index }, k) => {
+          const content = image.content ? image.content : image.src ? <Image
+            unoptimized
+            width={680}
+            height={850}
+            src={image.src}
+            alt={image.alt ?? `Gallery image ${index + 1}`}
+            draggable={false}
+            loading="lazy"
+            style={{
+              filter:
+                grayscale > 0
+                  ? `grayscale(${clamp(grayscale, 0, 1)})`
+                  : undefined,
+            }}
+            className="dolly-gallery__image"
+          /> : <div className="dolly-gallery__blank"><span>{image.label ?? image.alt}</span></div>;
+          const bindSlot = (node: HTMLElement | null) => {
+            slots.current[k] = node;
+          };
+          const tileClass = [
+            "dolly-gallery__tile",
+            image.href && "dolly-gallery__tile--link",
+          ].filter(Boolean).join(" ");
+          return (
           <div
             key={k}
-            ref={(node) => {
-              if (node) slots.current[k] = node;
-              else slots.current[k] = null;
-            }}
-            className="dolly-gallery__tile"
+            ref={bindSlot}
+            className={tileClass}
             style={tileStyle}
             aria-hidden={k >= list.length}
           >
-            {image.src ? <Image
-              unoptimized
-              width={680}
-              height={850}
-              src={image.src}
-              alt={image.alt ?? `Gallery image ${index + 1}`}
-              draggable={false}
-              loading="lazy"
-              style={{
-                filter:
-                  grayscale > 0
-                    ? `grayscale(${clamp(grayscale, 0, 1)})`
-                    : undefined,
-              }}
-              className="dolly-gallery__image"
-            /> : <div className="dolly-gallery__blank"><span>{image.label ?? image.alt}</span></div>}
+            {image.href ? (
+              <Link
+                className="dolly-gallery__tile-link"
+                href={image.href}
+                prefetch={false}
+                tabIndex={k >= list.length ? -1 : 0}
+                aria-label={`Explore ${image.alt ?? image.label ?? 'selected'} work`}
+                onClick={(event) => {
+                  if (!scrollDriven && suppressClick.current && event.detail !== 0) {
+                    event.preventDefault();
+                  }
+                }}
+              >
+                {content}
+              </Link>
+            ) : content}
           </div>
-        ))}
+          );
+        })}
       </div>
       {children ? (
         <div className="dolly-gallery__content">{children}</div>

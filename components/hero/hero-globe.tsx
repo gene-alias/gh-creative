@@ -77,9 +77,18 @@ export function HeroGlobe({ controls: overrides }: { controls?: Partial<GlobeCon
       runtime.current.active = intersecting && document.visibilityState === 'visible';
       runtime.current.invalidate();
     };
-    const observer = new IntersectionObserver(([entry]) => { intersecting = entry.isIntersecting; visibility(); });
-    // The globe leaves view well before the entire hero. Stop its GPU loop
-    // at the visible globe area, not at the bottom of the section.
+    const visibleTargets = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visibleTargets.add(entry.target);
+        else visibleTargets.delete(entry.target);
+      }
+      intersecting = visibleTargets.size > 0;
+      visibility();
+    });
+    // Keep rendering while either the hero or its drifting globe is visible.
+    // The hero also provides a stable wake-up target during initial measurement.
+    observer.observe(hero);
     observer.observe(element.querySelector('.hero-globe-visibility') ?? element);
     document.addEventListener('visibilitychange', visibility);
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -100,17 +109,22 @@ export function HeroGlobe({ controls: overrides }: { controls?: Partial<GlobeCon
         start: 'top top', end: () => '+=' + hero.offsetHeight * 0.9,
         refreshPriority: -6, invalidateOnRefresh: true,
         onUpdate: (self) => {
+          element.style.setProperty('--globe-parallax-y', `${self.progress * hero.offsetHeight * 0.9 * 0.2}px`);
           runtime.current.scrollProgress = self.progress;
           runtime.current.invalidate();
         },
         onRefresh: (self) => {
+          element.style.setProperty('--globe-parallax-y', `${self.progress * hero.offsetHeight * 0.9 * 0.2}px`);
           runtime.current.scrollProgress = self.progress;
           runtime.current.invalidate();
         },
       });
       runtime.current.scrollProgress = trigger.progress;
       runtime.current.invalidate();
-      cleanupScroll = () => trigger.kill();
+      cleanupScroll = () => {
+        trigger.kill();
+        element.style.removeProperty('--globe-parallax-y');
+      };
     }).catch(() => { /* The globe still rotates without scroll enhancement. */ });
 
     return () => {

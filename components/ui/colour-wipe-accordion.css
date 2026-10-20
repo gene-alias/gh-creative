@@ -1,0 +1,90 @@
+@media (min-width: 1024px) {
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] {
+    --service-trigger-size: var(--wipe-size, clamp(36px, 5.5svh, 52px));
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    justify-content: stretch;
+    scroll-margin-top: 16px;
+    font-size: calc(var(--service-trigger-size) - 2px) !important;
+    transition: color 220ms ease, font-size 220ms ease;
+    isolation: isolate;
+    position: relative;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 0;
+    background: transparent;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--wipe-colour, var(--gh-accent, #ff3f46));
+    border-radius: var(--wipe-radius, 12px) var(--wipe-radius, 12px) 0 0;
+    /* Reveal the inverted bar upward from its bottom edge. */
+    transform: scale(1, 0);
+    transform-origin: center bottom;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:hover,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:focus-visible,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'][aria-expanded='true'] {
+    background: transparent;
+    color: var(--wipe-ink, var(--gh-surface-page, #08080b));
+    font-size: calc(var(--service-trigger-size) + 10px) !important;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:hover::before,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:focus-visible::before,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'][aria-expanded='true']::before {
+    transform: scale(1.015, 1);
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] > .service-number { grid-column: 1; }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] > span:nth-child(2) {
+    grid-column: 2;
+    width: auto;
+    margin-right: 0;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] [data-slot='accordion-trigger-icon'] {
+    grid-column: 3;
+    margin-left: 0 !important;
+    justify-self: end;
+    transition: color 220ms ease, border-color 220ms ease, transform 260ms ease;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion > [data-slot='accordion-item'] {
+    border-bottom: 0;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-header'] {
+    margin: 0;
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: var(--wipe-colour, var(--gh-accent, #ff3f46));
+    pointer-events: none;
+    transform: scaleX(1);
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:hover::after,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:focus-visible::after,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'][aria-expanded='true']::after {
+    transform: scaleX(1.015);
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'],
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']::before,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']::after,
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] [data-slot='accordion-trigger-icon'] {
+    transition: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] > span { grid-row: 1; }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger'] [data-slot='accordion-trigger-icon'] { grid-row: 1; }
+  .colour-wipe-accordion.colour-wipe-accordion [data-slot='accordion-trigger']:is(:hover, :focus-visible, [aria-expanded='true']) > * { color: inherit; border-color: currentColor; }
+}

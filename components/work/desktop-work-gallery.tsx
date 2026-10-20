@@ -2,6 +2,7 @@
 
 import { lazy, Suspense, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import { DesktopScreenMockup } from './desktop-screen-mockup';
 
 const DollyGallery = lazy(() => import('@/components/react-bits/dolly-gallery'));
 const query = '(min-width: 1024px)';
@@ -11,16 +12,22 @@ const subscribe = (notify: () => void) => {
   return () => media.removeEventListener('change', notify);
 };
 const images = [
-  { src: '', label: '01 / WEB DESIGN', alt: 'Web design' },
-  { src: '', label: '02 / VISUAL DESIGN', alt: 'Visual design' },
-  { src: '', label: '03 / BRANDING', alt: 'Branding' },
-  { src: '', label: '04 / AUDIO', alt: 'Audio' },
+  {
+    src: '/assets/work/gh-creative-monitor-mockup.png',
+    label: '01 / WEB DESIGN',
+    alt: 'Web design',
+    href: '/work/web-design',
+    content: <DesktopScreenMockup caption="01 / WEB DESIGN" />,
+  },
+  { src: '', label: '02 / VISUAL DESIGN', alt: 'Visual design', href: '/work/visual-design' },
+  { src: '', label: '03 / BRANDING', alt: 'Branding', href: '/work/branding' },
+  { src: '', label: '04 / AUDIO', alt: 'Audio', href: '/work/audio' },
 ];
 const projects = [
   { title: 'Web design', href: '/work/web-design' },
   { title: 'Visual design', href: '/work/visual-design' },
   { title: 'Branding', href: '/work/branding' },
-  { title: 'Audio', href: '#services' },
+  { title: 'Audio', href: '/work/audio' },
 ];
 
 export function DesktopWorkGallery() {
@@ -34,6 +41,7 @@ export function DesktopWorkGallery() {
           <DollyGallery images={images} infinite={false} pageScroll pinSection
             itemWidth={340} aspectRatio={4 / 3} grayscale={0} borderRadius={18}
             spacing={650} spread={0.7} revealRange={1.5} passRange={1.4}
+            opacityFloor={0.9}
             pulse={0} drift={0} tilt={2} smooth={0.65} />
         </Suspense>
       </div>

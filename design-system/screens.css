@@ -200,6 +200,20 @@
 .mobile-site .section h2 em {
   color: var(--gh-text-primary);
 }
+@media (max-width: 1023px) {
+  .immersive-site #services > h2 {
+    container-type: inline-size;
+  }
+  .immersive-site #services > h2 > .section-title-line {
+    /* Anton's longest line measures 8.337em including the -0.02em tracking.
+       Fill the heading width with a small allowance for the outline stroke. */
+    font-size: 11.9cqw;
+    white-space: nowrap;
+  }
+  .immersive-site #services > h2 > .section-title-line:first-child {
+    font-size: inherit;
+  }
+}
 .project-stage {
   min-height: 440px;
   background: var(--gh-surface-canvas);
@@ -328,6 +342,22 @@
 .services .service-content a:focus-visible {
   outline-color: currentColor;
 }
+.services .service-content a.service-work-link {
+  justify-content: space-between;
+  min-height: var(--gh-ref-layout-control);
+  margin-top: var(--gh-ref-space-3);
+  padding: var(--gh-ref-space-3) var(--gh-ref-space-4);
+  background: var(--gh-surface-page);
+  color: var(--gh-text-primary);
+}
+.services .service-content a.service-work-link:hover {
+  background: var(--gh-surface-panel);
+  color: var(--gh-text-primary);
+}
+.services .service-content a.service-work-link:focus-visible {
+  outline: 2px solid var(--gh-surface-page);
+  outline-offset: 3px;
+}
 .services .service-content ul {
   list-style: disc outside;
   padding-left: 1.2em;
@@ -337,22 +367,19 @@
   padding-left: 0.25em;
 }
 .mobile-site .section.offers {
-  --gh-screen-border: var(--gh-text-on-accent);
+  /* The red Process panel uses ink for all copy, rules, and interactive states. */
+  --gh-accent: var(--gh-text-on-accent);
+  --gh-accent-hover: var(--gh-text-on-accent);
+  --gh-text-primary: var(--gh-text-on-accent);
   --gh-text-secondary: var(--gh-text-on-accent);
-  background: var(--gh-surface-spotlight);
+  --gh-border-subtle: var(--gh-text-on-accent);
+  --gh-border-control: var(--gh-text-on-accent);
+  --gh-screen-border: var(--gh-text-on-accent);
+  --gh-focus: var(--gh-text-on-accent);
+  background: var(--gh-ref-color-scarlet);
   color: var(--gh-text-on-accent);
-}
-.mobile-site .section.offers h2,
-.mobile-site .section.offers h2 em,
-.mobile-site .section.offers .section-index,
-.mobile-site .section.offers .section-index > span:last-child {
-  color: var(--gh-text-on-accent);
-}
-.mobile-site .section.offers .section-index > span:first-child:before {
-  background: var(--gh-text-on-accent);
 }
 .offers .offer {
-  border-color: var(--gh-text-on-accent);
   padding-block: var(--gh-ref-space-6);
 }
 .offers .offer h3 {
@@ -364,7 +391,7 @@
   list-style: disc;
   padding-left: 1.2em;
   margin: 0 0 var(--gh-ref-space-6);
-  color: var(--gh-text-on-accent);
+  color: var(--gh-text-secondary);
   line-height: var(--gh-ref-line-height-body);
 }
 .offers .process-points li + li {
@@ -378,19 +405,9 @@
   text-align: left;
   cursor: pointer;
 }
-.offers .offer-link,
-.offers .offer-link svg,
-.offers .offer:hover .offer-link {
-  color: var(--gh-text-on-accent);
-  border-color: var(--gh-text-on-accent);
-}
-.offers .offer-link svg {
-  background: var(--gh-text-on-accent);
-  color: var(--gh-accent);
-}
 .offers .offer-link:focus-visible {
   outline: 2px solid;
-  outline-color: var(--gh-text-on-accent);
+  outline-color: var(--gh-focus);
   outline-offset: 4px;
 }
 .mobile-site .section.studio {
@@ -828,6 +845,12 @@ a.hero-instagram:focus-visible {
 .hero-title-glow {
   display: inline-block;
   text-shadow: 0 0 5px rgb(228 39 44 / 0.3), 0 0 16px rgb(228 39 44 / 0.14);
+}
+.hero-title-outline {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--gh-accent);
+  text-shadow: none;
 }
 @media (prefers-reduced-motion: no-preference) {
   [data-motion='active'] .hero-title-glow {

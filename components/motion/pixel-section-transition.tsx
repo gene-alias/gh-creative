@@ -42,9 +42,10 @@ function ScrollCurtain({ section }: { section: HTMLElement }) {
   const [unavailable, setUnavailable] = useState(false);
   const [colors] = useState(() => {
     const tokens = getComputedStyle(section);
+    const dark = tokens.getPropertyValue('--gh-surface-page').trim();
     return {
-      cover: tokens.getPropertyValue('--gh-surface-page').trim(),
-      pixel: tokens.getPropertyValue('--gh-accent').trim(),
+      cover: dark,
+      pixel: tokens.backgroundColor,
     };
   });
   const handleReady = useCallback(() => setReady(true), []);
@@ -117,12 +118,12 @@ function ScrollCurtain({ section }: { section: HTMLElement }) {
         imageSrc=""
         revealContent
         coverColor={colors.cover || '#08080b'}
-        transitionColor={colors.pixel || '#ff3f46'}
+        transitionColor={colors.pixel || '#08080b'}
         width="100%"
         height="100%"
         gridSize={18}
         edgeHeight={0.18}
-        direction="down"
+        direction="up"
         autoTrigger={false}
         onReady={handleReady}
         onUnavailable={handleUnavailable}

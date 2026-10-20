@@ -39,9 +39,15 @@
   width: calc(var(--globe-diameter) * 2.4);
   height: calc(var(--globe-diameter) * 2.4);
 }
-.hero:has(.hero-globe) > :is(.nav, .hero-copy, .hero-footer) {
+.hero:has(.hero-globe) > :is(.nav, .hero-footer) {
   position: relative;
   z-index: 2;
+}
+@media (max-width: 1023px) {
+  .hero:has(.hero-globe) > .hero-copy {
+    position: relative;
+    z-index: 2;
+  }
 }
 .hero-globe-fallback {
   overflow: hidden;
@@ -55,3 +61,15 @@
   .hero-globe-fallback { transition: none; }
 }
 /* The Earth supplies the visual detail; the page star field stays behind it. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .hero-globe {
+    overflow: visible;
+    contain: none;
+  }
+  /* Offset 20% of page travel so the globe scrolls at 80% of page speed. */
+  .hero-globe-canvas > div,
+  .hero-globe-visibility,
+  .hero-globe-fallback {
+    top: calc(var(--globe-y) + var(--globe-parallax-y, 0px));
+  }
+}

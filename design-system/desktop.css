@@ -27,6 +27,17 @@
   .immersive-site .hero-support > .button { width: 310px; min-height: 60px; }
   .immersive-site .hero-footer { width: 100%; margin-top: 0; }
   .immersive-site .hero-globe-canvas { mask-image: none; }
+  /* Let the globe occlude the title, while controls remain in front. */
+  .immersive-site .hero > .hero-globe { z-index: 1; }
+  .immersive-site .hero > .hero-copy {
+    z-index: auto;
+    container-type: normal;
+  }
+  .immersive-site .hero h1 { position: relative; z-index: 0; }
+  .immersive-site .hero-copy > :is(.hero-services, .hero-support) {
+    position: relative;
+    z-index: 2;
+  }
   .immersive-site.mobile-site .section,
   .immersive-site .section:is(#work, #services) {
     width: calc(100% - 64px);
@@ -51,7 +62,7 @@
     max-height: none;
     aspect-ratio: 4 / 5;
   }
-  .immersive-site .work-panel figcaption { padding: 40px 20px 24px; font-size: 12px; }
+  .immersive-site .work-panel :is(figcaption, .work-panel-link) { padding: 40px 20px 24px; font-size: 12px; }
   .immersive-site .signal-ribbon { padding-block: 64px; }
   .immersive-site .signal-ribbon__line { font-size: clamp(80px, 10vw, 150px); }
   .immersive-site #services .services { max-width: 900px; margin-left: auto; }
@@ -159,31 +170,34 @@
   .immersive-site .studio-portrait { width: 150px; height: 180px; }
   .immersive-site .contact .dot-heading { font-size: clamp(48px, min(6vw, 9svh), 88px); }
 
-  /* The three work detail routes share one viewport-based composition. */
+  /* Work detail routes keep an editorial scroll canvas for the parallax gallery. */
   .portfolio-page.mobile-site {
     --gh-ref-layout-mobile-max: 100vw;
     max-width: none;
     min-height: 100svh;
-    padding: 0 40px;
+    padding: 0 clamp(24px, 4vw, 72px);
     display: flex;
     flex-direction: column;
   }
   .portfolio-page .portfolio-nav { padding: 24px 0; }
   .portfolio-page .section.portfolio-intro {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 20px 48px;
+    display: block;
     flex: 1;
     margin: 0;
-    padding: 24px;
+    padding: clamp(32px, 5vw, 80px);
     max-width: 100% !important;
   }
-  .portfolio-page .portfolio-intro > :is(.section-index, h1, .body-copy, .button) { grid-column: 1; margin: 0; }
-  .portfolio-page .portfolio-intro h1 { font-size: clamp(44px, min(6vw, 10svh), 88px); line-height: 1; }
-  .portfolio-page .portfolio-feature { grid-column: 2; grid-row: 1 / 5; margin: 0; min-width: 0; }
-  .portfolio-page .portfolio-feature img { width: 100%; height: clamp(240px, 48svh, 560px); object-fit: contain; }
-  .portfolio-page .portfolio-feature figcaption { padding: 16px; }
+  .portfolio-page .portfolio-intro h1 { font-size: clamp(72px, 9vw, 160px); line-height: 0.9; margin-bottom: 24px; }
+  .portfolio-page .portfolio-intro > .body-copy { max-width: 720px; }
+  .portfolio-page .portfolio-examples { margin-top: clamp(100px, 18svh, 220px); }
+  .portfolio-page .portfolio-example { padding-top: 36px; }
+  .portfolio-page .portfolio-example + .portfolio-example { margin-top: 160px; }
+  .portfolio-page .portfolio-gallery { gap: 24px 32px; padding: 64px 0 180px; }
+  .portfolio-page .portfolio-gallery__copy { grid-column: 1 / 5; grid-row: 1; margin-top: 12svh; }
+  .portfolio-page .portfolio-gallery__frame--0 { grid-column: 5 / 13; grid-row: 1 / 3; width: min(100%, 640px); justify-self: end; }
+  .portfolio-page .portfolio-gallery__frame--1 { grid-column: 1 / 7; grid-row: 2 / 4; width: min(100%, 460px); margin-top: -10svh; }
+  .portfolio-page .portfolio-gallery__frame--2 { grid-column: 8 / 13; grid-row: 3 / 5; width: min(100%, 420px); margin-top: -8svh; }
+  .portfolio-page .portfolio-intro > .button { max-width: 360px; margin-top: 24px; }
   .portfolio-page .portfolio-links { display: flex; justify-content: space-between; padding: 20px 0; }
 }
 
@@ -282,6 +296,16 @@
     border-radius: inherit;
     color: var(--gh-accent-hover);
     font: 400 14px/1.4 var(--gh-font-mono);
+    pointer-events: none;
+  }
+  .desktop-work-gallery .dolly-gallery__tile--link:hover .dolly-gallery__blank,
+  .desktop-work-gallery .dolly-gallery__tile--link:focus-visible .dolly-gallery__blank {
+    border-color: var(--gh-accent-hover);
+    color: var(--gh-text-primary);
+  }
+  .desktop-work-gallery .dolly-gallery__tile--link:hover .desktop-screen-mockup__display,
+  .desktop-work-gallery .dolly-gallery__tile--link:focus-visible .desktop-screen-mockup__display {
+    border-color: var(--gh-accent-hover);
   }
 }
 @media (min-width: 1024px) {
@@ -326,7 +350,6 @@
     opacity: 1;
     transform: none;
   }
-  .immersive-site #services .service-trigger { scroll-margin-top: 16px; }
 }
 
 .desktop-pricing-grid { display: none; }
@@ -426,6 +449,7 @@
     position: relative;
     z-index: 2;
     flex-shrink: 0;
+    pointer-events: none;
   }
   .immersive-site #work .desktop-work-gallery {
     display: flex;
