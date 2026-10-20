@@ -3,6 +3,7 @@ import { VisualArtGallery } from '@/components/work/visual-gallery';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
+import visualWork from '@/lib/visual-work.json';
 export const metadata = { title: 'Visual art / GH Creative' };
 export default function VisualArt() {
   return (
@@ -22,7 +23,10 @@ export default function VisualArt() {
           people and spaces.
         </p>
       </section>
-      <VisualArtGallery />
+      <VisualArtGallery
+        artworks={visualWork.artworks}
+        categories={visualWork.categories}
+      />
       <div className="mini-work-inquiry">
         <ProjectBriefTrigger
           className="mini-button mini-button-primary"

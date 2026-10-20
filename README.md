@@ -109,7 +109,7 @@ server environment variables are configured for the intended deployment.
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
 Loverboy Club, KONSTRUKT), Visual (a curated gallery of finished work), and Branding (Incredible Kitchens,
 ALIAS). Website previews play Gene’s supplied screen recordings as silent, looping videos. Still frames serve as loading posters.
-The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The visual collection has been organised into eight local folders: Product campaigns (11), Fashion & eyewear (14), Jewellery & portraits (13), Automotive & lifestyle (7), Music & events (3), Cinematic work (8), Architecture & interiors (7), and Fitness & training (8). The 71 originals retain their filenames. The site’s visual page is a holding page until the gallery is built; it has no before-and-after comparisons.
+The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The Visual gallery follows Gene’s revised six local categories and contains 70 images: Product & campaigns (9), Fashion & eyewear (16), Jewellery & portraits (15), Cinematic & character work (14), Architecture & interiors (7), and Fitness & training (9). The empty untitled folder is ignored, and the removed image is not included. The gallery contains individual artworks, with no before-and-after comparisons.
 
 Section 03 uses Gene's supplied `GH STATIC.png`, copied without changes to
 `public/assets/gene-studio.png`. Portfolio assets were copied from these local
@@ -173,3 +173,22 @@ preferences disable automatic playback while retaining manual controls.
 Videos use preload="none" so offscreen demos do not download before playback;
 poster images remain visible while loading. The homepage video controls are
 outside the category navigation link so playback does not trigger navigation.
+
+
+## Visual work gallery
+
+`lib/visual-work.json` contains the current category order, counts, descriptive
+image titles, alt text and asset dimensions. It reflects Gene’s revised source
+folders under Desktop/Visual Design, rather than the earlier sorting index.
+Source filenames and paths are not published in the gallery metadata.
+
+The gallery uses two columns with complete image proportions, horizontal category
+filters, and batches of 18 thumbnails. Category changes reset the batch size.
+The viewer opens the selected full image, with previous/next controls, arrow-key
+navigation, Escape to close, a trapped keyboard focus and return focus to the
+opening tile. Full image links support native browser zoom in a separate tab.
+
+Public WebP copies are under public/assets/work/visual: thumbnails fit within
+600×900, and viewer images fit within 1800×2200. Originals are unchanged. Below-fold
+thumbnails load lazily, and larger assets load only when selected. The homepage
+Visual cover remains a text placeholder while Gene selects a replacement image.

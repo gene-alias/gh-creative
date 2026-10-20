@@ -742,3 +742,202 @@ body:has(.mini-site) {
   object-fit: contain;
   border: 1px solid #393333;
 }
+
+/* Full-proportion artwork, organised by the studio's selected collections. */
+.mini-visual-gallery {
+  padding: 0 24px 16px;
+}
+.mini-gallery-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #101010;
+  padding: 16px 0 0;
+}
+.mini-gallery-toolbar .mini-index {
+  margin-bottom: 10px;
+}
+.mini-gallery-filters {
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #514343 transparent;
+}
+.mini-gallery-filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid #393333;
+  background: transparent;
+  color: #c3c0bf;
+  font: 300 12px/1.4 var(--gh-font-body);
+  cursor: pointer;
+}
+.mini-gallery-filters button[aria-pressed='true'] {
+  border-color: var(--mini-red);
+  background: var(--mini-red);
+  color: #101010;
+}
+.mini-gallery-filters button > span {
+  font: 400 10px/1.4 var(--gh-font-mono);
+  opacity: 0.75;
+}
+.mini-gallery-result,
+.mini-gallery-count {
+  display: block;
+  font: 300 12px/1.6 var(--gh-font-body);
+  color: #aaa7a6;
+  margin: 14px 0 20px;
+}
+.mini-gallery-grid {
+  columns: 2;
+  column-gap: 12px;
+}
+.mini-gallery-tile {
+  display: block;
+  width: 100%;
+  break-inside: avoid;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: zoom-in;
+  color: #aaa7a6;
+}
+.mini-gallery-tile img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #393333;
+}
+.mini-gallery-tile > span {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 8px;
+  font: 300 10px/1.5 var(--gh-font-body);
+}
+.mini-gallery-tile > span svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.mini-gallery-tile:hover img {
+  border-color: var(--mini-red);
+}
+.mini-gallery-filters button:focus-visible,
+.mini-gallery-tile:focus-visible,
+.mini-gallery-more:focus-visible,
+.visual-lightbox-control:focus-visible {
+  outline: 2px solid #ff7277;
+  outline-offset: 3px;
+}
+.mini-gallery-more {
+  width: 100%;
+  justify-content: space-between;
+  border: 1px solid #514343;
+  background: transparent;
+  color: #f2f1ed;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.mini-gallery-count {
+  text-align: center;
+  margin: 12px 0;
+}
+.visual-lightbox[data-slot='dialog-content'] {
+  --gh-font-body: 'Inter', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(94vw, 1120px);
+  max-width: none;
+  height: min(90dvh, 920px);
+  padding: 16px;
+  border: 1px solid #514343;
+  border-radius: 0;
+  background: #101010;
+  color: #f2f1ed;
+}
+.visual-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+.visual-lightbox-header h2 {
+  margin: 0 0 5px;
+  font: 300 20px/1.3 var(--gh-font-body);
+}
+.visual-lightbox-header p {
+  font: 300 12px/1.5 var(--gh-font-body);
+  color: #aaa7a6;
+}
+.visual-lightbox-stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.visual-lightbox-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  min-height: 0;
+}
+.visual-lightbox-control {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  color: #f2f1ed;
+  border: 1px solid #514343;
+  background: #181515;
+  cursor: pointer;
+}
+.visual-lightbox-footer,
+.visual-lightbox-footer > div,
+.visual-lightbox-footer > a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.visual-lightbox-footer {
+  justify-content: space-between;
+}
+.visual-lightbox-footer > a {
+  min-height: 44px;
+  font: 400 10px/1.5 var(--gh-font-mono);
+}
+.visual-lightbox-footer > div > span {
+  font: 400 11px/1.5 var(--gh-font-mono);
+  min-width: 52px;
+  text-align: center;
+}
+@media (max-width: 359px) {
+  .mini-visual-gallery {
+    padding-inline: 18px;
+  }
+  .mini-gallery-grid {
+    column-gap: 10px;
+  }
+  .visual-lightbox-footer {
+    gap: 5px;
+  }
+  .visual-lightbox-footer > div {
+    gap: 4px;
+  }
+}
