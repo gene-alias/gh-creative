@@ -1,7 +1,7 @@
 # GH Creative
 
-Mobile-first creative studio website with scroll-driven reveals, pinned sections,
-interactive service rows and a shared design system.
+Mobile creative mini-site with an animated Earth, expandable services, work
+galleries and a short inquiry form. A shared design system retains the GH identity.
 
 ## Local development
 
@@ -11,8 +11,7 @@ npm run dev -- --port 3005
 ```
 
 The default development and build commands retain the existing Vinext/Cloudflare
-setup. Pause motion and the operating system's reduced-motion setting restore
-the static layout.
+setup. The animated globe respects the operating system’s reduced-motion setting.
 
 ## Vercel previews
 
@@ -71,6 +70,21 @@ References: [Resend sending API](https://resend.com/docs/api-reference/emails/se
 [idempotency](https://resend.com/docs/dashboard/emails/idempotency-keys),
 [Vercel Node functions](https://vercel.com/docs/functions/runtimes/node-js).
 
-The Git history is local until a remote repository is connected. Vercel CLI
+Source repository: https://github.com/gene-alias/gh-creative. Vercel CLI
 deployments do not require a Git remote. Credentials and generated files are
 excluded from both Git and deployment uploads.
+
+## Mobile mini-site
+
+The homepage and work galleries now share a 480px maximum width on every screen,
+with native scrolling, expandable services and persistent bottom navigation.
+The original animated Earth remains in the hero, sized to its containing column;
+it pauses offscreen and respects reduced motion. Body copy uses locally hosted Inter Light (300); existing display headings, wordmark and technical labels are retained.
+The former pinned desktop presentation and cursor effect are not mounted on these pages.
+
+Inquiry flow: **Your idea → Review & send → Confirmation**. Name, email, at
+least one service and a short project description are required. Budget, timing,
+phone and business details are optional; omitted budget and timing use the
+existing “Let’s work it out” and “I’m flexible” choices. Service-specific inquiry
+buttons preselect that service. Answers persist while browsing during this visit.
+The same Resend endpoint, recipient, server validation and retry keys are used.
