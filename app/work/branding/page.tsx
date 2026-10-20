@@ -155,11 +155,12 @@ export default function Branding() {
           summary: 'The ALIAS identity applied across its digital presence.',
           media: [
             {
-              type: 'image',
-              src: '/assets/work/alias-thumbnail.jpg',
+              type: 'video',
+              src: '/assets/work/videos/alias.mp4',
+              poster: '/assets/work/alias-thumbnail.jpg',
               width: 1440,
               height: 838,
-              alt: 'ALIAS identity and visual direction applied to a website',
+              label: 'ALIAS Creative website video preview',
               caption: 'ALIAS / digital brand application',
             },
           ],

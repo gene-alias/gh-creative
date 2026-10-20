@@ -4,6 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniFooter } from '@/components/mini/site-shell';
 import { OriginalHero } from '@/components/hero/original-hero';
+import { WebsitePreview } from '@/components/work/website-preview';
 
 const services = [
   {
@@ -142,42 +143,70 @@ export default function Home() {
           Websites, visual art and brand identities. Tap to explore.
         </p>
         <div className="mini-work-list">
-          {work.map((item, index) => (
-            <Link
-              className={`mini-work-card mini-work-card--${item.treatment}`}
-              href={item.href}
-              key={item.href}
-              prefetch={false}
-            >
-              <div className="mini-work-image">
-                {item.image ? (
-                  <Image
-                    unoptimized
-                    src={item.image}
-                    width={item.width}
-                    height={item.height}
-                    alt={item.alt}
-                    sizes="(max-width: 480px) 90vw, 432px"
-                  />
-                ) : (
-                  <div className="mini-visual-cover" aria-hidden="true">
-                    <span>BEFORE.</span>
-                    <ArrowRight size={32} />
-                    <span>AFTER.</span>
-                  </div>
-                )}
+          {work.map((item, index) =>
+            item.treatment === 'web' ? (
+              <div
+                className="mini-work-card mini-work-card--web"
+                key={item.href}
+              >
+                <WebsitePreview
+                  src="/assets/work/videos/centum.mp4"
+                  poster={item.image}
+                  width={item.width}
+                  height={item.height}
+                  label="CENTUM website video preview"
+                />
+                <Link
+                  className="mini-work-label"
+                  href={item.href}
+                  prefetch={false}
+                >
+                  <span>
+                    <small>
+                      0{index + 1} / {item.category}
+                    </small>
+                    <strong>{item.title}</strong>
+                  </span>
+                  <ArrowUpRight size={23} aria-hidden="true" />
+                </Link>
               </div>
-              <div className="mini-work-label">
-                <span>
-                  <small>
-                    0{index + 1} / {item.category}
-                  </small>
-                  <strong>{item.title}</strong>
-                </span>
-                <ArrowUpRight size={23} aria-hidden="true" />
-              </div>
-            </Link>
-          ))}
+            ) : (
+              <Link
+                className={`mini-work-card mini-work-card--${item.treatment}`}
+                href={item.href}
+                key={item.href}
+                prefetch={false}
+              >
+                <div className="mini-work-image">
+                  {item.image ? (
+                    <Image
+                      unoptimized
+                      src={item.image}
+                      width={item.width}
+                      height={item.height}
+                      alt={item.alt}
+                      sizes="(max-width: 480px) 90vw, 432px"
+                    />
+                  ) : (
+                    <div className="mini-visual-cover" aria-hidden="true">
+                      <span>BEFORE.</span>
+                      <ArrowRight size={32} />
+                      <span>AFTER.</span>
+                    </div>
+                  )}
+                </div>
+                <div className="mini-work-label">
+                  <span>
+                    <small>
+                      0{index + 1} / {item.category}
+                    </small>
+                    <strong>{item.title}</strong>
+                  </span>
+                  <ArrowUpRight size={23} aria-hidden="true" />
+                </div>
+              </Link>
+            ),
+          )}
         </div>
       </section>
       <section

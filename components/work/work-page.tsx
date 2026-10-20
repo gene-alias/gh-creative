@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { WebsitePreview } from './website-preview';
 
 type WorkMedia = (
   | {
@@ -13,6 +14,14 @@ type WorkMedia = (
       alt: string;
       presentation?: 'cover';
       enlarge?: boolean;
+    }
+  | {
+      type: 'video';
+      src: string;
+      poster: string;
+      width: number;
+      height: number;
+      label: string;
     }
   | {
       type: 'audio';
@@ -161,6 +170,14 @@ function WorkFigure({ media }: { media: WorkMedia }) {
         ) : (
           picture
         )
+      ) : media.type === 'video' ? (
+        <WebsitePreview
+          src={media.src}
+          poster={media.poster}
+          width={media.width}
+          height={media.height}
+          label={media.label}
+        />
       ) : (
         <div className="mini-audio">
           <p>{media.label}</p>

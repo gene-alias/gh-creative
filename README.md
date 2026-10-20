@@ -108,7 +108,7 @@ server environment variables are configured for the intended deployment.
 
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
 Loverboy Club, KONSTRUKT), Visual (before/after artwork), and Branding (Incredible Kitchens,
-ALIAS). Website thumbnails use still frames from Gene’s supplied screen recordings.
+ALIAS). Website previews play Gene’s supplied screen recordings as silent, looping videos. Still frames serve as loading posters.
 The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The visual gallery
 is intentionally empty until Gene supplies the artwork pairs. Add those pairs in
 `app/work/visual-design/page.tsx`; the gallery includes a keyboard-accessible
@@ -158,3 +158,21 @@ WebP copies retain full image proportions and are stored in
 public/assets/work/incredible-kitchens. The originals are unchanged. The artwork
 is compressed for mobile browsing, with the ad contact sheet retained at its full
 2560px width for legibility.
+
+
+## Website video previews
+
+The four website examples, ALIAS digital brand example, and homepage Websites
+card use the supplied recordings. Mobile MP4 copies are in public/assets/work/videos:
+H.264, 1280px wide, 24fps, yuv420p and fast-start metadata. The complete recordings
+are retained; audio is removed for silent portfolio playback. Files total about
+14.3 MB, with no single preview larger than 4.6 MB.
+
+The shared WebsitePreview component starts playback when at least 25% of a video
+is visible and pauses it offscreen or in a hidden browser tab. Native controls
+allow pause, seek, fullscreen and manual playback when autoplay is unavailable.
+A visitor’s manual pause is preserved when scrolling away and back. Reduced-motion
+preferences disable automatic playback while retaining manual controls.
+Videos use preload="none" so offscreen demos do not download before playback;
+poster images remain visible while loading. The homepage video controls are
+outside the category navigation link so playback does not trigger navigation.

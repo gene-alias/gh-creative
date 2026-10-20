@@ -772,3 +772,12 @@ body:has(.mini-site) {
   font: 300 12px/1.7 var(--gh-font-body);
   color: #aaa7a6;
 }
+
+.mini-website-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #080808;
+  object-fit: contain;
+  border: 1px solid #393333;
+}
