@@ -706,45 +706,6 @@ body:has(.mini-site) {
   object-fit: cover;
   object-position: center;
 }
-.mini-comparison {
-  position: relative;
-  overflow: hidden;
-}
-.mini-comparison > img,
-.mini-comparison-after,
-.mini-comparison-after img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.mini-comparison-after {
-  position: absolute;
-  inset: 0;
-}
-.mini-comparison-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #ff454c;
-  transform: translateX(-50%);
-}
-.mini-comparison-control {
-  display: grid;
-  gap: 8px;
-  margin-top: 14px;
-  font: 300 14px/1.6 var(--gh-font-body);
-}
-.mini-comparison-control input {
-  width: 100%;
-  min-height: 44px;
-  accent-color: #ff454c;
-}
-.mini-comparison-control > span {
-  color: #aaa7a6;
-  font-size: 12px;
-}
-
 /* Deliverable groups within branding case studies. */
 .mini-case-section {
   margin-top: 36px;

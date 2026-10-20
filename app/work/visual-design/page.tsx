@@ -1,14 +1,9 @@
 import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
-import {
-  VisualArtGallery,
-  type VisualArtPair,
-} from '@/components/work/visual-gallery';
+import { VisualArtGallery } from '@/components/work/visual-gallery';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 export const metadata = { title: 'Visual art / GH Creative' };
-// Add the supplied before/after pairs here once the artwork folder is available.
-const artwork: VisualArtPair[] = [];
 export default function VisualArt() {
   return (
     <main className="mini-site" id="top">
@@ -21,17 +16,13 @@ export default function VisualArt() {
           <span>02 / VISUAL ART</span>
           <ArrowUpRight size={15} />
         </p>
-        <h1>
-          Before.
-          <br />
-          After.
-        </h1>
+        <h1>Visual work.</h1>
         <p>
-          From the first image to the final artwork. A gallery of visual
-          transformations.
+          Image-making, art direction and visual concepts across products,
+          people and spaces.
         </p>
       </section>
-      <VisualArtGallery pairs={artwork} />
+      <VisualArtGallery />
       <div className="mini-work-inquiry">
         <ProjectBriefTrigger
           className="mini-button mini-button-primary"

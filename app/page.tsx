@@ -51,7 +51,7 @@ const work = [
     treatment: 'web',
   },
   {
-    title: 'Visual art. Before & after.',
+    title: 'Image-making. Art direction. Visual concepts.',
     category: 'VISUAL',
     href: '/work/visual-design',
     image: '',
@@ -189,9 +189,9 @@ export default function Home() {
                     />
                   ) : (
                     <div className="mini-visual-cover" aria-hidden="true">
-                      <span>BEFORE.</span>
+                      <span>VISUAL.</span>
                       <ArrowRight size={32} />
-                      <span>AFTER.</span>
+                      <span>WORK.</span>
                     </div>
                   )}
                 </div>

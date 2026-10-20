@@ -107,12 +107,9 @@ server environment variables are configured for the intended deployment.
 ## Selected work and inquiry receipt design
 
 Selected Work now has three categories: Websites (CENTUM, Incredible Kitchens,
-Loverboy Club, KONSTRUKT), Visual (before/after artwork), and Branding (Incredible Kitchens,
+Loverboy Club, KONSTRUKT), Visual (a curated gallery of finished work), and Branding (Incredible Kitchens,
 ALIAS). Website previews play Gene’s supplied screen recordings as silent, looping videos. Still frames serve as loading posters.
-The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The visual gallery
-is intentionally empty until Gene supplies the artwork pairs. Add those pairs in
-`app/work/visual-design/page.tsx`; the gallery includes a keyboard-accessible
-before/after range control.
+The homepage category covers use the CENTUM preview and Incredible Kitchens business card artwork. The visual collection has been organised into eight local folders: Product campaigns (11), Fashion & eyewear (14), Jewellery & portraits (13), Automotive & lifestyle (7), Music & events (3), Cinematic work (8), Architecture & interiors (7), and Fitness & training (8). The 71 originals retain their filenames. The site’s visual page is a holding page until the gallery is built; it has no before-and-after comparisons.
 
 Section 03 uses Gene's supplied `GH STATIC.png`, copied without changes to
 `public/assets/gene-studio.png`. Portfolio assets were copied from these local
