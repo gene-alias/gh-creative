@@ -184,7 +184,7 @@ export default function Home() {
                   visualCoverFrames.map((frame, frameIndex) => (
                     <Image
                       className="mini-work-cover-frame"
-                      style={{ animationDelay: `${frameIndex * 4 - 20.4}s` }}
+                      style={{ animationDelay: `${frameIndex * 2 - 10.2}s` }}
                       key={frame.src}
                       unoptimized
                       src={frame.src}
