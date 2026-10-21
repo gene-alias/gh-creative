@@ -1,5 +1,5 @@
-import { WorkPage } from '@/components/work/work-page';
-import { aliasBranding } from '@/lib/alias-branding';
+import { WorkPage, type WorkExample } from '@/components/work/work-page';
+import { aliasBrandingMedia as alias } from '@/lib/alias-branding';
 
 export const metadata = { title: 'Branding / GH Creative' };
 
@@ -26,132 +26,139 @@ function image(name: keyof typeof artwork, alt: string, caption: string) {
     width,
     height,
     alt,
-    caption,
+    caption: `Incredible Kitchens / ${caption}`,
     enlarge: true,
   };
 }
+
+const categories: WorkExample[] = [
+  {
+    id: 'logos-identity',
+    title: 'Logos & identity',
+    label: 'IDENTITY',
+    summary: 'Logo systems, standalone symbols and motion identities. Tap any artwork to view it larger.',
+    media: [
+      image(
+        'logo-system',
+        'Incredible Kitchens monogram and wordmark variants in cream, charcoal, green and gold',
+        'Logo layouts, colour variations and profile icons.',
+      ),
+      alias.symbol,
+      alias.motion,
+    ],
+  },
+  {
+    id: 'print-stationery',
+    title: 'Print & stationery',
+    label: 'PRINT',
+    summary: 'Business cards, letterheads, envelopes and stationery designed as part of a consistent identity.',
+    media: [
+      image(
+        'business-cards',
+        'Cream and charcoal Incredible Kitchens business cards, showing the logo and contact layouts on a stone surface',
+        'Business card designs.',
+      ),
+      image(
+        'stationery',
+        'Business card fronts and backs, a branded letterhead and envelope, and a charcoal notebook',
+        'Stationery suite.',
+      ),
+      image(
+        'business-card-detail',
+        'Cream and charcoal business card concepts with the Incredible Kitchens logo and a subtle embossed monogram mockup',
+        'Business card concepts and embossed finish mockup.',
+      ),
+      alias.cardFront,
+      alias.cardBack,
+    ],
+  },
+  {
+    id: 'business-documents',
+    title: 'Business documents',
+    label: 'DOCUMENTS',
+    summary: 'Branded invoice templates with clear layouts for client details, itemised services and payment information.',
+    media: [
+      image(
+        'invoice',
+        'Incredible Kitchens sample invoice with client and project fields, itemised services, totals and placeholder payment details',
+        'Invoice template with sample content.',
+      ),
+      alias.invoice,
+    ],
+  },
+  {
+    id: 'advertising-campaigns',
+    title: 'Advertising & campaigns',
+    label: 'CAMPAIGNS',
+    summary: 'Campaign concepts and advertising creative, from bold headlines to image-led story layouts.',
+    media: [
+      image(
+        'brand-applications',
+        'A coordinated kitchen website concept and a vertical advertisement using the Incredible Kitchens identity',
+        'Website and vertical ad concepts.',
+      ),
+      image(
+        'story-ad-series',
+        'Eight coordinated vertical Incredible Kitchens ads featuring kitchen and joinery photography, headlines and calls to action',
+        'Eight-part story ad campaign.',
+      ),
+      image(
+        'dream-kitchen-ad',
+        'Vertical kitchen advertisement with the headline Your dream kitchen starts here and an Enquire now call to action',
+        'Dream kitchen story creative.',
+      ),
+      image(
+        'made-incredible-ad',
+        'Vertical Incredible Kitchens ad showing a classic kitchen with the headline Your home made incredible',
+        'Made incredible story creative.',
+      ),
+    ],
+  },
+  {
+    id: 'social-assets',
+    title: 'Social & sharing assets',
+    label: 'SOCIAL',
+    summary: 'Profile covers, banners and link-preview graphics that carry a brand across social channels.',
+    media: [
+      image(
+        'facebook-cover',
+        'Incredible Kitchens Facebook cover with a black logo and tagline on a pale marble background',
+        'Facebook cover.',
+      ),
+      image(
+        'x-header',
+        'Incredible Kitchens X header with the logo and tagline arranged for a wide social banner',
+        'X header.',
+      ),
+      alias.linkPreview,
+      alias.facebookDark,
+      alias.facebookLight,
+    ],
+  },
+  {
+    id: 'email-signatures',
+    title: 'Email signatures',
+    label: 'EMAIL',
+    summary: 'Branded signatures that bring a consistent identity to everyday correspondence.',
+    media: [
+      image(
+        'email-signature',
+        'Incredible Kitchens email signature with the IK monogram, Richard Wilson’s name and business contact details on a marble background',
+        'Email signature.',
+      ),
+      alias.emailDark,
+      alias.emailLight,
+    ],
+  },
+];
 
 export default function Branding() {
   return (
     <WorkPage
       title="Branding."
       number="03"
-      description="Selected identity work for Incredible Kitchens and ALIAS."
-      examples={[
-        {
-          title: 'Incredible Kitchens',
-          label: 'BRAND IDENTITY & ROLLOUT',
-          summary:
-            'A complete visual identity for a custom kitchen and joinery business, carried across print, everyday communication and advertising. Warm neutrals, charcoal, deep green and muted gold give the brand a considered feel, with a consistent logo and clear typography tying everything together.',
-          media: [
-            image(
-              'business-cards',
-              'Cream and charcoal Incredible Kitchens business cards, showing the logo and contact layouts on a stone surface',
-              'The identity in print / business card design. Tap any artwork to view it larger.',
-            ),
-          ],
-          sections: [
-            {
-              title: 'Logo & visual identity',
-              description:
-                'A distinctive IK monogram paired with a clean wordmark. Horizontal, stacked and standalone versions give the identity flexibility across signs, documents, social profiles and smaller digital spaces. The overview shows how each version works across the brand colour palette.',
-              media: [
-                image(
-                  'logo-system',
-                  'Incredible Kitchens monogram and wordmark variants in cream, charcoal, green and gold',
-                  'Logo system / layouts, colour variations and profile icons.',
-                ),
-              ],
-            },
-            {
-              title: 'Print & stationery',
-              description:
-                'Business cards, letterhead, envelopes and a branded notebook bring the identity into the details clients handle. Cream and charcoal layouts, generous spacing and restrained typography create a coordinated set for introductions, correspondence and project presentations.',
-              media: [
-                image(
-                  'stationery',
-                  'Business card fronts and backs, a branded letterhead and envelope, and a charcoal notebook',
-                  'Stationery suite / business cards, letterhead, envelope and notebook.',
-                ),
-                image(
-                  'business-card-detail',
-                  'Cream and charcoal business card concepts with the Incredible Kitchens logo and a subtle embossed monogram mockup',
-                  'Business card concepts / contrasting colours and a tactile embossed finish mockup.',
-                ),
-              ],
-            },
-            {
-              title: 'Business documents',
-              description:
-                'A branded invoice template makes practical information easy to follow. Clear sections for client and project details, itemised services, totals and payment information keep the document useful while maintaining the same visual language as the rest of the brand.',
-              media: [
-                image(
-                  'invoice',
-                  'Incredible Kitchens sample invoice with client and project fields, itemised services, totals and placeholder payment details',
-                  'Invoice design / a reusable business document template.',
-                ),
-              ],
-            },
-            {
-              title: 'Advertising & campaign assets',
-              description:
-                'Kitchen imagery, focused headlines and clear calls to action translate the identity into advertising. Website and ad concepts sit alongside a coordinated story series, with both bold headline treatments and quieter, image-led layouts for different messages and formats.',
-              media: [
-                image(
-                  'brand-applications',
-                  'A coordinated kitchen website concept and a vertical advertisement using the Incredible Kitchens identity',
-                  'Digital applications / website and vertical ad concepts.',
-                ),
-                image(
-                  'story-ad-series',
-                  'Eight coordinated vertical Incredible Kitchens ads featuring kitchen and joinery photography, headlines and calls to action',
-                  'Story campaign / eight coordinated kitchen and joinery ads.',
-                ),
-                image(
-                  'dream-kitchen-ad',
-                  'Vertical kitchen advertisement with the headline Your dream kitchen starts here and an Enquire now call to action',
-                  'Story creative / a bold headline, warm timber kitchen imagery and a direct inquiry prompt.',
-                ),
-                image(
-                  'made-incredible-ad',
-                  'Vertical Incredible Kitchens ad showing a classic kitchen with the headline Your home made incredible',
-                  'Story creative / an image-led layout with the logo, brand framing and a conversation-led call to action.',
-                ),
-              ],
-            },
-            {
-              title: 'Social brand assets',
-              description:
-                'Matching Facebook and X profile covers extend the identity across social channels. A pale marble texture, clear logo placement and a shared tagline create a recognisable presence while adapting the composition to each platform’s proportions.',
-              media: [
-                image(
-                  'facebook-cover',
-                  'Incredible Kitchens Facebook cover with a black logo and tagline on a pale marble background',
-                  'Facebook cover / logo, marble texture and brand tagline.',
-                ),
-                image(
-                  'x-header',
-                  'Incredible Kitchens X header with the logo and tagline arranged for a wide social banner',
-                  'X header / the same identity adapted to a wider format.',
-                ),
-              ],
-            },
-            {
-              title: 'Email signatures',
-              description:
-                'A branded email signature brings the same consistency to everyday conversations. The monogram, name, role and contact details sit in a clear hierarchy over a subtle marble background, making the sender easy to identify and contact.',
-              media: [
-                image(
-                  'email-signature',
-                  'Incredible Kitchens email signature with the IK monogram, Richard Wilson’s name and business contact details on a marble background',
-                  'Email signature / a consistent finish for client correspondence.',
-                ),
-              ],
-            },
-          ],
-        },
-        aliasBranding,
-      ]}
+      description="Identity design across logos, print, documents, advertising and everyday communication."
+      examples={categories}
     />
   );
 }
