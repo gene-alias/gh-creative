@@ -4,13 +4,15 @@ import { visualCoverFrames, type WorkCoverItem } from '@/lib/work-covers';
 export function WorkCover({
   item,
   caption = false,
+  rotate = true,
 }: {
   item: WorkCoverItem;
   caption?: boolean;
+  rotate?: boolean;
 }) {
   return (
     <div className={`work-cover work-cover--${item.treatment}`}>
-      {item.treatment === 'visual' ? (
+      {item.treatment === 'visual' && rotate ? (
         visualCoverFrames.map((frame, index) => (
           <Image
             className="work-cover__frame"
