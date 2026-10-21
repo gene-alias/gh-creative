@@ -874,7 +874,8 @@ export default function Home() {
                 START A PROJECT <ArrowRight size={19} />
               </ProjectBriefTrigger>
               <p className="form-note">
-                Tell me about your project, one step at a time.
+                Your confirmation comes from hello@gh-creative.app. Reply to
+                that email to continue the conversation with Gene.
               </p>
             </div>
           </div>

@@ -549,8 +549,8 @@ export function ProjectBriefProvider({ children }: { children: ReactNode }) {
                   </dl>
                   <p className="brief-delivery-note">
                     Your details and project brief will be emailed to Gene at GH
-                    Creative. You’ll also receive a confirmation email, with
-                    replies going directly to Gene.
+                    Creative. You’ll receive a confirmation from hello@gh-creative.app.
+                    Reply to that email to get straight back to Gene.
                   </p>
                 </>
               )}
