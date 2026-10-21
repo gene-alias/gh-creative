@@ -2,7 +2,7 @@
 import { PixelSectionTransition } from '@/components/motion/pixel-section-transition';
 import { DesktopWorkGallery } from '@/components/work/desktop-work-gallery';
 import { WorkCover } from '@/components/work/work-cover';
-import { workCovers } from '@/lib/work-covers';
+import { galleryExamples } from '@/lib/work-covers';
 import { StaggeredText } from '@/components/ui/staggered-text';
 import { useRef, useState } from 'react';
 /* Static export uses document navigation for work routes. */
@@ -502,12 +502,12 @@ export default function Home() {
           </h2>
           <DesktopWorkGallery />
           <div className="work-stack" aria-label="Selected creative work">
-            {workCovers.map((item, index) => (
+            {galleryExamples.map((item, index) => (
               <figure
                 className={`work-panel work-panel--${item.treatment}`}
-                key={item.href}
+                key={item.image}
               >
-                <WorkCover item={item} />
+                <WorkCover item={item} rotate={false} />
                 <a className="work-panel-link" href={item.href}>
                   <span>
                     <strong>
