@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  animation: full-cover-cycle 20s linear infinite;
+  animation: full-cover-cycle 10s linear infinite;
 }
 @keyframes full-cover-cycle {
   0%,

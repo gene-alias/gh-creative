@@ -14,7 +14,7 @@ export function WorkCover({
         visualCoverFrames.map((frame, index) => (
           <Image
             className="work-cover__frame"
-            style={{ animationDelay: `${index * 4 - 20.4}s` }}
+            style={{ animationDelay: `${index * 2 - 10.2}s` }}
             key={frame.src}
             unoptimized
             src={frame.src}
