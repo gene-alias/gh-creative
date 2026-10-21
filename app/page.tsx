@@ -1,5 +1,6 @@
+/* Static hosting uses document navigation; vinext Link requires a server router. */
+/* oxlint-disable next/no-html-link-for-pages */
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniFooter } from '@/components/mini/site-shell';
@@ -156,10 +157,9 @@ export default function Home() {
                   height={item.height}
                   label="CENTUM website video preview"
                 />
-                <Link
+                <a
                   className="mini-work-label"
                   href={item.href}
-                  prefetch={false}
                 >
                   <span>
                     <small>
@@ -168,14 +168,13 @@ export default function Home() {
                     <strong>{item.title}</strong>
                   </span>
                   <ArrowUpRight size={23} aria-hidden="true" />
-                </Link>
+                </a>
               </div>
             ) : (
-              <Link
+              <a
                 className={`mini-work-card mini-work-card--${item.treatment}`}
                 href={item.href}
                 key={item.href}
-                prefetch={false}
               >
                 <div className="mini-work-image">
                   {item.image ? (
@@ -204,7 +203,7 @@ export default function Home() {
                   </span>
                   <ArrowUpRight size={23} aria-hidden="true" />
                 </div>
-              </Link>
+              </a>
             ),
           )}
         </div>

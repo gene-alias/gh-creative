@@ -1,5 +1,6 @@
+/* Static hosting uses document navigation; vinext Link requires a server router. */
+/* oxlint-disable next/no-html-link-for-pages */
 import Image from 'next/image';
-import Link from 'next/link';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
@@ -54,9 +55,9 @@ export function WorkPage(props: WorkPageProps) {
   return (
     <main className="mini-site mini-work-page" id="top">
       <MiniHeader />
-      <Link className="mini-work-back" href="/#work">
+      <a className="mini-work-back" href="/#work">
         <ArrowLeft size={16} aria-hidden="true" /> BACK TO SELECTED WORK
-      </Link>
+      </a>
       <section className="mini-work-intro">
         <p className="mini-index">
           <span>{props.number} / SELECTED WORK</span>
@@ -127,15 +128,15 @@ export function WorkPage(props: WorkPageProps) {
         </ProjectBriefTrigger>
       </div>
       <nav className="mini-work-links" aria-label="Explore work disciplines">
-        <Link href="/work/web-design">
+        <a href="/work/web-design">
           WEBSITES <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/visual-design">
+        </a>
+        <a href="/work/visual-design">
           VISUAL <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/branding">
+        </a>
+        <a href="/work/branding">
           BRANDING <ArrowUpRight size={16} />
-        </Link>
+        </a>
       </nav>
       <MiniFooter />
     </main>
