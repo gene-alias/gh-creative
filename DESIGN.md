@@ -35,3 +35,14 @@ card. Retain Inter Light for body text. Restore the original conversational
 question flow and progress indicators. Add a branded transactional confirmation
 email after the inquiry notification is accepted, with honest handling and a
 retry when only the client receipt fails.
+
+
+## Full website content integration
+
+The original full GH Creative homepage composition is restored on the full-site
+branch, including its desktop gallery, services, process, engagement options,
+studio and contact sections. Uploaded content uses the approved three homepage
+categories: Websites, Visual and Branding. Website and chrome identity covers loop
+without video controls; Visual rotates through the five selected works. Detail
+pages expand to the viewport, with responsive artwork grids and wide swipeable
+category marquees. The mobile mini site remains a separate deployment.

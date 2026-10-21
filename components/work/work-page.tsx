@@ -1,9 +1,14 @@
+/* Static hosting uses document navigation; vinext Link requires a server router. */
+/* oxlint-disable next/no-html-link-for-pages */
 import Image from 'next/image';
-import Link from 'next/link';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
-import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
+import {
+  PortfolioHeader,
+  PortfolioFooter,
+} from '@/components/work/portfolio-shell';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { WebsitePreview } from './website-preview';
+import { WorkMarquee } from './work-marquee';
 
 type WorkMedia = (
   | {
@@ -18,6 +23,7 @@ type WorkMedia = (
   | {
       type: 'video';
       src: string;
+      animation: string;
       poster: string;
       width: number;
       height: number;
@@ -48,15 +54,16 @@ type WorkPageProps = {
   description: string;
   examples: WorkExample[];
   pendingMessage?: string;
+  mediaLayout?: 'stack' | 'marquee';
 };
 
 export function WorkPage(props: WorkPageProps) {
   return (
-    <main className="mini-site mini-work-page" id="top">
-      <MiniHeader />
-      <Link className="mini-work-back" href="/#work">
+    <main className="mini-site full-work-page mini-work-page" id="top">
+      <PortfolioHeader />
+      <a className="mini-work-back" href="/#work">
         <ArrowLeft size={16} aria-hidden="true" /> BACK TO SELECTED WORK
-      </Link>
+      </a>
       <section className="mini-work-intro">
         <p className="mini-index">
           <span>{props.number} / SELECTED WORK</span>
@@ -96,9 +103,17 @@ export function WorkPage(props: WorkPageProps) {
                     </p>
                   ) : null}
                 </div>
-                {example.media.map((media) => (
-                  <WorkFigure key={media.src} media={media} />
-                ))}
+                {props.mediaLayout === 'marquee' ? (
+                  <WorkMarquee label={example.title}>
+                    {example.media.map((media) => (
+                      <WorkFigure key={media.src} media={media} />
+                    ))}
+                  </WorkMarquee>
+                ) : (
+                  example.media.map((media) => (
+                    <WorkFigure key={media.src} media={media} />
+                  ))
+                )}
                 {example.sections?.map((section) => (
                   <section className="mini-case-section" key={section.title}>
                     <h3>{section.title}</h3>
@@ -127,17 +142,17 @@ export function WorkPage(props: WorkPageProps) {
         </ProjectBriefTrigger>
       </div>
       <nav className="mini-work-links" aria-label="Explore work disciplines">
-        <Link href="/work/web-design">
+        <a href="/work/web-design">
           WEBSITES <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/visual-design">
+        </a>
+        <a href="/work/visual-design">
           VISUAL <ArrowUpRight size={16} />
-        </Link>
-        <Link href="/work/branding">
+        </a>
+        <a href="/work/branding">
           BRANDING <ArrowUpRight size={16} />
-        </Link>
+        </a>
       </nav>
-      <MiniFooter />
+      <PortfolioFooter />
     </main>
   );
 }
@@ -156,7 +171,7 @@ function WorkFigure({ media }: { media: WorkMedia }) {
         alt={media.alt}
         width={media.width}
         height={media.height}
-        sizes="(max-width: 480px) 90vw, 432px"
+        sizes="(min-width: 900px) 65vw, 90vw"
       />
     ) : null;
   return (
@@ -177,7 +192,7 @@ function WorkFigure({ media }: { media: WorkMedia }) {
         )
       ) : media.type === 'video' ? (
         <WebsitePreview
-          src={media.src}
+          animation={media.animation}
           poster={media.poster}
           width={media.width}
           height={media.height}

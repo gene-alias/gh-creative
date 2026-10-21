@@ -5,7 +5,7 @@ export default function Websites() {
     <WorkPage
       title="Websites."
       number="01"
-      description="Selected website work for CENTUM, Incredible Kitchens, Loverboy Club, KONSTRUKT and ALIAS."
+      description="Custom websites, online stores and digital experiences, designed around each brand and the people using it."
       examples={[
         {
           title: 'CENTUM',
@@ -16,6 +16,7 @@ export default function Websites() {
             {
               type: 'video',
               src: '/assets/work/videos/centum.mp4',
+              animation: '/assets/work/videos/centum-preview.gif',
               poster: '/assets/work/centum-thumbnail.jpg',
               width: 1440,
               height: 838,
@@ -33,6 +34,7 @@ export default function Websites() {
             {
               type: 'video',
               src: '/assets/work/videos/incredible-kitchens.mp4',
+              animation: '/assets/work/videos/incredible-kitchens-preview.gif',
               poster: '/assets/work/incredible-kitchens-thumbnail.jpg',
               width: 1440,
               height: 838,
@@ -49,6 +51,7 @@ export default function Websites() {
             {
               type: 'video',
               src: '/assets/work/videos/loverboy.mp4',
+              animation: '/assets/work/videos/loverboy-preview.gif',
               poster: '/assets/work/loverboy-thumbnail.jpg',
               width: 1440,
               height: 838,
@@ -65,6 +68,7 @@ export default function Websites() {
             {
               type: 'video',
               src: '/assets/work/videos/konstrukt.mp4',
+              animation: '/assets/work/videos/konstrukt-preview.gif',
               poster: '/assets/work/konstrukt-thumbnail.jpg',
               width: 1440,
               height: 868,
@@ -83,6 +87,7 @@ export default function Websites() {
             {
               type: 'video',
               src: '/assets/work/videos/alias.mp4',
+              animation: '/assets/work/videos/alias-preview.gif',
               poster: '/assets/work/alias-thumbnail.jpg',
               width: 1440,
               height: 838,

@@ -1,4 +1,5 @@
-import Link from 'next/link';
+/* Static hosting uses document navigation; vinext Link requires a server router. */
+/* oxlint-disable next/no-html-link-for-pages */
 import { ArrowUpRight, ArrowUp, Send } from 'lucide-react';
 import { GHMonogram } from '@/components/brand/gh-monogram';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
@@ -6,9 +7,9 @@ import { ProjectBriefTrigger } from '@/components/project/project-brief';
 export function MiniHeader() {
   return (
     <header className="mini-header">
-      <Link href="/" className="mini-logo" aria-label="GH Creative home">
+      <a href="/" className="mini-logo" aria-label="GH Creative home">
         <GHMonogram wordmark />
-      </Link>
+      </a>
       <ProjectBriefTrigger className="mini-header-cta">
         LET’S TALK <ArrowUpRight size={15} aria-hidden="true" />
       </ProjectBriefTrigger>
@@ -30,9 +31,9 @@ export function MiniFooter() {
         </a>
       </footer>
       <nav className="mini-bottom-nav" aria-label="Quick navigation">
-        <Link href="/#services">SERVICES</Link>
-        <Link href="/#work">WORK</Link>
-        <Link href="/#studio">ABOUT</Link>
+        <a href="/#services">SERVICES</a>
+        <a href="/#work">WORK</a>
+        <a href="/#studio">ABOUT</a>
         <ProjectBriefTrigger>
           <Send size={15} aria-hidden="true" /> INQUIRE
         </ProjectBriefTrigger>

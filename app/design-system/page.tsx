@@ -1,5 +1,6 @@
+/* Static hosting uses document navigation; vinext Link requires a server router. */
+/* oxlint-disable next/no-html-link-for-pages */
 'use client';
-import Link from 'next/link';
 import { ArrowRight, ArrowDown, Check, AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
@@ -204,9 +205,9 @@ export default function DesignSystem() {
               reduced-motion support. The full page remains readable before
               motion loads.
             </p>
-            <Link className="text-link" href="/">
+            <a className="text-link" href="/">
               EXPLORE THE SCROLL SEQUENCE ↗
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -226,9 +227,9 @@ export default function DesignSystem() {
             React Bits Pro Pixel Reveal · 18px cells · 250ms scroll catch-up ·
             automatic reduced-motion fallback.
           </p>
-          <Link className="text-link" href="/#services">
+          <a className="text-link" href="/#services">
             VIEW THE SECTION TRANSITION ↗
-          </Link>
+          </a>
         </div>
       </section>
       <section className="ds-section" id="typography">

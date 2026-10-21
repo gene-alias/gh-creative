@@ -7,6 +7,7 @@ import '../design-system/pricing.css';
 import '../design-system/motion.css';
 import '../design-system/desktop.css';
 import '../design-system/mini-site.css';
+import '../design-system/full-content.css';
 export const viewport: Viewport = {
   themeColor: '#08080b',
   colorScheme: 'dark',
