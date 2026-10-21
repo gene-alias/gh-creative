@@ -40,13 +40,13 @@ const categories: WorkExample[] = [
     summary:
       'Logo systems, standalone symbols and motion identities. Tap any artwork to view it larger.',
     media: [
+      alias.symbol,
+      alias.motion,
       image(
         'logo-system',
         'Incredible Kitchens monogram and wordmark variants in cream, charcoal, green and gold',
         'Logo layouts, colour variations and profile icons.',
       ),
-      alias.symbol,
-      alias.motion,
       centum.mark,
       centum.appIcons,
       centum.splash,
@@ -85,12 +85,12 @@ const categories: WorkExample[] = [
     summary:
       'Branded invoice templates with clear layouts for client details, itemised services and payment information.',
     media: [
+      alias.invoice,
       image(
         'invoice',
         'Incredible Kitchens sample invoice with client and project fields, itemised services, totals and placeholder payment details',
         'Invoice template with sample content.',
       ),
-      alias.invoice,
     ],
   },
   {
@@ -100,6 +100,14 @@ const categories: WorkExample[] = [
     summary:
       'Campaign concepts and advertising creative, from bold headlines to image-led story layouts.',
     media: [
+      centum.fiveTasks,
+      centum.coastalRun,
+      centum.teamChallenge,
+      centum.eatToTrain,
+      centum.restOnPlan,
+      centum.everyRep,
+      centum.doneLoggedScored,
+      centum.postProof,
       image(
         'brand-applications',
         'A coordinated kitchen website concept and a vertical advertisement using the Incredible Kitchens identity',
@@ -120,14 +128,6 @@ const categories: WorkExample[] = [
         'Vertical Incredible Kitchens ad showing a classic kitchen with the headline Your home made incredible',
         'Made incredible story creative.',
       ),
-      centum.fiveTasks,
-      centum.coastalRun,
-      centum.eatToTrain,
-      centum.restOnPlan,
-      centum.everyRep,
-      centum.doneLoggedScored,
-      centum.postProof,
-      centum.teamChallenge,
     ],
   },
   {
@@ -137,6 +137,9 @@ const categories: WorkExample[] = [
     summary:
       'Profile covers, banners and link-preview graphics that carry a brand across social channels.',
     media: [
+      alias.linkPreview,
+      alias.facebookDark,
+      alias.facebookLight,
       image(
         'facebook-cover',
         'Incredible Kitchens Facebook cover with a black logo and tagline on a pale marble background',
@@ -147,9 +150,6 @@ const categories: WorkExample[] = [
         'Incredible Kitchens X header with the logo and tagline arranged for a wide social banner',
         'X header.',
       ),
-      alias.linkPreview,
-      alias.facebookDark,
-      alias.facebookLight,
       centum.milestone,
     ],
   },
