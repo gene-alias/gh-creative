@@ -218,6 +218,11 @@ body:has(.mini-site) {
   overflow: hidden;
   background: #080808;
 }
+.mini-work-image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .mini-work-image img {
   display: block;
   width: 100%;
@@ -228,7 +233,7 @@ body:has(.mini-site) {
   object-position: center 34%;
 }
 .mini-work-card--brand .mini-work-image {
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1;
 }
 .mini-work-card--brand .mini-work-image img {
   object-position: center 45%;

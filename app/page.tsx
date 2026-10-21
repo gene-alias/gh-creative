@@ -5,7 +5,6 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniFooter } from '@/components/mini/site-shell';
 import { OriginalHero } from '@/components/hero/original-hero';
-import { WebsitePreview } from '@/components/work/website-preview';
 
 const services = [
   {
@@ -45,11 +44,10 @@ const work = [
     title: 'Custom websites. Online stores. Digital experiences.',
     category: 'WEBSITES',
     href: '/work/web-design',
-    image: '/assets/work/centum-thumbnail.jpg',
-    video: '/assets/work/videos/centum.mp4',
-    videoLabel: 'CENTUM website video preview',
-    width: 1440,
-    height: 838,
+    image: '/assets/work/videos/centum-cover.gif',
+    still: '/assets/work/centum-thumbnail.jpg',
+    width: 480,
+    height: 279,
     alt: 'CENTUM website preview',
     treatment: 'web',
   },
@@ -67,11 +65,10 @@ const work = [
     title: 'Logo design. Visual identities. Brand systems.',
     category: 'BRANDING',
     href: '/work/branding',
-    image: '/assets/work/alias/liquid-metal-poster.jpg',
-    video: '/assets/work/alias/liquid-metal.mp4',
-    videoLabel: 'ALIAS chrome identity animation',
-    width: 1080,
-    height: 1080,
+    image: '/assets/work/alias/liquid-metal-cover.gif',
+    still: '/assets/work/alias/liquid-metal-poster.jpg',
+    width: 640,
+    height: 640,
     alt: 'ALIAS liquid-metal chrome logo on black',
     treatment: 'brand',
   },
@@ -148,65 +145,41 @@ export default function Home() {
           Websites, visual art and brand identities. Tap to explore.
         </p>
         <div className="mini-work-list">
-          {work.map((item, index) =>
-            item.video && item.videoLabel ? (
-              <div
-                className={`mini-work-card mini-work-card--${item.treatment}`}
-                key={item.href}
-              >
-                <WebsitePreview
-                  src={item.video}
-                  poster={item.image}
-                  width={item.width}
-                  height={item.height}
-                  label={item.videoLabel}
-                />
-                <a className="mini-work-label" href={item.href}>
-                  <span>
-                    <small>
-                      0{index + 1} / {item.category}
-                    </small>
-                    <strong>{item.title}</strong>
-                  </span>
-                  <ArrowUpRight size={23} aria-hidden="true" />
-                </a>
-              </div>
-            ) : (
-              <a
-                className={`mini-work-card mini-work-card--${item.treatment}`}
-                href={item.href}
-                key={item.href}
-              >
-                <div className="mini-work-image">
-                  {item.image ? (
-                    <Image
-                      unoptimized
-                      src={item.image}
-                      width={item.width}
-                      height={item.height}
-                      alt={item.alt}
-                      sizes="(max-width: 480px) 90vw, 432px"
+          {work.map((item, index) => (
+            <a
+              className={`mini-work-card mini-work-card--${item.treatment}`}
+              href={item.href}
+              key={item.href}
+            >
+              <div className="mini-work-image">
+                <picture>
+                  {item.still ? (
+                    <source
+                      media="(prefers-reduced-motion: reduce)"
+                      srcSet={item.still}
                     />
-                  ) : (
-                    <div className="mini-visual-cover" aria-hidden="true">
-                      <span>VISUAL.</span>
-                      <ArrowRight size={32} />
-                      <span>WORK.</span>
-                    </div>
-                  )}
-                </div>
-                <div className="mini-work-label">
-                  <span>
-                    <small>
-                      0{index + 1} / {item.category}
-                    </small>
-                    <strong>{item.title}</strong>
-                  </span>
-                  <ArrowUpRight size={23} aria-hidden="true" />
-                </div>
-              </a>
-            ),
-          )}
+                  ) : null}
+                  <Image
+                    unoptimized
+                    src={item.image}
+                    width={item.width}
+                    height={item.height}
+                    alt={item.alt}
+                    sizes="(max-width: 480px) 90vw, 432px"
+                  />
+                </picture>
+              </div>
+              <div className="mini-work-label">
+                <span>
+                  <small>
+                    0{index + 1} / {item.category}
+                  </small>
+                  <strong>{item.title}</strong>
+                </span>
+                <ArrowUpRight size={23} aria-hidden="true" />
+              </div>
+            </a>
+          ))}
         </div>
       </section>
       <section
