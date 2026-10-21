@@ -297,7 +297,7 @@ export default function Home() {
           SEND AN INQUIRY <ArrowUpRight size={20} aria-hidden="true" />
         </ProjectBriefTrigger>
         <div className="mini-direct-contact">
-          <a href="mailto:hello@ghcreative.com">
+          <a href="mailto:gene@alias.com.ai">
             Email Gene <ArrowUpRight size={14} aria-hidden="true" />
           </a>
           <a href="tel:+61405179803">

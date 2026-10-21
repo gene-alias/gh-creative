@@ -28,10 +28,10 @@ the local development server continues using its original configuration.
 ## Project brief delivery (Resend)
 
 The original one-question-at-a-time popup ends with **Review details → Send project brief → Confirmation**.
-`POST /api/project-brief` emails the brief to **hello@ghcreative.com** using Resend.
+`POST /api/project-brief` emails the brief to **gene@alias.com.ai** using Resend.
 The visitor’s email is the Reply-To address for Gene’s notification. After Resend
 accepts that notification, the server sends a separate branded confirmation to
-the validated visitor email. Replies to the confirmation go to hello@ghcreative.com.
+the validated visitor email. Replies to the confirmation go to gene@alias.com.ai.
 Both messages use the verified PROJECT_BRIEF_FROM sender. Request payloads cannot
 override Gene’s address, the confirmation recipient or the confirmation copy. Downloads are optional after a successful send.
 
