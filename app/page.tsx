@@ -296,6 +296,11 @@ export default function Home() {
         <ProjectBriefTrigger className="mini-button mini-button-dark">
           SEND AN INQUIRY <ArrowUpRight size={20} aria-hidden="true" />
         </ProjectBriefTrigger>
+        <p className="form-note">
+          Your confirmation comes from hello@gh-creative.app.
+          <br />
+          Hit reply to continue the conversation with Gene.
+        </p>
         <div className="mini-direct-contact">
           <a href="mailto:gene@alias.com.ai">
             Email Gene <ArrowUpRight size={14} aria-hidden="true" />
