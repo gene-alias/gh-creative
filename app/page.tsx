@@ -39,6 +39,34 @@ const services = [
   },
 ];
 
+const visualCoverFrames = [
+  {
+    src: '/assets/work/visual/fashion-eyewear/021.webp',
+    width: 1800,
+    height: 1005,
+  },
+  {
+    src: '/assets/work/visual/architecture-interiors/056.webp',
+    width: 1800,
+    height: 1005,
+  },
+  {
+    src: '/assets/work/visual/jewellery-portraits/048.webp',
+    width: 1800,
+    height: 1013,
+  },
+  {
+    src: '/assets/work/visual/cinematic-character/040.webp',
+    width: 1664,
+    height: 960,
+  },
+  {
+    src: '/assets/work/visual/fitness-training/069.webp',
+    width: 1800,
+    height: 1018,
+  },
+];
+
 const work = [
   {
     title: 'Custom websites. Online stores. Digital experiences.',
@@ -152,22 +180,38 @@ export default function Home() {
               key={item.href}
             >
               <div className="mini-work-image">
-                <picture>
-                  {item.still ? (
-                    <source
-                      media="(prefers-reduced-motion: reduce)"
-                      srcSet={item.still}
+                {item.treatment === 'visual' ? (
+                  visualCoverFrames.map((frame, frameIndex) => (
+                    <Image
+                      className="mini-work-cover-frame"
+                      style={{ animationDelay: `${frameIndex * 4 - 20.4}s` }}
+                      key={frame.src}
+                      unoptimized
+                      src={frame.src}
+                      width={frame.width}
+                      height={frame.height}
+                      alt={frameIndex === 0 ? item.alt : ''}
+                      sizes="(max-width: 480px) 90vw, 432px"
                     />
-                  ) : null}
-                  <Image
-                    unoptimized
-                    src={item.image}
-                    width={item.width}
-                    height={item.height}
-                    alt={item.alt}
-                    sizes="(max-width: 480px) 90vw, 432px"
-                  />
-                </picture>
+                  ))
+                ) : (
+                  <picture>
+                    {item.still ? (
+                      <source
+                        media="(prefers-reduced-motion: reduce)"
+                        srcSet={item.still}
+                      />
+                    ) : null}
+                    <Image
+                      unoptimized
+                      src={item.image}
+                      width={item.width}
+                      height={item.height}
+                      alt={item.alt}
+                      sizes="(max-width: 480px) 90vw, 432px"
+                    />
+                  </picture>
+                )}
               </div>
               <div className="mini-work-label">
                 <span>

@@ -232,6 +232,24 @@ body:has(.mini-site) {
 .mini-work-card--visual .mini-work-image img {
   object-position: center 34%;
 }
+.mini-work-image .mini-work-cover-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: mini-cover-cycle 20s linear infinite;
+}
+@keyframes mini-cover-cycle {
+  0%, 22%, 100% { opacity: 0; }
+  2%, 20% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-work-image .mini-work-cover-frame {
+    animation: none;
+  }
+  .mini-work-image .mini-work-cover-frame:first-child {
+    opacity: 1;
+  }
+}
 .mini-work-card--brand .mini-work-image {
   aspect-ratio: 1;
 }
