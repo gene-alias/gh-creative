@@ -2,7 +2,7 @@
 // Vendor gallery uses imperative frame refs and a keyboard-operable carousel region.
 /* oxlint-disable react/react-compiler, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex, jsx-a11y/prefer-tag-over-role */
 import Image from 'next/image';
-import Link from 'next/link';
+/* oxlint-disable next/no-html-link-for-pages */
 import {
   useCallback,
   useEffect,
@@ -537,10 +537,9 @@ export const DollyGallery = ({
             aria-hidden={k >= list.length}
           >
             {image.href ? (
-              <Link
+              <a
                 className="dolly-gallery__tile-link"
                 href={image.href}
-                prefetch={false}
                 tabIndex={k >= list.length ? -1 : 0}
                 aria-label={`Explore ${image.alt ?? image.label ?? 'selected'} work`}
                 onClick={(event) => {
@@ -550,7 +549,7 @@ export const DollyGallery = ({
                 }}
               >
                 {content}
-              </Link>
+              </a>
             ) : content}
           </div>
           );

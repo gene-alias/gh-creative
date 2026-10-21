@@ -146,7 +146,7 @@ export function VisualArtGallery({
                 width={item.thumbnailWidth}
                 height={item.thumbnailHeight}
                 loading={index < 2 ? 'eager' : 'lazy'}
-                sizes="(max-width: 480px) 44vw, 208px"
+                sizes="(min-width: 1200px) 28vw, (min-width: 768px) 44vw, 44vw"
               />
               <span>
                 {item.title} <ArrowUpRight size={12} aria-hidden="true" />

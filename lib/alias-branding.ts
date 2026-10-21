@@ -19,6 +19,7 @@ export const aliasBrandingMedia = {
   motion: {
     type: 'video' as const,
     src: '/assets/work/alias/liquid-metal.mp4',
+    animation: '/assets/work/alias/liquid-metal-cover.gif',
     poster: '/assets/work/alias/liquid-metal-poster.jpg',
     width: 1080,
     height: 1080,

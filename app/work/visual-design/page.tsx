@@ -1,6 +1,6 @@
 /* Static hosting uses document navigation; vinext Link requires a server router. */
 /* oxlint-disable next/no-html-link-for-pages */
-import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
+import { PortfolioHeader, PortfolioFooter } from '@/components/work/portfolio-shell';
 import { VisualArtGallery } from '@/components/work/visual-gallery';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
@@ -8,8 +8,8 @@ import visualWork from '@/lib/visual-work.json';
 export const metadata = { title: 'Visual art / GH Creative' };
 export default function VisualArt() {
   return (
-    <main className="mini-site" id="top">
-      <MiniHeader />
+    <main className="mini-site full-work-page" id="top">
+      <PortfolioHeader />
       <a className="mini-work-back" href="/#work">
         <ArrowLeft size={16} /> BACK TO SELECTED WORK
       </a>
@@ -37,7 +37,7 @@ export default function VisualArt() {
           LET’S CREATE SOMETHING <ArrowUpRight size={20} />
         </ProjectBriefTrigger>
       </div>
-      <MiniFooter />
+      <PortfolioFooter />
     </main>
   );
 }

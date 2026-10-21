@@ -1,7 +1,9 @@
 # GH Creative
 
-Mobile creative mini-site with an animated Earth, expandable services, work
-galleries and a conversational inquiry form. A shared design system retains the GH identity.
+Full GH Creative website with the original desktop composition, animated Earth,
+services, process, engagement options and conversational inquiry form. The uploaded
+portfolio includes five website walkthroughs, 70 visual works and 36 branding assets
+across six category marquees. The separate mini site remains on `codex/mobile-mini-site`.
 
 ## Local development
 
@@ -206,3 +208,21 @@ supplied six-second GIF is delivered as a silent H.264 MP4 with its original
 square proportions, a loading poster, native controls and the shared visible-only
 playback behaviour. The original source assets remain unchanged. Invoice captions
 identify the example content and placeholders as a template.
+
+
+## Full website portfolio integration
+
+The full-site branch restores the original homepage layout while reusing the
+approved mini-site portfolio content. `lib/work-covers.ts` owns the three category
+descriptions and rotating Visual selection; `WorkCover` displays the same content
+in the desktop gallery and mobile work stack. Static-hosted work routes use native
+anchors. Branding keeps all six category marquees and the selected opening assets.
+Visual All Work keeps its jewellery-first curation, filters, lightbox and load-more
+flow, with three columns on wide screens and two on mobile. Website details use lazy-loaded GIF previews with reduced-motion posters for
+all five walkthroughs and the corrected kitchen design, manufacture and installation
+copy. `design-system/full-content.css` adapts detail pages to the full width without
+changing the mini-site deployment.
+
+The existing Resend notification and branded visitor confirmation are retained.
+Neither Vercel project had production email environment variables at the integration
+check on 21 October 2026; mail delivery still requires configuration.

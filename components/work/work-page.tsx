@@ -2,7 +2,10 @@
 /* oxlint-disable next/no-html-link-for-pages */
 import Image from 'next/image';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
-import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
+import {
+  PortfolioHeader,
+  PortfolioFooter,
+} from '@/components/work/portfolio-shell';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { WebsitePreview } from './website-preview';
 import { WorkMarquee } from './work-marquee';
@@ -20,6 +23,7 @@ type WorkMedia = (
   | {
       type: 'video';
       src: string;
+      animation: string;
       poster: string;
       width: number;
       height: number;
@@ -55,8 +59,8 @@ type WorkPageProps = {
 
 export function WorkPage(props: WorkPageProps) {
   return (
-    <main className="mini-site mini-work-page" id="top">
-      <MiniHeader />
+    <main className="mini-site full-work-page mini-work-page" id="top">
+      <PortfolioHeader />
       <a className="mini-work-back" href="/#work">
         <ArrowLeft size={16} aria-hidden="true" /> BACK TO SELECTED WORK
       </a>
@@ -105,9 +109,11 @@ export function WorkPage(props: WorkPageProps) {
                       <WorkFigure key={media.src} media={media} />
                     ))}
                   </WorkMarquee>
-                ) : example.media.map((media) => (
-                  <WorkFigure key={media.src} media={media} />
-                ))}
+                ) : (
+                  example.media.map((media) => (
+                    <WorkFigure key={media.src} media={media} />
+                  ))
+                )}
                 {example.sections?.map((section) => (
                   <section className="mini-case-section" key={section.title}>
                     <h3>{section.title}</h3>
@@ -146,7 +152,7 @@ export function WorkPage(props: WorkPageProps) {
           BRANDING <ArrowUpRight size={16} />
         </a>
       </nav>
-      <MiniFooter />
+      <PortfolioFooter />
     </main>
   );
 }
@@ -165,7 +171,7 @@ function WorkFigure({ media }: { media: WorkMedia }) {
         alt={media.alt}
         width={media.width}
         height={media.height}
-        sizes="(max-width: 480px) 90vw, 432px"
+        sizes="(min-width: 900px) 65vw, 90vw"
       />
     ) : null;
   return (
@@ -186,7 +192,7 @@ function WorkFigure({ media }: { media: WorkMedia }) {
         )
       ) : media.type === 'video' ? (
         <WebsitePreview
-          src={media.src}
+          animation={media.animation}
           poster={media.poster}
           width={media.width}
           height={media.height}
