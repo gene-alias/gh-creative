@@ -27,6 +27,7 @@ export default function VisualArt() {
       <VisualArtGallery
         artworks={visualWork.artworks}
         categories={visualWork.categories}
+        allWorkOrder={visualWork.allWorkOrder}
       />
       <div className="mini-work-inquiry">
         <ProjectBriefTrigger

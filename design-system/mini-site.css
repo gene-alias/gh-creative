@@ -802,6 +802,13 @@ body:has(.mini-site) {
   columns: 2;
   column-gap: 12px;
 }
+/* Read curated picks across each row, rather than down masonry columns. */
+.mini-gallery-grid[data-curated='true'] {
+  columns: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
 .mini-gallery-tile {
   display: block;
   width: 100%;

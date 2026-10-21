@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
   ArrowDown,
@@ -35,17 +35,28 @@ type Category = { id: string; label: string; count: number };
 export function VisualArtGallery({
   artworks,
   categories,
+  allWorkOrder,
 }: {
   artworks: Artwork[];
   categories: Category[];
+  allWorkOrder: string[];
 }) {
   const gallery = useRef<HTMLElement>(null);
   const [category, setCategory] = useState('all');
   const [limit, setLimit] = useState(18);
   const [activeId, setActiveId] = useState<string | null>(null);
+  // Only the All Work view follows the curated mix; category views retain their order.
+  const allWork = useMemo(() => {
+    const rank = new Map(allWorkOrder.map((id, index) => [id, index]));
+    return [...artworks].sort(
+      (a, b) =>
+        (rank.get(a.id) ?? allWorkOrder.length) -
+        (rank.get(b.id) ?? allWorkOrder.length),
+    );
+  }, [artworks, allWorkOrder]);
   const filtered =
     category === 'all'
-      ? artworks
+      ? allWork
       : artworks.filter((item) => item.category === category);
   const activeIndex = filtered.findIndex((item) => item.id === activeId);
   const active = filtered[activeIndex];
@@ -111,7 +122,10 @@ export function VisualArtGallery({
             : categories.find((item) => item.id === category)?.label}{' '}
           / {filtered.length} images
         </output>
-        <div className="mini-gallery-grid">
+        <div
+          className="mini-gallery-grid"
+          data-curated={category === 'all' ? 'true' : undefined}
+        >
           {shown.map((item, index) => (
             <DialogTrigger
               key={item.id}
