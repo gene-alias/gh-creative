@@ -46,6 +46,8 @@ const work = [
     category: 'WEBSITES',
     href: '/work/web-design',
     image: '/assets/work/centum-thumbnail.jpg',
+    video: '/assets/work/videos/centum.mp4',
+    videoLabel: 'CENTUM website video preview',
     width: 1440,
     height: 838,
     alt: 'CENTUM website preview',
@@ -62,13 +64,15 @@ const work = [
     treatment: 'visual',
   },
   {
-    title: 'INCREDIBLE KITCHENS. ALIAS.',
+    title: 'Logo design. Visual identities. Brand systems.',
     category: 'BRANDING',
     href: '/work/branding',
-    image: '/assets/work/incredible-kitchens/business-cards.webp',
-    width: 1600,
-    height: 1067,
-    alt: 'Incredible Kitchens cream and charcoal business card designs',
+    image: '/assets/work/alias/liquid-metal-poster.jpg',
+    video: '/assets/work/alias/liquid-metal.mp4',
+    videoLabel: 'ALIAS chrome identity animation',
+    width: 1080,
+    height: 1080,
+    alt: 'ALIAS liquid-metal chrome logo on black',
     treatment: 'brand',
   },
 ];
@@ -145,22 +149,19 @@ export default function Home() {
         </p>
         <div className="mini-work-list">
           {work.map((item, index) =>
-            item.treatment === 'web' ? (
+            item.video && item.videoLabel ? (
               <div
-                className="mini-work-card mini-work-card--web"
+                className={`mini-work-card mini-work-card--${item.treatment}`}
                 key={item.href}
               >
                 <WebsitePreview
-                  src="/assets/work/videos/centum.mp4"
+                  src={item.video}
                   poster={item.image}
                   width={item.width}
                   height={item.height}
-                  label="CENTUM website video preview"
+                  label={item.videoLabel}
                 />
-                <a
-                  className="mini-work-label"
-                  href={item.href}
-                >
+                <a className="mini-work-label" href={item.href}>
                   <span>
                     <small>
                       0{index + 1} / {item.category}
