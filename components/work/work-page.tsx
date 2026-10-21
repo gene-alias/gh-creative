@@ -5,6 +5,7 @@ import { ProjectBriefTrigger } from '@/components/project/project-brief';
 import { MiniHeader, MiniFooter } from '@/components/mini/site-shell';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { WebsitePreview } from './website-preview';
+import { WorkMarquee } from './work-marquee';
 
 type WorkMedia = (
   | {
@@ -49,6 +50,7 @@ type WorkPageProps = {
   description: string;
   examples: WorkExample[];
   pendingMessage?: string;
+  mediaLayout?: 'stack' | 'marquee';
 };
 
 export function WorkPage(props: WorkPageProps) {
@@ -97,7 +99,13 @@ export function WorkPage(props: WorkPageProps) {
                     </p>
                   ) : null}
                 </div>
-                {example.media.map((media) => (
+                {props.mediaLayout === 'marquee' ? (
+                  <WorkMarquee label={example.title}>
+                    {example.media.map((media) => (
+                      <WorkFigure key={media.src} media={media} />
+                    ))}
+                  </WorkMarquee>
+                ) : example.media.map((media) => (
                   <WorkFigure key={media.src} media={media} />
                 ))}
                 {example.sections?.map((section) => (

@@ -941,3 +941,87 @@ body:has(.mini-site) {
     gap: 4px;
   }
 }
+
+/* Branding collections: continuous motion with free swipe momentum. */
+.mini-work-marquee {
+  margin-top: 24px;
+}
+.mini-marquee-viewport {
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+}
+.mini-marquee-viewport:active {
+  cursor: grabbing;
+}
+.mini-marquee-track {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+.mini-marquee-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding-right: 16px;
+}
+.mini-marquee-slide figure {
+  margin: 0;
+}
+.mini-marquee-slide .mini-artwork-link,
+.mini-marquee-slide .mini-website-video {
+  height: 320px;
+  background: #080808;
+}
+.mini-marquee-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.mini-marquee-slide figcaption {
+  min-height: 42px;
+  font-size: 11px;
+  padding: 0 2px;
+}
+.mini-marquee-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.mini-marquee-count {
+  margin-right: auto;
+  font: 400 11px/1.6 var(--gh-font-mono);
+  color: #c3c0bf;
+}
+.mini-marquee-count small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: .08em;
+  color: var(--mini-muted);
+}
+.mini-marquee-controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #393333;
+  color: #f4efee;
+  background: transparent;
+  cursor: pointer;
+}
+.mini-marquee-controls button:hover,
+.mini-marquee-controls button:focus-visible {
+  border-color: var(--mini-red);
+  color: var(--mini-red);
+}
+.mini-marquee-controls button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+@media (max-width: 359px) {
+  .mini-marquee-slide .mini-artwork-link,
+  .mini-marquee-slide .mini-website-video {
+    height: 280px;
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "mark": {
+    "src": "/assets/work/centum-branding/mark.webp",
+    "width": 1000,
+    "height": 1000
+  },
+  "app-icons": {
+    "src": "/assets/work/centum-branding/app-icons.webp",
+    "width": 1600,
+    "height": 1173
+  },
+  "splash": {
+    "src": "/assets/work/centum-branding/splash.webp",
+    "width": 1017,
+    "height": 2200
+  },
+  "confirm-email": {
+    "src": "/assets/work/centum-branding/confirm-email.webp",
+    "width": 1200,
+    "height": 1294
+  },
+  "welcome-email": {
+    "src": "/assets/work/centum-branding/welcome-email.webp",
+    "width": 1200,
+    "height": 1736
+  },
+  "milestone": {
+    "src": "/assets/work/centum-branding/milestone.webp",
+    "width": 1080,
+    "height": 1920
+  },
+  "five-tasks": {
+    "src": "/assets/work/centum-branding/five-tasks.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "coastal-run": {
+    "src": "/assets/work/centum-branding/coastal-run.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "eat-to-train": {
+    "src": "/assets/work/centum-branding/eat-to-train.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "rest-on-plan": {
+    "src": "/assets/work/centum-branding/rest-on-plan.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "every-rep": {
+    "src": "/assets/work/centum-branding/every-rep.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "done-logged-scored": {
+    "src": "/assets/work/centum-branding/done-logged-scored.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "post-proof": {
+    "src": "/assets/work/centum-branding/post-proof.webp",
+    "width": 1080,
+    "height": 1350
+  },
+  "team-challenge": {
+    "src": "/assets/work/centum-branding/team-challenge.webp",
+    "width": 1080,
+    "height": 1350
+  }
+}

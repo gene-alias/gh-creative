@@ -1,5 +1,6 @@
 import { WorkPage, type WorkExample } from '@/components/work/work-page';
 import { aliasBrandingMedia as alias } from '@/lib/alias-branding';
+import { centumBrandingMedia as centum } from '@/lib/centum-branding';
 
 export const metadata = { title: 'Branding / GH Creative' };
 
@@ -36,7 +37,8 @@ const categories: WorkExample[] = [
     id: 'logos-identity',
     title: 'Logos & identity',
     label: 'IDENTITY',
-    summary: 'Logo systems, standalone symbols and motion identities. Tap any artwork to view it larger.',
+    summary:
+      'Logo systems, standalone symbols and motion identities. Tap any artwork to view it larger.',
     media: [
       image(
         'logo-system',
@@ -45,13 +47,17 @@ const categories: WorkExample[] = [
       ),
       alias.symbol,
       alias.motion,
+      centum.mark,
+      centum.appIcons,
+      centum.splash,
     ],
   },
   {
     id: 'print-stationery',
     title: 'Print & stationery',
     label: 'PRINT',
-    summary: 'Business cards, letterheads, envelopes and stationery designed as part of a consistent identity.',
+    summary:
+      'Business cards, letterheads, envelopes and stationery designed as part of a consistent identity.',
     media: [
       image(
         'business-cards',
@@ -76,7 +82,8 @@ const categories: WorkExample[] = [
     id: 'business-documents',
     title: 'Business documents',
     label: 'DOCUMENTS',
-    summary: 'Branded invoice templates with clear layouts for client details, itemised services and payment information.',
+    summary:
+      'Branded invoice templates with clear layouts for client details, itemised services and payment information.',
     media: [
       image(
         'invoice',
@@ -90,7 +97,8 @@ const categories: WorkExample[] = [
     id: 'advertising-campaigns',
     title: 'Advertising & campaigns',
     label: 'CAMPAIGNS',
-    summary: 'Campaign concepts and advertising creative, from bold headlines to image-led story layouts.',
+    summary:
+      'Campaign concepts and advertising creative, from bold headlines to image-led story layouts.',
     media: [
       image(
         'brand-applications',
@@ -112,13 +120,22 @@ const categories: WorkExample[] = [
         'Vertical Incredible Kitchens ad showing a classic kitchen with the headline Your home made incredible',
         'Made incredible story creative.',
       ),
+      centum.fiveTasks,
+      centum.coastalRun,
+      centum.eatToTrain,
+      centum.restOnPlan,
+      centum.everyRep,
+      centum.doneLoggedScored,
+      centum.postProof,
+      centum.teamChallenge,
     ],
   },
   {
     id: 'social-assets',
     title: 'Social & sharing assets',
     label: 'SOCIAL',
-    summary: 'Profile covers, banners and link-preview graphics that carry a brand across social channels.',
+    summary:
+      'Profile covers, banners and link-preview graphics that carry a brand across social channels.',
     media: [
       image(
         'facebook-cover',
@@ -133,13 +150,15 @@ const categories: WorkExample[] = [
       alias.linkPreview,
       alias.facebookDark,
       alias.facebookLight,
+      centum.milestone,
     ],
   },
   {
     id: 'email-signatures',
-    title: 'Email signatures',
+    title: 'Email design',
     label: 'EMAIL',
-    summary: 'Branded signatures that bring a consistent identity to everyday correspondence.',
+    summary:
+      'Email signatures, confirmation messages and welcome templates that carry a brand into the inbox.',
     media: [
       image(
         'email-signature',
@@ -148,6 +167,8 @@ const categories: WorkExample[] = [
       ),
       alias.emailDark,
       alias.emailLight,
+      centum.confirmEmail,
+      centum.welcomeEmail,
     ],
   },
 ];
@@ -159,6 +180,7 @@ export default function Branding() {
       number="03"
       description="Identity design across logos, print, documents, advertising and everyday communication."
       examples={categories}
+      mediaLayout="marquee"
     />
   );
 }
