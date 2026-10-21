@@ -8,7 +8,7 @@ import {
   type ProjectBrief,
 } from '../../components/project/brief-model.ts';
 
-export const BRIEF_RECIPIENT = 'gene@alias.com.ai';
+export const BRIEF_RECIPIENT = 'hello@ghcreative.com';
 export const MAX_BRIEF_BYTES = 40_000;
 export type BriefDeliveryConfig = { apiKey?: string; from?: string };
 

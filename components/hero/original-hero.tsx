@@ -191,7 +191,7 @@ export function OriginalHero() {
             <div className="contact-card-meta meta">
               <span>GENE / CREATIVE PARTNER</span>
               <a href="tel:+61405179803">+61 405 179 803</a>
-              <a href="mailto:gene@alias.com.ai">gene@alias.com.ai</a>
+              <a href="mailto:hello@ghcreative.com">hello@ghcreative.com</a>
             </div>
             <ProjectBriefTrigger
               className="contact-card-cta"
