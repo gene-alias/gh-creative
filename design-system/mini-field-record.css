@@ -1,0 +1,750 @@
+@import url('https://fonts.googleapis.com/css2?family=Krub:wght@300;400;500&display=swap');
+
+/* FIELD RECORD restyle of the mini homepage (sections below the original hero).
+   Krub for headings and body, Plex mono labels, red as the only accent, dark solid cards,
+   every section dark, HUD frame on contact, fine 240px grain on the background only.
+   Buttons follow the original hero buttons: square red outlines, mono uppercase, arrow right. */
+
+.mini-site {
+  --fr-ground: #0a0a0b;
+  --fr-panel: #111113;
+  --fr-ink: #f4f4f2;
+  --fr-body: #f4f4f2d9;
+  --fr-muted: #f4f4f299;
+  --fr-line: #f4f4f22e;
+  --fr-line-soft: #f4f4f21f;
+  --fr-red: #ff3b2f;
+  --fr-hero-red: #e4272c;
+  --fr-hero-pink: #ff686d;
+  --fr-light: #e6e6e1;
+  --fr-light-panel: #dadad5;
+  --fr-dark-ink: #0a0a0b;
+  --fr-krub: 'Krub', 'Inter', Arial, sans-serif;
+  position: relative;
+  isolation: isolate;
+  background: var(--fr-ground);
+}
+
+/* Grain: tiled at native size, never stretched. It sits behind all content (z-index -1 inside the
+   isolated page), so it only shows on the background, never over images, video or cards. */
+.mini-site::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('/assets/field-record/grain.png') repeat;
+  background-size: 240px 240px;
+  opacity: 0.1;
+  mix-blend-mode: hard-light;
+}
+
+.mini-site .fr-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 8px 20px 72px;
+}
+
+.mini-site .fr-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--fr-line);
+}
+
+.mini-site .fr-eyebrow {
+  font: 500 12px/16px var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fr-red);
+}
+
+.mini-site :is(.fr-section, .fr-contact) h2 {
+  font-family: var(--fr-krub);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: -0.04em;
+  text-transform: none;
+  color: var(--fr-ink);
+}
+
+.mini-site :is(.fr-intro, .fr-body) {
+  font-family: var(--fr-krub);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--fr-body);
+}
+
+/* Services: compact rows with the line drawing, expandable. */
+.mini-site .fr-services {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-site .fr-service {
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 14px;
+  background: var(--fr-panel);
+}
+
+.mini-site .fr-service summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.mini-site .fr-service summary::-webkit-details-marker {
+  display: none;
+}
+
+.mini-site .fr-service-thumb {
+  flex-shrink: 0;
+  width: 112px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.mini-site .fr-service-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mini-site .fr-service-text strong {
+  font: 500 20px/24px var(--fr-krub);
+  letter-spacing: -0.02em;
+  color: var(--fr-ink);
+}
+
+.mini-site .fr-service-text small {
+  font: 300 15px/21px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .fr-service-plus {
+  flex-shrink: 0;
+  color: var(--fr-red);
+  transition: transform 200ms ease;
+}
+
+.mini-site .fr-service[open] .fr-service-plus {
+  transform: rotate(45deg);
+}
+
+.mini-site .fr-service-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 16px 16px;
+}
+
+.mini-site .fr-service-body p {
+  font: 300 16px/25px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+/* Buttons: the original hero style. */
+.mini-site .fr-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 15px 18px;
+  border: 1px solid #e4272c80;
+  border-radius: 0;
+  background: transparent;
+  color: var(--fr-hero-pink);
+  font: 500 13px/18px var(--gh-font-mono);
+  letter-spacing: 0.06em;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.mini-site .fr-button--primary {
+  border: 1.5px solid var(--fr-hero-red);
+  color: var(--fr-hero-red);
+}
+
+.mini-site .fr-button:hover,
+.mini-site .fr-button:focus-visible {
+  background: #e4272c14;
+  border-color: var(--fr-hero-red);
+}
+
+.mini-site .fr-button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+/* Work: dark solid cards, image on top. */
+.mini-site .fr-work-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mini-site .fr-work-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 14px;
+  background: var(--fr-panel);
+  color: inherit;
+  text-decoration: none;
+}
+
+.mini-site .fr-work-image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+}
+
+.mini-site .fr-work-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-site .fr-work-label {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 20px;
+  color: var(--fr-red);
+}
+
+.mini-site .fr-work-label > span {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-site .fr-work-label small {
+  font: 500 11px/14px var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  color: var(--fr-red);
+}
+
+.mini-site .fr-work-label strong {
+  font: 500 20px/26px var(--fr-krub);
+  letter-spacing: -0.02em;
+  color: var(--fr-ink);
+}
+
+/* About: original image and copy, new type. */
+.mini-site .fr-about-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 14px;
+}
+
+/* Process: dark like every other section. */
+.mini-site .fr-process {
+  gap: 14px;
+}
+
+.mini-site .fr-process h2 {
+  padding-bottom: 10px;
+}
+
+.mini-site .fr-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-site .fr-steps li {
+  display: flex;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 14px;
+  background: var(--fr-panel);
+}
+
+.mini-site .fr-steps li > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-site .fr-steps strong {
+  font: 500 22px/28px var(--fr-krub);
+  color: var(--fr-ink);
+}
+
+.mini-site .fr-steps small {
+  font: 300 16px/24px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .fr-step-number {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #f4f4f24d;
+  border-radius: 50%;
+  color: var(--fr-ink);
+  font: 500 12px/1 var(--gh-font-mono);
+}
+
+.mini-site .fr-step-number--current {
+  border-color: var(--fr-red);
+  background: var(--fr-red);
+  color: var(--fr-dark-ink);
+}
+
+.mini-site .fr-faq {
+  border-top: 1px solid var(--fr-line);
+  border-bottom: 1px solid var(--fr-line);
+}
+
+.mini-site .fr-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+  font: 400 18px/24px var(--fr-krub);
+  color: var(--fr-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.mini-site .fr-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.mini-site .fr-faq summary svg {
+  flex-shrink: 0;
+  color: var(--fr-red);
+  transition: transform 200ms ease;
+}
+
+.mini-site .fr-faq[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.mini-site .fr-faq p {
+  padding-bottom: 20px;
+  font: 300 16px/25px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+/* Contact: HUD frame with red corner arms. */
+.mini-site .fr-contact {
+  padding: 56px 14px 24px;
+}
+
+.mini-site .fr-hud {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 36px 22px 28px;
+  border: 1px solid #f4f4f238;
+  border-radius: 12px;
+}
+
+.mini-site .fr-contact h2 {
+  font-size: 48px;
+  line-height: 48px;
+  letter-spacing: -0.045em;
+}
+
+.mini-site .fr-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 0 solid var(--fr-red);
+}
+
+.mini-site .fr-corner--tl {
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-left-radius: 12px;
+}
+
+.mini-site .fr-corner--tr {
+  top: -1px;
+  right: -1px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-top-right-radius: 12px;
+}
+
+.mini-site .fr-corner--bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-bottom-left-radius: 12px;
+}
+
+.mini-site .fr-corner--br {
+  right: -1px;
+  bottom: -1px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-bottom-right-radius: 12px;
+}
+
+.mini-site .fr-note {
+  font: 400 11px/17px var(--gh-font-mono);
+  letter-spacing: 0.04em;
+  color: var(--fr-muted);
+}
+
+/* Footer + bottom nav restyle (shared MiniFooter markup). */
+.mini-site .mini-footer p {
+  font: 500 10px/1.6 var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  color: var(--fr-muted);
+}
+
+.mini-site .mini-footer > a {
+  border-color: #e4272c80;
+  color: var(--fr-hero-red);
+}
+
+.mini-site .mini-bottom-nav {
+  background: var(--fr-panel);
+  border-top: 1px solid var(--fr-line-soft);
+}
+
+.mini-site .mini-bottom-nav a {
+  font: 500 11px/14px var(--gh-font-mono);
+  letter-spacing: 0.14em;
+  color: #f4f4f2cc;
+}
+
+.mini-site .mini-bottom-nav button {
+  border: 1.5px solid var(--fr-hero-red);
+  background: transparent;
+  color: var(--fr-hero-red);
+  font: 500 12px/16px var(--gh-font-mono);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 359px) {
+  .mini-site .fr-section {
+    padding-inline: 16px;
+  }
+
+  .mini-site :is(.fr-section, .fr-contact) h2 {
+    font-size: 34px;
+    line-height: 38px;
+  }
+
+  .mini-site .fr-service-thumb {
+    width: 88px;
+    height: 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-site :is(.fr-service-plus, .fr-faq summary svg, .fr-button) {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Work pages (/work/*): same FIELD RECORD headings and type as the homepage sections.
+   Content and layout stay as they were; only headings, type, labels and buttons change.
+   --------------------------------------------------------------------------------------------- */
+.mini-site .mini-work-back {
+  margin: 12px 20px 0;
+  font: 500 11px/16px var(--gh-font-mono);
+  letter-spacing: 0.14em;
+  color: var(--fr-muted);
+}
+
+.mini-site .mini-work-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 20px;
+  padding: 24px 0 22px;
+  border-bottom: 1px solid var(--fr-line);
+}
+
+.mini-site .mini-index {
+  margin-bottom: 0 !important;
+  font: 500 12px/16px var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fr-muted);
+}
+
+.mini-site :is(.mini-work-intro, .mini-example) > .mini-index {
+  color: var(--fr-red);
+}
+
+.mini-site .mini-work-intro h1 {
+  font-family: var(--fr-krub);
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 50px;
+  letter-spacing: -0.045em;
+  text-transform: none;
+  color: var(--fr-ink);
+}
+
+.mini-site .mini-work-intro > p:last-child {
+  margin-top: 0;
+  font: 300 18px/28px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-example {
+  padding: 32px 20px;
+  border-top: 1px solid var(--fr-line);
+}
+
+.mini-site .mini-example h2 {
+  margin: 12px 0 18px;
+  font-family: var(--fr-krub);
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 36px;
+  letter-spacing: -0.04em;
+  text-transform: none;
+  color: var(--fr-ink);
+}
+
+.mini-site :is(.mini-example > p:not(.mini-index), .mini-example-copy) {
+  font: 300 16px/26px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-example-copy strong {
+  font-weight: 500;
+  color: var(--fr-ink);
+}
+
+.mini-site .mini-example img,
+.mini-site .mini-website-video {
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 10px;
+}
+
+.mini-site :is(.mini-example, .mini-case-section) figcaption {
+  font: 500 11px/17px var(--gh-font-mono);
+  letter-spacing: 0.08em;
+  color: var(--fr-muted);
+}
+
+.mini-site .mini-case-section {
+  border-top: 1px solid var(--fr-line);
+}
+
+.mini-site .mini-case-section h3 {
+  font: 500 24px/30px var(--fr-krub);
+  letter-spacing: -0.03em;
+  text-transform: none;
+  color: var(--fr-ink);
+}
+
+.mini-site .mini-case-section > p {
+  font: 300 16px/26px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-work-pending {
+  margin: 0 20px 20px;
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 14px;
+  background: var(--fr-panel);
+  font: 300 16px/26px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-work-pending .eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font: 500 11px/16px var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  color: var(--fr-red);
+}
+
+.mini-site .mini-work-inquiry {
+  padding: 24px 20px;
+}
+
+.mini-site .mini-work-links {
+  padding: 10px 20px 20px;
+}
+
+.mini-site .mini-work-links a {
+  border-bottom: 1px solid var(--fr-line);
+  font: 500 11px/16px var(--gh-font-mono);
+  letter-spacing: 0.14em;
+  color: var(--fr-ink);
+}
+
+.mini-site .mini-work-links a svg {
+  color: var(--fr-red);
+}
+
+/* Buttons on the work pages use the hero style too. */
+.mini-site .mini-button {
+  border: 1px solid #e4272c80;
+  background: transparent;
+  color: var(--fr-hero-pink);
+  font: 500 13px/18px var(--gh-font-mono);
+  letter-spacing: 0.06em;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.mini-site .mini-button-primary {
+  border: 1.5px solid var(--fr-hero-red);
+  background: transparent;
+  color: var(--fr-hero-red);
+}
+
+.mini-site .mini-button:hover,
+.mini-site .mini-button-primary:hover {
+  background: #e4272c14;
+  border-color: var(--fr-hero-red);
+}
+
+/* Visual gallery */
+.mini-site .mini-visual-gallery {
+  padding: 0 20px 16px;
+}
+
+.mini-site .mini-gallery-toolbar {
+  background: var(--fr-ground);
+}
+
+.mini-site .mini-gallery-filters button {
+  border: 1px solid var(--fr-line);
+  font: 400 14px/18px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-gallery-filters button[aria-pressed='true'] {
+  border: 1.5px solid var(--fr-hero-red);
+  background: transparent;
+  color: var(--fr-hero-red);
+}
+
+.mini-site .mini-gallery-filters button > span {
+  font: 500 10px/14px var(--gh-font-mono);
+}
+
+.mini-site :is(.mini-gallery-result, .mini-gallery-count) {
+  font: 500 11px/17px var(--gh-font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fr-muted);
+}
+
+.mini-site .mini-gallery-tile img {
+  border: 1px solid var(--fr-line-soft);
+  border-radius: 8px;
+}
+
+.mini-site .mini-gallery-tile > span {
+  font: 400 13px/18px var(--fr-krub);
+  color: var(--fr-body);
+}
+
+.mini-site .mini-gallery-tile > span svg {
+  color: var(--fr-red);
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Motion: entrances are handled in components/mini/field-record-motion.tsx (Motion inView).
+   CSS covers state changes: a service or FAQ opening, and hover feedback.
+   --------------------------------------------------------------------------------------------- */
+.mini-site .fr-corner--tl { transform-origin: top left; }
+.mini-site .fr-corner--tr { transform-origin: top right; }
+.mini-site .fr-corner--bl { transform-origin: bottom left; }
+.mini-site .fr-corner--br { transform-origin: bottom right; }
+
+@keyframes fr-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mini-site .fr-service[open] .fr-service-body,
+.mini-site .fr-faq[open] > p {
+  animation: fr-open 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mini-site .fr-service,
+.mini-site .fr-work-card {
+  transition: border-color 200ms ease;
+}
+
+.mini-site .fr-service:hover,
+.mini-site .fr-service[open],
+.mini-site .fr-work-card:hover {
+  border-color: #e4272c59;
+}
+
+.mini-site .fr-work-image img {
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mini-site .fr-work-card:hover .fr-work-image img {
+  transform: scale(1.03);
+}
+
+.mini-site :is(.fr-button, .mini-button) svg,
+.mini-site .fr-work-label > svg {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mini-site :is(.fr-button, .mini-button):hover svg,
+.mini-site .fr-work-card:hover .fr-work-label > svg {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-site .fr-service[open] .fr-service-body,
+  .mini-site .fr-faq[open] > p {
+    animation: none;
+  }
+
+  .mini-site :is(.fr-work-image img, .fr-button svg, .mini-button svg, .fr-work-label > svg) {
+    transition: none;
+    transform: none !important;
+  }
+}

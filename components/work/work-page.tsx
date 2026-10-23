@@ -62,7 +62,7 @@ export function WorkPage(props: WorkPageProps) {
       </a>
       <section className="mini-work-intro">
         <p className="mini-index">
-          <span>{props.number} / SELECTED WORK</span>
+          <span>{`// ${props.number} · SELECTED WORK`}</span>
           <span>↗</span>
         </p>
         <h1>{props.title}</h1>
@@ -77,7 +77,7 @@ export function WorkPage(props: WorkPageProps) {
               key={example.title}
             >
               <p className="mini-index">
-                0{index + 1} / {example.label}
+                {`// 0${index + 1} · ${example.label}`}
               </p>
               <h2>{example.title}</h2>
               <div className="mini-example-gallery">

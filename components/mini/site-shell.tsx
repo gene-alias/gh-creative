@@ -1,8 +1,9 @@
 /* Static hosting uses document navigation; vinext Link requires a server router. */
 /* oxlint-disable next/no-html-link-for-pages */
-import { ArrowUpRight, ArrowUp, Send } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ArrowUp } from 'lucide-react';
 import { GHMonogram } from '@/components/brand/gh-monogram';
 import { ProjectBriefTrigger } from '@/components/project/project-brief';
+import { FieldRecordMotion } from './field-record-motion';
 
 export function MiniHeader() {
   return (
@@ -20,6 +21,7 @@ export function MiniHeader() {
 export function MiniFooter() {
   return (
     <>
+      <FieldRecordMotion />
       <footer className="mini-footer">
         <p>
           INDEPENDENT BY DESIGN.
@@ -35,7 +37,7 @@ export function MiniFooter() {
         <a href="/#work">WORK</a>
         <a href="/#studio">ABOUT</a>
         <ProjectBriefTrigger>
-          <Send size={15} aria-hidden="true" /> INQUIRE
+          ENQUIRE <ArrowRight size={15} aria-hidden="true" />
         </ProjectBriefTrigger>
       </nav>
     </>

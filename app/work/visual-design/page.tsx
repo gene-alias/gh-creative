@@ -15,7 +15,7 @@ export default function VisualArt() {
       </a>
       <section className="mini-work-intro">
         <p className="mini-index">
-          <span>02 / VISUAL ART</span>
+          <span>{'// 02 · VISUAL ART'}</span>
           <ArrowUpRight size={15} />
         </p>
         <h1>Visual work.</h1>

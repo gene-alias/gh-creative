@@ -1,4 +1,4 @@
-export const serviceOptions = ['Web design', 'Visual design', 'Branding', 'Audio design', 'Marketing', 'Help me decide'];
+export const serviceOptions = ['Web design', 'Visual design', 'Branding', 'AI assistants', 'Audio design', 'Marketing', 'Help me decide'];
 export const budgetOptions = ['Under $2,000', '$2,000 to $5,000', '$5,000 to $10,000', '$10,000+', 'Let’s work it out'];
 export const timingOptions = ['As soon as possible', 'Within 1 to 2 months', 'Within 3 to 6 months', 'I’m flexible'];
 
