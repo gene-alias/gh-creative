@@ -58,7 +58,7 @@ export function FieldRecordMotion() {
           batch.push(element as HTMLElement);
           if (!frame) frame = requestAnimationFrame(flush);
         },
-        { amount: 0.2 },
+        { margin: '0px 0px -8% 0px' },
       ),
     );
 
